@@ -10,12 +10,12 @@
 - [ ] Message send and receive using `OuchIn` and `OuchOut` via `OuchClient`
 
 ### For library:
-- [x] Convert message types to use `OrderToken`
-- [x] `OrderToken` encode method
-- [ ] Convert functions to use `OuchError` instead of `unwrap` 
-- [x] Break up messages into submodules for structs
 - [ ] Documentation for message types
-- [ ] Types for `FirmId` and `Symbol` (stock)
+- [ ] Convert functions to use `OuchError` instead of `unwrap` 
+- [x] Types for `FirmId` and `StockSymbol` 
+- [x] Convert messages to use `FirmId` and `StockSymbol`
+- [ ] Strongly-typed enums for all `char` options and variants?
+- [ ] Conversion for `u32` to timestamp/duration
 - [ ] Use `std::net::SocketAddr` type for `OuchClient`
-
+- [ ] Finish send/recv for `OuchClient`
 

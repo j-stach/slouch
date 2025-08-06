@@ -3,15 +3,18 @@ use std::io::{ Read, Write };
 use std::net::TcpStream;
 use std::time::Duration;
 
-use crate::msg::{ OuchOut, OuchIn };
-use crate::token::OrderToken;
+use crate::{
+    msg::{ OuchOut, OuchIn },
+    token::OrderToken,
+    trade::{ FirmId, StockSymbol },
+};
 
 ///
 pub struct OuchClient {
     stream: TcpStream,
     buffer: Vec<u8>,
     timeout: Duration,
-    firm_id: String,
+    firm_id: FirmId,
     order_token_prefix: String,
     order_token_counter: u64,
 }
@@ -23,7 +26,7 @@ impl OuchClient {
         // TODO: Use SocketAddr type
         addr: &str, 
         timeout: Duration, 
-        firm_id: String, 
+        firm_id: FirmId, 
         order_token_prefix: String
     ) -> std::io::Result<Self> {
 

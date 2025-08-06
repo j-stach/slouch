@@ -1,8 +1,11 @@
 
 use serde::{ Deserialize, Serialize };
 
-use crate::helper::encode_fixed_str;
-use crate::token::OrderToken;
+use crate::{
+    token::OrderToken,
+    trade::{ FirmId, StockSymbol }
+};
+
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -10,10 +13,10 @@ pub struct EnterOrder {
     pub order_token: OrderToken,
     pub buy_sell_indicator: char,
     pub shares: u32,
-    pub stock: String, // 8 bytes ASCII
+    pub stock_symbol: StockSymbol,
     pub price: u32,
     pub time_in_force: u32,
-    pub firm: String, // 4 bytes
+    pub firm_id: FirmId,
     pub display: char,
     pub capacity: char,
     pub intermarket_sweep_eligibility: char,
@@ -29,10 +32,10 @@ impl EnterOrder {
         buf.extend(self.order_token.encode());
         buf.push(self.buy_sell_indicator as u8);
         buf.extend(&self.shares.to_be_bytes());
-        buf.extend(encode_fixed_str(&self.stock, 8));
+        buf.extend(self.stock_symbol.encode());
         buf.extend(&self.price.to_be_bytes());
         buf.extend(&self.time_in_force.to_be_bytes());
-        buf.extend(encode_fixed_str(&self.firm, 4));
+        buf.extend(self.firm_id.encode());
         buf.push(self.display as u8);
         buf.push(self.capacity as u8);
         buf.push(self.intermarket_sweep_eligibility as u8);

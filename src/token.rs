@@ -1,13 +1,14 @@
 
 // OrderToken type to check for bytelength
 
-use serde::{ Deserialize, Serialize };
 use std::fmt;
+use serde::{ Deserialize, Serialize };
+use derive_more::{ Deref, DerefMut };
 
 use crate::helper::encode_fixed_str;
 
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, Deref, DerefMut, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct OrderToken(String);
 
 impl OrderToken {
@@ -28,14 +29,13 @@ impl OrderToken {
         OrderToken::new(s)
     }
 
-    pub fn as_str(&self) -> &str {
-        &self.0
-    }
+    /// Get the OrderToken as a string.
+    pub fn as_str(&self) -> &str { &*self }
 
     /// OrderToken should have its length checked when it is created.
     /// This method will encode it into a fixed length of 14 bytes.
     pub fn encode(&self) -> Vec<u8> {
-        encode_fixed_str(self.as_str(), 14)
+        encode_fixed_str(&*self, 14)
     }
 }
 
