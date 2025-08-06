@@ -4,6 +4,9 @@
 use serde::{ Deserialize, Serialize };
 use std::fmt;
 
+use crate::helper::encode_fixed_str;
+
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct OrderToken(String);
 
@@ -27,6 +30,12 @@ impl OrderToken {
 
     pub fn as_str(&self) -> &str {
         &self.0
+    }
+
+    /// OrderToken should have its length checked when it is created.
+    /// This method will encode it into a fixed length of 14 bytes.
+    pub fn encode(&self) -> Vec<u8> {
+        encode_fixed_str(self.as_str(), 14)
     }
 }
 

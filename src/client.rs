@@ -7,7 +7,7 @@ use crate::msg::{ OuchOut, OuchIn };
 use crate::token::OrderToken;
 
 ///
-pub struct Client {
+pub struct OuchClient {
     stream: TcpStream,
     buffer: Vec<u8>,
     timeout: Duration,
@@ -16,7 +16,7 @@ pub struct Client {
     order_token_counter: u64,
 }
 
-impl Client {
+impl OuchClient {
 
     /// Create a Client connected to the provided TCP address.
     pub fn connect(
@@ -27,11 +27,11 @@ impl Client {
         order_token_prefix: String
     ) -> std::io::Result<Self> {
 
-        let mut stream = TcpStream::connect(addr)?;
+        let stream = TcpStream::connect(addr)?;
         stream.set_read_timeout(Some(timeout))?;
         stream.set_write_timeout(Some(timeout))?;
 
-        Ok(Client {
+        Ok(OuchClient {
             stream,
             buffer: vec![0u8; 128],
             timeout,
@@ -43,6 +43,7 @@ impl Client {
 
     fn next_order_token(&mut self) -> String {
         self.order_token_counter += 1;
+        // TODO OrderToken from_parts
         format!("{}{:08}", self.order_token_prefix, self.order_token_counter)
     }
 

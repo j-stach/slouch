@@ -1,10 +1,13 @@
 
 use serde::{ Deserialize, Serialize };
-use super::encode_fixed_str;
+
+use crate::helper::encode_fixed_str;
+use crate::token::OrderToken;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct EnterOrder {
-    pub order_token: String, // 14 bytes ASCII
+    pub order_token: OrderToken,
     pub buy_sell_indicator: char,
     pub shares: u32,
     pub stock: String, // 8 bytes ASCII
@@ -23,7 +26,7 @@ impl EnterOrder {
 
     pub(super) fn encode(&self) -> Vec<u8> {
         let mut buf = vec![b'O'];
-        buf.extend(encode_fixed_str(&self.order_token, 14));
+        buf.extend(self.order_token.encode());
         buf.push(self.buy_sell_indicator as u8);
         buf.extend(&self.shares.to_be_bytes());
         buf.extend(encode_fixed_str(&self.stock, 8));

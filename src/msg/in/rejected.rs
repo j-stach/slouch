@@ -1,10 +1,11 @@
 
 use serde::{ Deserialize, Serialize };
-use std::convert::TryFrom;
+use crate::token::OrderToken;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OrderRejected {
-    pub order_token: String,
+    pub order_token: OrderToken,
     pub reason: char,
 }
 
@@ -16,9 +17,15 @@ impl OrderRejected {
             return Err("OrderRejected: insufficient data".into());
         }
         
+        let order_token = OrderToken::new(
+            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+        )?;
+
+        let reason = data[14] as char;
+
         Ok(OrderRejected {
-            order_token: String::from_utf8_lossy(&data[0..14]).trim_end().to_string(),
-            reason: data[14] as char,
+            order_token,
+            reason
         })
     }
 

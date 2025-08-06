@@ -1,10 +1,11 @@
 
 use serde::{ Deserialize, Serialize };
-use std::convert::TryFrom;
+use crate::token::OrderToken;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OrderCanceled {
-    pub order_token: String,
+    pub order_token: OrderToken,
     pub canceled_shares: u32,
 }
 
@@ -16,9 +17,15 @@ impl OrderCanceled {
             return Err("OrderCanceled: insufficient data".into());
         }
 
+        let order_token = OrderToken::new(
+            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+        )?;
+
+        let canceled_shares = u32::from_be_bytes(data[14..18].try_into().unwrap());
+
         Ok(OrderCanceled {
-            order_token: String::from_utf8_lossy(&data[0..14]).trim_end().to_string(),
-            canceled_shares: u32::from_be_bytes(data[14..18].try_into().unwrap()),
+            order_token,
+            canceled_shares,
         })
     }
 

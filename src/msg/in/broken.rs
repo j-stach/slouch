@@ -1,6 +1,5 @@
 
 use serde::{ Deserialize, Serialize };
-use std::convert::TryFrom;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrokenTrade {

@@ -13,4 +13,6 @@ pub mod client;
 /// Contains an OuchError type for recoverable errors.
 pub mod error;
 
+// Helper functions used throughout the crate.
+mod helper;
 
