@@ -18,16 +18,17 @@ pub struct OrderAccepted {
 
 impl OrderAccepted {
 
-    // TODO Errors
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         if data.len() < 39 {
-            return Err("OrderAccepted: insufficient data".into());
+            return Err(OuchError::Parse("OrderAccepted".to_string()))
         }
 
         let order_token = OrderToken::new(
             String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
         )?;
+
+        // Unwrap is safe because we specify the correct byte array lengths.
 
         let timestamp = u64::from_be_bytes(data[14..22].try_into().unwrap());
         let shares = u32::from_be_bytes(data[22..26].try_into().unwrap());

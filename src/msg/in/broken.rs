@@ -10,13 +10,13 @@ pub struct BrokenTrade {
 
 impl BrokenTrade {
 
-    // TODO Errors
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         if data.len() < 9 {
-            return Err("BrokenTrade: insufficient data".into());
+            return Err(OuchError::Parse("BrokenTrade".to_string()))
         }
 
+        // Unwrap is safe because we specify the correct byte array lengths.
         Ok(BrokenTrade {
             match_number: u64::from_be_bytes(data[0..8].try_into().unwrap()),
             reason: data[8] as char,

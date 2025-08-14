@@ -4,7 +4,7 @@ use serde::{ Deserialize, Serialize };
 
 use crate::{ 
     helper::encode_fixed_str, 
-    error::{ OuchError, BadElementError } 
+    error::BadElementError 
 };
 
 /// Strong type for firm IDs that ensures protocol compliance.
@@ -14,22 +14,19 @@ pub struct FirmId(String);
 impl FirmId {
 
     /// Generate a new FirmId from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, OuchError> {
+    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
 
         if s.len() != 4 {
             return Err(
-                BadElementError::FirmId(
-                    format!("Must be 4 characters, got {}", s.len())
-                ).into()
+                BadElementError::WrongSize("FirmId".to_string(), 4, s.len())
             );
         }
 
         if !s.chars().all(|c| c.is_ascii()) {
             return Err(
-                BadElementError::FirmId("Must be ASCII".to_string())
-                    .into()
+                BadElementError::NotAscii("FirmId".to_string())
             );
         }
 

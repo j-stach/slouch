@@ -4,7 +4,7 @@ use serde::{ Deserialize, Serialize };
 
 use crate::{ 
     helper::encode_fixed_str, 
-    error::{ OuchError, BadElementError } 
+    error::BadElementError 
 };
 
 /// Strong type for stock symbols that ensures protocol compliance.
@@ -14,22 +14,19 @@ pub struct StockSymbol(String);
 impl StockSymbol {
 
     /// Generate a new StockSymbol from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, OuchError> {
+    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
 
         if s.len() != 8 {
             return Err(
-                BadElementError::StockSymbol(
-                    format!("Must be 8 characters, got {}", s.len())
-                ).into()
+                BadElementError::WrongSize("StockSymbol".to_string(), 8, s.len())
             );
         }
 
         if !s.chars().all(|c| c.is_ascii()) {
             return Err(
-                BadElementError::StockSymbol("Must be ASCII".to_string())
-                    .into()
+                BadElementError::NotAscii("StockSymbol".to_string())
             );
         }
 

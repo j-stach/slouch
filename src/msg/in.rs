@@ -33,14 +33,12 @@ pub enum OuchIn {
 }
 
 impl TryFrom<&[u8]> for OuchIn {
-    // TODO: Error type
     type Error = OuchError;
 
-    // TODO Errors
     fn try_from(data: &[u8]) -> Result<Self, Self::Error> {
 
         if data.is_empty() {
-            return Err("Empty message".into());
+            return Err(OuchError::Parse("Empty message".to_string()))
         }
 
         let msg_type = data[0];

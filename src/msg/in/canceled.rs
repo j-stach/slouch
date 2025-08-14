@@ -14,17 +14,17 @@ pub struct OrderCanceled {
 
 impl OrderCanceled {
 
-    // TODO Errors
     pub(super) fn parse(data: &[u8]) -> Result<OrderCanceled, OuchError> {
 
         if data.len() < 18 {
-            return Err("OrderCanceled: insufficient data".into());
+            return Err(OuchError::Parse("OrderCanceled".to_string()))
         }
 
         let order_token = OrderToken::new(
             String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
         )?;
 
+        // Unwrap is safe because we specify the correct byte array lengths.
         let canceled_shares = u32::from_be_bytes(data[14..18].try_into().unwrap());
 
         Ok(OrderCanceled {

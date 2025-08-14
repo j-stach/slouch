@@ -14,17 +14,17 @@ pub struct OrderRejected {
 
 impl OrderRejected {
 
-    // TODO Errors
     pub(super) fn parse(data: &[u8]) -> Result<OrderRejected, OuchError> {
 
         if data.len() < 15 {
-            return Err("OrderRejected: insufficient data".into());
+            return Err(OuchError::Parse("OrderRejected".to_string()))
         }
         
         let order_token = OrderToken::new(
             String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
         )?;
 
+        // TODO Enum
         let reason = data[14] as char;
 
         Ok(OrderRejected {

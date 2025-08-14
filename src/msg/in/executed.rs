@@ -16,17 +16,17 @@ pub struct OrderExecuted {
 
 impl OrderExecuted {
 
-    // TODO Errors
     pub(super) fn parse(data: &[u8]) -> Result<OrderExecuted, OuchError> {
 
         if data.len() < 30 {
-            return Err("OrderExecuted: insufficient data".into());
+            return Err(OuchError::Parse("OrderExecuted".to_string()))
         }
 
         let order_token = OrderToken::new(
             String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
         )?;
 
+        // Unwrap is safe because we specify the correct byte array lengths.
         let executed_shares = u32::from_be_bytes(data[14..18].try_into().unwrap());
         let execution_price = u32::from_be_bytes(data[18..22].try_into().unwrap());
         let match_number = u64::from_be_bytes(data[22..30].try_into().unwrap());
