@@ -1,6 +1,6 @@
 
 use serde::{ Deserialize, Serialize };
-use crate::token::OrderToken;
+use crate::types::OrderToken;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ReplaceOrder {

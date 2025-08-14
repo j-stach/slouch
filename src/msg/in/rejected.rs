@@ -1,6 +1,9 @@
 
 use serde::{ Deserialize, Serialize };
-use crate::token::OrderToken;
+use crate::{
+    types::OrderToken,
+    error::OuchError
+};
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -11,7 +14,8 @@ pub struct OrderRejected {
 
 impl OrderRejected {
 
-    pub(super) fn parse(data: &[u8]) -> Result<OrderRejected, String> {
+    // TODO Errors
+    pub(super) fn parse(data: &[u8]) -> Result<OrderRejected, OuchError> {
 
         if data.len() < 15 {
             return Err("OrderRejected: insufficient data".into());

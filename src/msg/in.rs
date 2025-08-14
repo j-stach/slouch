@@ -18,6 +18,8 @@ pub use self::{
 use serde::{ Deserialize, Serialize };
 use std::convert::TryFrom;
 
+use crate::error::OuchError;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum OuchIn {
@@ -32,8 +34,9 @@ pub enum OuchIn {
 
 impl TryFrom<&[u8]> for OuchIn {
     // TODO: Error type
-    type Error = String;
+    type Error = OuchError;
 
+    // TODO Errors
     fn try_from(data: &[u8]) -> Result<Self, Self::Error> {
 
         if data.is_empty() {

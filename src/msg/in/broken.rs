@@ -1,5 +1,6 @@
 
 use serde::{ Deserialize, Serialize };
+use crate::error::OuchError;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrokenTrade {
@@ -9,7 +10,8 @@ pub struct BrokenTrade {
 
 impl BrokenTrade {
 
-    pub(super) fn parse(data: &[u8]) -> Result<Self, String> {
+    // TODO Errors
+    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         if data.len() < 9 {
             return Err("BrokenTrade: insufficient data".into());

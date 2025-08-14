@@ -1,11 +1,6 @@
 
 use serde::{ Deserialize, Serialize };
-
-use crate::{
-    token::OrderToken,
-    trade::{ FirmId, StockSymbol }
-};
-
+use crate::types::{ OrderToken, FirmId, StockSymbol };
 
 
 #[derive(Debug, Serialize, Deserialize)]

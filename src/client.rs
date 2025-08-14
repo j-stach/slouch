@@ -5,11 +5,11 @@ use std::time::Duration;
 
 use crate::{
     msg::{ OuchOut, OuchIn },
-    token::OrderToken,
-    trade::{ FirmId, StockSymbol },
+    types::{ OrderToken, FirmId, StockSymbol },
+    error::OuchError
 };
 
-///
+/// Convenience struct for coordinating communication with OUCH server.
 pub struct OuchClient {
     stream: TcpStream,
     buffer: Vec<u8>,
@@ -27,8 +27,9 @@ impl OuchClient {
         addr: &str, 
         timeout: Duration, 
         firm_id: FirmId, 
+        // TODO: Does this need length checked?
         order_token_prefix: String
-    ) -> std::io::Result<Self> {
+    ) -> Result<Self, OuchError> {
 
         let stream = TcpStream::connect(addr)?;
         stream.set_read_timeout(Some(timeout))?;
@@ -44,24 +45,41 @@ impl OuchClient {
         })
     }
 
-    fn next_order_token(&mut self) -> String {
+    // TODO: Use TokenGenerator
+    /*
+    fn next_order_token(&mut self) -> Result<OrderToken, OuchError> {
         self.order_token_counter += 1;
-        // TODO OrderToken from_parts
-        format!("{}{:08}", self.order_token_prefix, self.order_token_counter)
+        OrderToken::from_parts(
+            &self.order_token_prefix, 
+            self.order_token_counter
+        )
     }
+    */
 
-    ///
-    pub fn send(&mut self, msg: OuchOut) -> std::io::Result<()> {
+    /// The TCP stream is configured to time out after this duration.
+    pub fn timeout(&self) -> &Duration { &self.timeout }
+
+    /// The client is configured to use this firm ID for placing orders.
+    pub fn firm_id(&self) -> &FirmId { &self.firm_id }
+
+    /// The client uses this prefix for generating order tokens.
+    pub fn order_token_prefix(&self) -> &str { &self.order_token_prefix }
+
+    /// Send OUCH message to the server.
+    pub fn send(&mut self, msg: OuchOut) -> Result<(), OuchError> {
 
         let bytes = msg.to_bytes();
-        self.stream.write_all(&bytes)
+        self.stream.write_all(&bytes)?;
+        Ok(())
     }
 
-    ///
-    pub fn recv(&mut self) -> std::io::Result<OuchIn> {
+    /// Receive OUCH message from the server.
+    pub fn recv(&mut self) -> Result<OuchIn, OuchError> {
 
         let n = self.stream.read(&mut self.buffer)?;
         OuchIn::try_from(&self.buffer[..n])
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))
+            .map_err(|e| {
+                std::io::Error::new(std::io::ErrorKind::InvalidData, e).into()
+            })
     }
 }

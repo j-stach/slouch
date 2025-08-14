@@ -4,17 +4,14 @@
 /// Contains OuchIn and OuchOut types for protocol-compliant messages.
 pub mod msg;
 
-/// Contains a strong OrderToken type that ensures valid tokens.
-pub mod token;
-
-/// Contains strong types for Firm and Symbol.
-pub mod trade;
-
 /// Contains an OuchClient type for sending and receiving messages.
 pub mod client;
 
 /// Contains an OuchError type for recoverable errors.
 pub mod error;
+
+/// Contains strong types used in OUCH protocol messages.
+pub mod types;
 
 // Helper functions used throughout the crate.
 mod helper;

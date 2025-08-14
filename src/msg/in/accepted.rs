@@ -1,8 +1,8 @@
 
 use serde::{ Deserialize, Serialize };
 use crate::{
-    token::OrderToken,
-    trade::StockSymbol
+    types::{ OrderToken, StockSymbol},
+    error::OuchError,
 };
 
 
@@ -18,7 +18,8 @@ pub struct OrderAccepted {
 
 impl OrderAccepted {
 
-    pub(super) fn parse(data: &[u8]) -> Result<Self, String> {
+    // TODO Errors
+    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         if data.len() < 39 {
             return Err("OrderAccepted: insufficient data".into());
