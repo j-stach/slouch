@@ -11,9 +11,8 @@
 
 ## TODO for library:
 ### For messages:
-- [x] Convert functions to use `OuchError` instead of `unwrap` 
 - [ ] Documentation for message types
-- [ ] Ensure proper encoding of numeric values for protocol messages
+- [x] Helper function for encoding big-endian numbers (shares, etc.)
 
 ### For types:
 - [ ] Strongly-typed enums for all `char` options in messages

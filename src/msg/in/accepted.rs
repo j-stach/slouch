@@ -3,6 +3,7 @@ use serde::{ Deserialize, Serialize };
 use crate::{
     types::{ OrderToken, StockSymbol},
     error::OuchError,
+    helper::{ u32_from_be_bytes, u64_from_be_bytes }
 };
 
 
@@ -25,19 +26,23 @@ impl OrderAccepted {
         }
 
         let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+            String::from_utf8_lossy(&data[0..14])
+                .trim_end()
+                .to_string()
         )?;
 
-        // Unwrap is safe because we specify the correct byte array lengths.
-
-        let timestamp = u64::from_be_bytes(data[14..22].try_into().unwrap());
-        let shares = u32::from_be_bytes(data[22..26].try_into().unwrap());
+        let timestamp = u64_from_be_bytes(&data[14..22])?;
+        let shares = u32_from_be_bytes(&data[22..26])?;
 
         let stock_symbol = StockSymbol::new(
-            String::from_utf8_lossy(&data[26..34]).trim_end().to_string()
+            String::from_utf8_lossy(&data[26..34])
+                .trim_end()
+                .to_string()
         )?;
 
-        let price = u32::from_be_bytes(data[34..38].try_into().unwrap());
+        let price = u32_from_be_bytes(&data[34..38])?;
+
+        // TODO Enum
         let buy_sell_indicator = data[38] as char;
 
         Ok(OrderAccepted {

@@ -21,7 +21,9 @@ impl OrderRejected {
         }
         
         let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+            String::from_utf8_lossy(&data[0..14])
+                .trim_end()
+                .to_string()
         )?;
 
         // TODO Enum

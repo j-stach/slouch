@@ -2,7 +2,8 @@
 use serde::{ Deserialize, Serialize };
 use crate::{
     types::OrderToken,
-    error::OuchError
+    error::OuchError,
+    helper::u32_from_be_bytes
 };
 
 
@@ -21,11 +22,12 @@ impl OrderCanceled {
         }
 
         let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+            String::from_utf8_lossy(&data[0..14])
+                .trim_end()
+                .to_string()
         )?;
 
-        // Unwrap is safe because we specify the correct byte array lengths.
-        let canceled_shares = u32::from_be_bytes(data[14..18].try_into().unwrap());
+        let canceled_shares = u32_from_be_bytes(&data[14..18])?;
 
         Ok(OrderCanceled {
             order_token,

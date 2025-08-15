@@ -2,7 +2,8 @@
 use serde::{ Deserialize, Serialize };
 use crate::{
     types::OrderToken,
-    error::OuchError
+    error::OuchError,
+    helper::{ u64_from_be_bytes, u32_from_be_bytes }
 };
 
 
@@ -23,13 +24,14 @@ impl OrderExecuted {
         }
 
         let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14]).trim_end().to_string()
+            String::from_utf8_lossy(&data[0..14])
+                .trim_end()
+                .to_string()
         )?;
 
-        // Unwrap is safe because we specify the correct byte array lengths.
-        let executed_shares = u32::from_be_bytes(data[14..18].try_into().unwrap());
-        let execution_price = u32::from_be_bytes(data[18..22].try_into().unwrap());
-        let match_number = u64::from_be_bytes(data[22..30].try_into().unwrap());
+        let executed_shares = u32_from_be_bytes(&data[14..18])?;
+        let execution_price = u32_from_be_bytes(&data[18..22])?;
+        let match_number = u64_from_be_bytes(&data[22..30])?;
 
         Ok(OrderExecuted {
             order_token,

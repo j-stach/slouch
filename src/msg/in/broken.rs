@@ -1,6 +1,9 @@
 
 use serde::{ Deserialize, Serialize };
-use crate::error::OuchError;
+use crate::{
+    error::OuchError,
+    helper::u64_from_be_bytes,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BrokenTrade {
@@ -16,9 +19,9 @@ impl BrokenTrade {
             return Err(OuchError::Parse("BrokenTrade".to_string()))
         }
 
-        // Unwrap is safe because we specify the correct byte array lengths.
         Ok(BrokenTrade {
-            match_number: u64::from_be_bytes(data[0..8].try_into().unwrap()),
+            match_number: u64_from_be_bytes(&data[0..8])?,
+            // TODO Enum
             reason: data[8] as char,
         })
     }

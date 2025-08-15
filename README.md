@@ -7,3 +7,5 @@ Contains strong types for messages and a simple client to send and receive them.
 `slouch` is a work-in-progress. <br>
 Current tasks can be tracked in [`TODO.md`](TODO.md)
 
+[Reference](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf)
+
