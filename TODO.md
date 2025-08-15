@@ -9,10 +9,10 @@
 - [ ] `OuchClient` walkthrough
 - [ ] Message send and receive using `OuchIn` and `OuchOut` via `OuchClient`
 
+
 ## TODO for library:
 ### For messages:
 - [ ] Documentation for message types
-- [x] Helper function for encoding big-endian numbers (shares, etc.)
 
 ### For types:
 - [ ] Strongly-typed enums for all `char` options in messages

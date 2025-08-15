@@ -1,6 +1,28 @@
 
 use crate::error::BadElementError;
 
+pub(crate) fn check_string_compliance(
+    s: &str,
+    len: usize,
+    name: &str
+) -> Result<(), BadElementError> {
+
+    if s.len() != len {
+        return Err(
+            BadElementError::WrongSize(name.to_string(), len, s.len())
+        );
+    }
+
+    if !s.chars().all(|c| c.is_ascii()) {
+        return Err(
+            BadElementError::NotAscii(name.to_string())
+        );
+    }
+
+    Ok(())
+
+}
+
 pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
     let mut buf = vec![b' '; len];
     let bytes = s.as_bytes();

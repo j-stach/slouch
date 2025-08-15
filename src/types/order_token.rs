@@ -4,7 +4,7 @@ use serde::{ Deserialize, Serialize };
 use derive_more::{ Deref, DerefMut };
 
 use crate::{
-    helper::encode_fixed_str,
+    helper::{ check_string_compliance, encode_fixed_str },
     error::BadElementError
 };
 
@@ -19,18 +19,7 @@ impl OrderToken {
     pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
-
-        if s.len() != 14 {
-            return Err(
-                BadElementError::WrongSize("OrderToken".to_string(), 14, s.len())
-            );
-        }
-
-        if !s.chars().all(|c| c.is_ascii()) {
-            return Err(
-                BadElementError::NotAscii("OrderToken".to_string())
-            );
-        }
+        check_string_compliance(s, 14, "OrderToken")?;
 
         Ok(OrderToken(s.to_string()))
     }

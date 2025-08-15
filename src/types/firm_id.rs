@@ -17,18 +17,7 @@ impl FirmId {
     pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
-
-        if s.len() != 4 {
-            return Err(
-                BadElementError::WrongSize("FirmId".to_string(), 4, s.len())
-            );
-        }
-
-        if !s.chars().all(|c| c.is_ascii()) {
-            return Err(
-                BadElementError::NotAscii("FirmId".to_string())
-            );
-        }
+        check_string_compliance(s, 4, "FirmId")?;
 
         Ok(FirmId(s.to_string()))
     }

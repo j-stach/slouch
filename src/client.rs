@@ -1,6 +1,8 @@
 
+pub mod token_generator;
+
 use std::io::{ Read, Write };
-use std::net::TcpStream;
+use std::net::{ TcpStream, SocketAddr };
 use std::time::Duration;
 
 use crate::{
@@ -23,8 +25,7 @@ impl OuchClient {
 
     /// Create a Client connected to the provided TCP address.
     pub fn connect(
-        // TODO: Use SocketAddr type
-        addr: &str, 
+        addr: SocketAddr, 
         timeout: Duration, 
         firm_id: FirmId, 
         // TODO: Does this need length checked?
