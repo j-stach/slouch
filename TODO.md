@@ -14,15 +14,16 @@
 ## TODO for library:
 ### For messages:
 - [ ] Documentation for message types
+- [ ] More messages for NASDAQ's OUCH 5.0
+- [ ] Double-check protocol offsets for 5.0
 
 ### For types:
 - [ ] Strongly-typed enums for all `char` options in messages
-- [ ] Conversion for `u64` to timestamp/duration
+- [x] Conversion for `u64` to timestamp/duration
+- [ ] Types for shares and price to enforce bounds
+- [ ] Bring type names into alignment with OUCH
 
 ### For client:
-- [x] Use `std::net::SocketAddr` type for `OuchClient`
 - [ ] Finish send/recv for `OuchClient`
-- [x] `OrderTokenGenerator` and `OrderTokenEncoding` for use in `OuchClient`
-- [x] Rollover for token sequentialization based on `OrderTokenEncoding`
 
 

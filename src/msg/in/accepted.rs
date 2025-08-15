@@ -1,16 +1,22 @@
 
-use serde::{ Deserialize, Serialize };
+use chrono::NaiveTime;
+
 use crate::{
     types::{ OrderToken, StockSymbol},
     error::OuchError,
-    helper::{ u32_from_be_bytes, u64_from_be_bytes }
+    helper::{ 
+        u32_from_be_bytes, 
+        u64_from_be_bytes,
+        nanosec_from_midnight
+    }
 };
 
 
-#[derive(Debug, Serialize, Deserialize)]
+/// 
+#[derive(Debug)]
 pub struct OrderAccepted {
     pub order_token: OrderToken,
-    pub timestamp: u64,
+    pub timestamp: NaiveTime,
     pub shares: u32,
     pub stock_symbol: StockSymbol,
     pub price: u32,
@@ -31,7 +37,9 @@ impl OrderAccepted {
                 .to_string()
         )?;
 
-        let timestamp = u64_from_be_bytes(&data[14..22])?;
+        let ts = u64_from_be_bytes(&data[14..22])?;
+        let timestamp = nanosec_from_midnight(ts);
+
         let shares = u32_from_be_bytes(&data[22..26])?;
 
         let stock_symbol = StockSymbol::new(

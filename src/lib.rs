@@ -13,6 +13,6 @@ pub mod error;
 /// Contains strong types used in OUCH protocol messages.
 pub mod types;
 
-// Helper functions used throughout the crate.
-mod helper;
+/// Helper functions used throughout the crate.
+pub mod helper;
 

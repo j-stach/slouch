@@ -15,13 +15,12 @@ pub use self::{
     event::SystemEvent
 };
 
-use serde::{ Deserialize, Serialize };
 use std::convert::TryFrom;
 
 use crate::error::OuchError;
 
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug)]
 pub enum OuchIn {
     OrderAccepted(OrderAccepted),
     OrderExecuted(OrderExecuted),
