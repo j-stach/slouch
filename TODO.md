@@ -3,6 +3,7 @@
 - [ ] Test OUCH compliance (via emulator API?)
 - [ ] Unit testing
 - [ ] `README.md` minimal examples
+- [ ] `async` and `log` features
 
 ### Readme examples:
 - [ ] `OrderToken` creation
@@ -19,9 +20,9 @@
 - [ ] Conversion for `u64` to timestamp/duration
 
 ### For client:
-- [ ] Use `std::net::SocketAddr` type for `OuchClient`
+- [x] Use `std::net::SocketAddr` type for `OuchClient`
 - [ ] Finish send/recv for `OuchClient`
-- [ ] `OrderTokenGenerator` and `OrderTokenEncoding` for use in `OuchClient`
-- [ ] Rollover for token sequentialization based on `OrderTokenEncoding`
+- [x] `OrderTokenGenerator` and `OrderTokenEncoding` for use in `OuchClient`
+- [x] Rollover for token sequentialization based on `OrderTokenEncoding`
 
 

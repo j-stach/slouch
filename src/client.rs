@@ -1,7 +1,12 @@
 
-pub mod token_generator;
+mod token_generator;
+mod token_prefix;
 
-use std::io::{ Read, Write };
+pub use token_prefix::TokenPrefix;
+pub use token_generator::TokenGenerator;
+
+
+use std::io::{ Read, Write, Error, ErrorKind };
 use std::net::{ TcpStream, SocketAddr };
 use std::time::Duration;
 
@@ -11,14 +16,15 @@ use crate::{
     error::OuchError
 };
 
+
 /// Convenience struct for coordinating communication with OUCH server.
 pub struct OuchClient {
     stream: TcpStream,
     buffer: Vec<u8>,
     timeout: Duration,
     firm_id: FirmId,
-    order_token_prefix: String,
-    order_token_counter: u64,
+    // TODO: Will be changed to trait obj for flexibility
+    order_token_generator: TokenGenerator,
 }
 
 impl OuchClient {
@@ -28,8 +34,7 @@ impl OuchClient {
         addr: SocketAddr, 
         timeout: Duration, 
         firm_id: FirmId, 
-        // TODO: Does this need length checked?
-        order_token_prefix: String
+        order_token_prefix: &str
     ) -> Result<Self, OuchError> {
 
         let stream = TcpStream::connect(addr)?;
@@ -41,30 +46,34 @@ impl OuchClient {
             buffer: vec![0u8; 128],
             timeout,
             firm_id,
-            order_token_prefix,
-            order_token_counter: 0,
+            order_token_generator: TokenGenerator::new(order_token_prefix)?,
         })
     }
-
-    // TODO: Use TokenGenerator
-    /*
-    fn next_order_token(&mut self) -> Result<OrderToken, OuchError> {
-        self.order_token_counter += 1;
-        OrderToken::from_parts(
-            &self.order_token_prefix, 
-            self.order_token_counter
-        )
-    }
-    */
 
     /// The TCP stream is configured to time out after this duration.
     pub fn timeout(&self) -> &Duration { &self.timeout }
 
+
+    /// Configure the TCP stream to time out after this duration.
+    pub fn set_timeout(&mut self, duration: Duration) -> Result<(), OuchError> { 
+
+        self.stream.set_read_timeout(Some(duration))?;
+        self.stream.set_write_timeout(Some(duration))?;
+        Ok(self.timeout = duration)
+    }
+
     /// The client is configured to use this firm ID for placing orders.
     pub fn firm_id(&self) -> &FirmId { &self.firm_id }
 
-    /// The client uses this prefix for generating order tokens.
-    pub fn order_token_prefix(&self) -> &str { &self.order_token_prefix }
+    /// The client uses this struct to generate order tokens.
+    /// NOTE: Returns a mutable reference, so be careful what you do with it.
+    pub fn token_generator(&mut self) -> &mut TokenGenerator { 
+        &mut self.order_token_generator 
+    }
+
+}
+
+impl OuchClient {
 
     /// Send OUCH message to the server.
     pub fn send(&mut self, msg: OuchOut) -> Result<(), OuchError> {
@@ -79,8 +88,6 @@ impl OuchClient {
 
         let n = self.stream.read(&mut self.buffer)?;
         OuchIn::try_from(&self.buffer[..n])
-            .map_err(|e| {
-                std::io::Error::new(std::io::ErrorKind::InvalidData, e).into()
-            })
+            .map_err(|e| Error::new(ErrorKind::InvalidData, e).into())
     }
 }

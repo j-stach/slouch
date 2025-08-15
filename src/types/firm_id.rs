@@ -3,7 +3,7 @@ use derive_more::{ Deref, DerefMut };
 use serde::{ Deserialize, Serialize };
 
 use crate::{ 
-    helper::encode_fixed_str, 
+    helper::{ check_string_compliance, encode_fixed_str }, 
     error::BadElementError 
 };
 
