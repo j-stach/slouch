@@ -21,7 +21,7 @@ use crate::error::OuchError;
 
 
 #[derive(Debug)]
-pub enum OuchIn {
+pub enum OuchResponse {
     OrderAccepted(OrderAccepted),
     OrderExecuted(OrderExecuted),
     OrderCanceled(OrderCanceled),
@@ -31,7 +31,7 @@ pub enum OuchIn {
     Unknown(u8, Vec<u8>),
 }
 
-impl TryFrom<&[u8]> for OuchIn {
+impl TryFrom<&[u8]> for OuchResponse {
     type Error = OuchError;
 
     fn try_from(data: &[u8]) -> Result<Self, Self::Error> {

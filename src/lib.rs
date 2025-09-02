@@ -4,8 +4,8 @@
 /// Contains OuchIn and OuchOut types for protocol-compliant messages.
 pub mod msg;
 
-/// Contains an OuchClient type for sending and receiving messages.
-pub mod client;
+///// Contains an OuchClient type for sending and receiving messages.
+//pub mod client;
 
 /// Contains an OuchError type for recoverable errors.
 pub mod error;
