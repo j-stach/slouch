@@ -13,18 +13,12 @@
 
 ## TODO for Messages
 ### For `OuchRequest`
-- [x] `EnterOrder`
-- [x] `CancelOrder`
-- [x] `ReplaceOrder`
-- [x] `ModifyOrder`
-- [x] `MassCancel`
-- [x] `DisableOrderEntry`
-- [x] `EnableOrderEntry`
-- [x] `AccountQuery`
 - [ ] `encode` to byte string
 - [ ] Comments & documentation
 - [ ] Datatype for `UserRefNum`, `Price`, and others
-- [ ] Move `OptionalAppendage` into msg
+
+### For `OptionalAppendage`
+- [x] Move `OptionalAppendage` into msg
 - [ ] Options need types (e.g., `TagValue` and enums)
 - [ ] Strong types for optional fields (there are many)
 

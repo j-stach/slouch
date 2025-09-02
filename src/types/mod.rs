@@ -1,13 +1,25 @@
 
-// TODO 
-// Move FirmId and StockSymbol into this module
-// Also OrderToken
-
 mod firm_id;
 mod stock_symbol;
 mod order_token;
+mod price;
+mod display;
+mod capacity;
+mod side;
+mod cross_type;
+mod time_in_force;
+mod user_ref_num;
 
-pub use firm_id::FirmId;
-pub use stock_symbol::StockSymbol;
-pub use order_token::OrderToken;
+pub use self::{
+    firm_id::FirmId;
+    stock_symbol::StockSymbol,
+    order_token::OrderToken,
+    price::Price,
+    display::Display,
+    capacity::Capacity,
+    side::Side,
+    cross_type::CrossType,
+    time_in_force::TimeInForce,
+    user_ref_num::UserRefNum
+}
 
