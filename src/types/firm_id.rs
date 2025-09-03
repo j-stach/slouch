@@ -24,7 +24,7 @@ impl FirmId {
 
     /// FirmId should have its length checked when it is created.
     /// This method will encode it into a fixed length of 4 bytes.
-    pub fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 4)
     }
 }

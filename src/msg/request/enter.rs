@@ -21,23 +21,17 @@ pub struct EnterOrder {
     // TODO: Client should track and increment this
     // TODO: Data type
     user_ref_num: UserRefNum,
-    // TODO: Enum for Buy, Sell, Sell short, Sell short exempt
     side: Side,
-    /// Number of shares.
     quantity: u32,
     // Still 8?
     symbol: StockSymbol,
     // TODO: Price type with decimal bounds
     price: Price,
-    // TODO: Enum for Day, IOC, GTX, GTT, E
     time_in_force: TimeInForce,
-    // TODO: Enum for Visible, Hidden, Attributable
     display: Display,
-    // TODO: Agency, Principle, Riskless
     capacity: Capacity,
     // TODO: true -> Y, false -> N
     intermarket_sweep_eligibility: bool,
-    // TODO: Needs enum, see the PDF
     cross_type: CrossType,
     /// Customer order identifier (ClOrdID). 
     /// Will not be checked for day-uniqueness for each OUCH account.

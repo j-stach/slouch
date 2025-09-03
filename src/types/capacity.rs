@@ -1,5 +1,6 @@
 
-// NOTE: "All fixed-width alpha fields are left-justified and padded on the right with spaces"
+use crate::error::BadElementError;
+
 
 /// 
 pub enum Capacity {
@@ -11,25 +12,29 @@ pub enum Capacity {
 
 impl Capacity {
 
-    pub(crate) fn encode(&self) -> char {
+    pub(crate) fn encode(&self) -> u8 {
 
         use Self::*;
         match self {
-            Agency => 'A',
-            Principal => 'P',
-            Riskless => 'R',
-            Other => 'O',
+            Agency => b'A',
+            Principal => b'P',
+            Riskless => b'R',
+            Other => b'O',
         }
     }
 
-    pub(crate) fn parse(data: u8) -> Result<Self, OuchError> {
+    pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
         use Self::*;
-        match data as char {
-            'A' => Agency,
-            'P' => Principal,
-            'R' => Riskless,
-            'O' => Other,
+        match data {
+            b'A' => Ok(Agency),
+            b'P' => Ok(Principal),
+            b'R' => Ok(Riskless),
+            b'O' => Ok(Other),
+            _ => BadElementError::InvalidEnum(
+                data as char, 
+                "Capacity".to_string()
+            )
         }
     }
 }

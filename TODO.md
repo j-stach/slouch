@@ -18,7 +18,6 @@
 - [ ] Datatype for `UserRefNum`, `Price`, and others
 
 ### For `OptionalAppendage`
-- [x] Move `OptionalAppendage` into msg
 - [ ] Options need types (e.g., `TagValue` and enums)
 - [ ] Strong types for optional fields (there are many)
 

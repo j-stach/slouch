@@ -24,6 +24,10 @@ pub enum BadElementError {
 
     #[error("{0} is not valid ASCII")]
     NotAscii(String),
+
+    #[error("{0} is an invalid option for {1}")]
+    InvalidEnum(char, String),
+
 }
 
 

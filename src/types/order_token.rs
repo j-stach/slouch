@@ -9,7 +9,7 @@ use crate::{
 };
 
 
-/// Strong type for order tokens that ensures protocol compliance.
+/// Strong type for `ClOrdId` that ensures protocol compliance.
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct OrderToken(String);
 
