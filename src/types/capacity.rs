@@ -2,7 +2,7 @@
 use crate::error::BadElementError;
 
 
-/// 
+///  
 pub enum Capacity {
     Agency,
     Principal,

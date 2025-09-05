@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// During which time span will the order be active?
 pub enum TimeInForce {
     /// Market hours
     Day,

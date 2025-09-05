@@ -13,9 +13,9 @@
 
 ## TODO for Messages
 ### For `OuchRequest`
-- [ ] `encode` to byte string
+- [x] `encode` to byte string
 - [ ] Comments & documentation
-- [ ] Datatype for `UserRefNum`, `Price`, and others
+- [x] Datatype for `UserRefNum`, `Price`, and others
 
 ### For `OptionalAppendage`
 - [ ] Options need types (e.g., `TagValue` and enums)

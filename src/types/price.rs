@@ -19,9 +19,8 @@ impl Price {
     pub fn new(dollars: u32, cents: u16) -> Result<Self, BadElementError> {
 
         // Ensures price is within limits.
-        if dollars > 199_999 || (dollars == 199_999 && cents >= 9900) {
-            // TODO:
-            // return BadElementError::InvalidValue
+        if dollars > 199_999 (dollars == 199_999 && cents >= 9900) {
+            return BadElementError::InvalidValue("Price".to_string())
         }
 
         Ok(Price { dollars, cents })
@@ -54,9 +53,9 @@ impl Price {
 
     pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
 
-        let price = u32_from_be_bytes(&data)?;
+        let price = u64_from_be_bytes(&data)?;
         // OUCH price has four decimals implied.
-        Price::new(price / 10_000, price % 10_000)
+        Price::new((price / 10_000) as u32, (price % 10_000) as u16)
     }
 }
 

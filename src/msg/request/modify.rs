@@ -1,26 +1,31 @@
 
-use crate::types::UserRefNum;
-use super::options::OptionalAppendage;
+use crate::types::{
+    UserRefNum,
+    Side
+};
+use crate::msg::options::OptionalAppendage;
 
 ///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ModifyOrder {
-    /// Must be day-unique and strictly increasing for each OUCH account.
-    // TODO: Client should track and increment this
-    // TODO: Data type
-    user_ref_num: u32,
-    // TODO: Use Enum for Buy, Sell, Sell short, Sell short exempt
-    side: char,
-    /// Number of shares.
-    quantity: u32,
-    /// This holds all optional fields included in the order.
+    pub user_ref_num: UserRefNum,
+    pub side: Side,
+    pub quantity: u32,
     optional_appendage: OptionalAppendage
 }
 
 impl ModifyOrder {
     
     pub(super) fn encode(&self) -> Vec<u8> {
-        todo!{}
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'X');
+        bytes.extend(self.side.encode());
+        bytes.extend(self.quantity.to_be_bytes());
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
 } 
 

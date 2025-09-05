@@ -10,6 +10,7 @@ use crate::{
 
 
 /// Strong type for `ClOrdId` that ensures protocol compliance.
+/// Will not be checked for day-uniqueness for each OUCH account.
 #[derive(Debug, Clone, Deref, DerefMut, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub struct OrderToken(String);
 
@@ -29,9 +30,16 @@ impl OrderToken {
 
     /// OrderToken should have its length checked when it is created.
     /// This method will encode it into a fixed length of 14 bytes.
-    pub fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 14)
     }
+
+    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+        
+        // TODO:
+        todo!{}
+    }
+
 }
 
 impl fmt::Display for OrderToken {

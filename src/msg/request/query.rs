@@ -9,7 +9,13 @@ pub struct AccountQuery {
 impl AccountQuery {
     
     pub(super) fn encode(&self) -> Vec<u8> {
-        todo!{}
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'Q');
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
 } 
 

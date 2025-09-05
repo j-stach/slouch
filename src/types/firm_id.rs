@@ -27,5 +27,11 @@ impl FirmId {
     pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 4)
     }
+
+    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+
+        // TODO
+        todo!{}
+    }
 }
 

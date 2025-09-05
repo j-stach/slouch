@@ -24,8 +24,15 @@ impl StockSymbol {
 
     /// StockSymbol should have its length checked when it is created.
     /// This method will encode it into a fixed length of 8 bytes.
-    pub fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 8)
+    }
+
+    //
+    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+
+        // TODO:
+        todo!{}
     }
 }
 

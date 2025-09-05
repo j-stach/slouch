@@ -28,6 +28,12 @@ pub enum BadElementError {
     #[error("{0} is an invalid option for {1}")]
     InvalidEnum(char, String),
 
+    #[error("Invalid value for {0}")]
+    InvalidValue(String),
+
+    #[error("Invalid option tag for {0}")]
+    InvalidOption(String),
+
 }
 
 

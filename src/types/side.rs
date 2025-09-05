@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// 
 pub enum Side {
     Buy,
     Sell,
