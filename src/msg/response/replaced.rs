@@ -27,9 +27,10 @@ use crate::types::{
 
 /// 
 #[derive(Debug)]
-pub struct OrderAccepted {
+pub struct OrderReplaced {
     pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
+    pub old_user_ref_num: UserRefNum,
+    pub new_user_ref_num: UserRefNum,
     pub side: Side,
     pub quantity: u32,
     pub symbol: StockSymbol,
@@ -45,7 +46,7 @@ pub struct OrderAccepted {
     optional_appendage: OptionalAppendage
 }
 
-impl OrderAccepted {
+impl OrderReplaced {
 
     // TODO
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {

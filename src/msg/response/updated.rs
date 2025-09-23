@@ -1,10 +1,8 @@
 
 use chrono::NaiveTime;
-use serde::{ Deserialize, Serialize };
 
 use crate::{
     error::OuchError,
-    options::OptionalAppendage,
     helper::{ 
         u32_from_be_bytes, 
         u64_from_be_bytes,
@@ -23,28 +21,48 @@ use crate::types::{
     CrossType,
     OrderState,
     OrderRefNum,
-    MatchNumber,
     OrderToken
 };
 
 
-///
-#[derive(Debug, Serialize, Deserialize)]
-pub struct BrokenTrade {
+/// 
+#[derive(Debug)]
+pub struct OrderPriorityUpdate {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
-    pub match_number: MatchNumber,
-    pub broken_reason: BrokenReason,
-    pub order_token: OrderToken,
+    pub price: Price,
+    pub display: Display,
+    pub order_ref_num: OrderRefNum,
     optional_appendage: OptionalAppendage
 }
 
-impl BrokenTrade {
+impl OrderPriorityUpdate {
 
+    // TODO
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        todo![]
     }
 
 }
 
+
+/// 
+#[derive(Debug)]
+pub struct OrderRestated {
+    pub timestamp: NaiveTime,
+    pub user_ref_num: UserRefNum,
+    pub side: Side,
+    pub quantity: u32,
+    optional_appendage: OptionalAppendage
+}
+
+impl OrderRestated {
+
+    // TODO
+    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
+
+        todo![]
+    }
+
+}

@@ -8,6 +8,9 @@ pub enum OuchError {
     #[error("Invalid message element: {0}")]
     InvalidElement(#[from] BadElementError),
 
+    #[error("Unrecognized OUCH response type: {0}, data: {1}")]
+    UnknownResponse(char, Vec<u8>),
+
     #[error("Insufficient data to parse: {0}")]
     Parse(String),
 

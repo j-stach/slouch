@@ -1,24 +1,51 @@
 
 use serde::{ Deserialize, Serialize };
+
+use chrono::NaiveTime;
+
 use crate::{
-    types::OrderToken,
     error::OuchError,
-    helper::{ u64_from_be_bytes, u32_from_be_bytes }
+    helper::{ 
+        u32_from_be_bytes, 
+        u64_from_be_bytes,
+        nanosec_from_midnight
+    }
+};
+
+use crate::types::{ 
+    UserRefNum,
+    Side,
+    StockSymbol, 
+    Price,
+    TimeInForce,
+    Display,
+    Capacity,
+    CrossType,
+    OrderState,
+    OrderRefNum,
+    LiquidityFlag,
+    MatchNumber,
+    OrderToken
 };
 
 
+///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OrderExecuted {
-    pub order_token: OrderToken,
-    pub executed_shares: u32,
-    pub execution_price: u32,
-    pub match_number: u64,
+    pub timestamp: NaiveTime,
+    pub user_ref_num: UserRefNum,
+    pub quantity: u32,
+    pub price: Price,
+    pub liquidity_flag: LiquidityFlag,
+    pub match_number: MatchNumber,
+    optional_appendage: OptionalAppendage
 }
 
 impl OrderExecuted {
 
-    pub(super) fn parse(data: &[u8]) -> Result<OrderExecuted, OuchError> {
+    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
+        /*
         if data.len() < 30 {
             return Err(OuchError::Parse("OrderExecuted".to_string()))
         }
@@ -39,6 +66,8 @@ impl OrderExecuted {
             execution_price,
             match_number
         })
+        */
+        todo!{}
     }
 
 }

@@ -10,6 +10,9 @@ mod cross_type;
 mod time_in_force;
 mod user_ref_num;
 
+mod event_code;
+mod order_state;
+
 pub use self::{
     firm_id::FirmId;
     stock_symbol::StockSymbol,
@@ -20,6 +23,10 @@ pub use self::{
     side::Side,
     cross_type::CrossType,
     time_in_force::TimeInForce,
-    user_ref_num::UserRefNum
+    user_ref_num::UserRefNum,
+
+    event_code::EventCode,
+    order_state::OrderState,
+    cancel_reason::CancelReason,
 }
 

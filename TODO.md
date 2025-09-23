@@ -13,30 +13,39 @@
 
 ## TODO for Messages
 ### For `OuchRequest`
-- [x] `encode` to byte string
 - [ ] Comments & documentation
-- [x] Datatype for `UserRefNum`, `Price`, and others
 
 ### For `OptionalAppendage`
 - [ ] Options need types (e.g., `TagValue` and enums)
 - [ ] Strong types for optional fields (there are many)
 
 ### For `OuchResponse`
-- [ ] `SystemEvent`
-- [ ] `OrderAccepted`
-- [ ] `OrderReplaced`
-- [ ] `OrderCanceled`
-- [ ] `AiqCanceled`
-- [ ] `OrderExecuted`
-- [ ] `BrokenTrade`
-- [ ] `Rejected`
-- [ ] `CancelPending`
-- [ ] `CancelReject`
-- [ ] `OrderPriorityUpdate`
-- [ ] `OrderModified`
-- [ ] `OrderRestated`
-- [ ] `MassCancelResponse`
-- [ ] `DisableOrderEntryResponse`
-- [ ] `EnableOrderEntryResponse`
-- [ ] `AccountQueryResponse`
+- [x] `Timestamp` type?
+- [x] `EventCode` type
+- [ ] `CancelReason`
+- [ ] `BrokenReason`
+- [ ] `LiquidityFlag`
+- [ ] `AiqStrategy`
+- [ ] `OrderRefNum` (nasdq-assigned)
+- [ ] `MatchNumber` Assigned by exchange to identify trade
+
+- [ ] `parse` and `options` methods
+
+- [x] `SystemEvent`
+- [x] `OrderAccepted`
+- [x] `OrderReplaced`
+- [x] `OrderCanceled`
+- [x] `AiqCanceled`
+- [x] `OrderExecuted`
+- [x] `BrokenTrade`
+- [x] `Rejected`
+- [x] `CancelPending`
+- [x] `CancelReject`
+- [x] `OrderPriorityUpdate`
+- [x] `OrderModified`
+- [x] `OrderRestated`
+- [x] `MassCancelResponse`
+- [x] `DisableOrderEntryResponse`
+- [x] `EnableOrderEntryResponse`
+- [x] `AccountQueryResponse`
 

@@ -1,24 +1,41 @@
 
-use serde::{ Deserialize, Serialize };
-use crate::error::OuchError;
+use chrono::NaiveTime;
 
+use serde::{ Deserialize, Serialize };
+use crate::{
+    error::OuchError,
+    types::EventCode,
+    helper::{
+        nanosec_from_midnight,
+        u64_from_be_bytes,
+    },
+};
+
+
+///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct SystemEvent {
-    pub event_code: char,
+    pub timestamp: NaiveTime,
+    pub event_code: EventCode,
 }
 
 impl SystemEvent {
 
     pub(super) fn parse(data: &[u8]) -> Result<SystemEvent, OuchError> {
 
-        if data.len() < 1 {
-            return Err(OuchError::Parse("SystemEvent".to_string()))
+        if data.len() != 9 {
+            return Err(BadElementError::WrongSize(
+                "SystemEvent".to_string(), 9, data.len()
+            ).into())
         }
-        
-        Ok(SystemEvent {
-            // TODO Enum
-            event_code: data[0] as char,
-        })
+
+        let ts = u64_from_be_bytes(&data[0..9])?;
+        let timestamp = nanosec_from_midnight(ts);
+
+        let ec = &data[9];
+        let event_code = EventCode::parse(ec)?;
+
+        Ok(SystemEvent { timstamp, event_code })
     }
 
 }
