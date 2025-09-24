@@ -1,0 +1,39 @@
+
+use crate::error::BadElementError;
+
+///
+pub enum RestateReason {
+
+    /// Refresh of display (on an order with reserves)
+    Refresh,
+
+    /// Update of displayed price
+    Update
+}
+
+impl RestateReason {
+
+    pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
+
+        use Self::*;
+        match data {
+            b'R' => Ok(Refresh),
+            b'P' => Ok(Update),
+
+            _ => BadElementError::InvalidEnum(
+                data as char, 
+                "OrderState".to_string()
+            )
+        }
+    }
+
+    pub(crate) fn encode(&self) -> u8 {
+        
+        use Self::*;
+        match self {
+            Refresh => b'R',
+            Update  => b'P',
+        }
+    }
+
+}

@@ -20,11 +20,9 @@
 ### For `OptionalAppendage`
 - [ ] Options need types (e.g., `TagValue` and enums)
 - [ ] Strong types for optional fields (there are many)
+- [ ] `options` methods for messages
 
 ### For `OuchResponse`
-- [ ] `RestateReason` type overlooked
-
-- [x] `parse`
-- [ ] `options` methods
+- [x] `RestateReason` type overlooked
 - [ ] Comments & documentation (Copy from protocol PDF)
 
