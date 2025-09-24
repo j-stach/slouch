@@ -20,7 +20,6 @@ use crate::types::{
     Capacity,
     CrossType,
     OrderState,
-    OrderRefNum,
     OrderToken
 };
 
@@ -32,7 +31,7 @@ pub struct OrderPriorityUpdate {
     pub user_ref_num: UserRefNum,
     pub price: Price,
     pub display: Display,
-    pub order_ref_num: OrderRefNum,
+    pub order_ref_num: u64,
     optional_appendage: OptionalAppendage
 }
 

@@ -37,7 +37,7 @@ pub struct OrderExecuted {
     pub quantity: u32,
     pub price: Price,
     pub liquidity_flag: LiquidityFlag,
-    pub match_number: MatchNumber,
+    pub match_number: u64,
     optional_appendage: OptionalAppendage
 }
 

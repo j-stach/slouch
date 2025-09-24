@@ -21,7 +21,7 @@ use crate::types::{
     Capacity,
     CrossType,
     OrderState,
-    OrderRefNum,
+    RejectedReason,
     OrderToken
 };
 
@@ -31,7 +31,7 @@ use crate::types::{
 pub struct OrderRejected {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
-    pub rejected_reason: BrokenReason,
+    pub rejected_reason: RejectedReason,
     pub order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }

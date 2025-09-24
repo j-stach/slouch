@@ -4,6 +4,7 @@
 - [ ] Unit testing
 - [ ] `README.md` minimal examples
 - [ ] `async` and `log` features
+- [ ] Add citation to dev resources for [AIQ Strategy values](https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8)
 
 
 ## TODO for library:
@@ -13,39 +14,17 @@
 
 ## TODO for Messages
 ### For `OuchRequest`
-- [ ] Comments & documentation
+- [ ] Comments & documentation (Copy from protocol PDF)
 
 ### For `OptionalAppendage`
 - [ ] Options need types (e.g., `TagValue` and enums)
 - [ ] Strong types for optional fields (there are many)
 
 ### For `OuchResponse`
-- [x] `Timestamp` type?
-- [x] `EventCode` type
-- [ ] `CancelReason`
-- [ ] `BrokenReason`
-- [ ] `LiquidityFlag`
-- [ ] `AiqStrategy`
-- [ ] `OrderRefNum` (nasdq-assigned)
-- [ ] `MatchNumber` Assigned by exchange to identify trade
+- [x] `RejectReason`
+- [x] `u16_from_be_bytes` helper function
+- [x] `AiqStrategy`
 
 - [ ] `parse` and `options` methods
-
-- [x] `SystemEvent`
-- [x] `OrderAccepted`
-- [x] `OrderReplaced`
-- [x] `OrderCanceled`
-- [x] `AiqCanceled`
-- [x] `OrderExecuted`
-- [x] `BrokenTrade`
-- [x] `Rejected`
-- [x] `CancelPending`
-- [x] `CancelReject`
-- [x] `OrderPriorityUpdate`
-- [x] `OrderModified`
-- [x] `OrderRestated`
-- [x] `MassCancelResponse`
-- [x] `DisableOrderEntryResponse`
-- [x] `EnableOrderEntryResponse`
-- [x] `AccountQueryResponse`
+- [ ] Comments & documentation (Copy from protocol PDF)
 

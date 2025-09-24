@@ -51,6 +51,15 @@ pub(crate) fn u32_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
     }
 }
 
+pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
+
+    if let Ok(bytes) = data.try_into() {
+        Ok(u16::from_be_bytes(bytes))
+    } else {
+        Err(BadElementError::WrongSize("u16".to_string(), 2, data.len()))
+    }
+}
+
 pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
 
     let d = 10u64.pow(9);

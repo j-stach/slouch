@@ -33,7 +33,7 @@ use crate::types::{
 pub struct BrokenTrade {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
-    pub match_number: MatchNumber,
+    pub match_number: u64,
     pub broken_reason: BrokenReason,
     pub order_token: OrderToken,
     optional_appendage: OptionalAppendage

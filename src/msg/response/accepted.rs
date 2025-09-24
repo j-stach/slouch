@@ -36,7 +36,7 @@ pub struct OrderAccepted {
     pub price: Price,
     pub time_in_force: TimeInForce,
     pub display: Display,
-    pub order_ref_num: OrderRefNum,
+    pub order_ref_num: u64,
     pub capacity: Capacity,
     pub intermarket_sweep_eligibility: bool,
     pub cross_type: CrossType,
