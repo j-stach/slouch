@@ -12,6 +12,10 @@ mod user_ref_num;
 
 mod event_code;
 mod order_state;
+mod aiq_strategy;
+mod cancel_reason;
+mod broken_reason;
+mod reject_reason;
 
 pub use self::{
     firm_id::FirmId;
@@ -28,5 +32,8 @@ pub use self::{
     event_code::EventCode,
     order_state::OrderState,
     cancel_reason::CancelReason,
+    broken_reason::BrokenReason,
+    reject_reason::RejectedReason,
+    aiq_strategy::AiqStrategy,
 }
 
