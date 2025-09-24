@@ -4,6 +4,7 @@ use crate::{
     helper::u16_from_be_bytes
 };
 
+
 ///
 pub enum RejectReason {
 
@@ -95,12 +96,9 @@ pub enum RejectReason {
 
 impl RejectReason {
 
-    // TODO: Need `u16_from_be_bytes` helper function
-    // This will need 2 bytes instead of one
-    // Either convert here, or convert before calling
-    pub(crate) fn parse(data: &[u8; 2]) -> Result<Self, BadElementError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
 
-        let data = u16_from_be_bytes(data);
+        let data = u16_from_be_bytes(data)?;
 
         use Self::*;
         match data {
@@ -141,12 +139,10 @@ impl RejectReason {
         }
     }
 
-    // This will need 2 bytes instead of one
     pub(crate) fn encode(&self) -> [u8; 2] {
         
         use Self::*;
-
-        match self {
+        let data = match self {
 
              Test                          => 0x0018,
              LateLocTooAggressive          => 0x0019,
@@ -176,8 +172,9 @@ impl RejectReason {
              MaxQuantityExceeded           => 0x0031,
              ShoStateNotAvailable          => 0x0032,
              IpoMarketBuyNotAllowed        => 0x0033,
-
         }
+
+        data.to_be_bytes()
     }
 
 }
