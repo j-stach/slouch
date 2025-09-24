@@ -23,6 +23,7 @@ use crate::types::{
     CrossType,
     OrderState,
     CancelReason,
+    AiqStrategy,
     OrderToken
 };
 
@@ -39,9 +40,24 @@ pub struct OrderCanceled {
 
 impl OrderCanceled {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 19 {
+            return Err(OuchError::Parse("OrderCanceled".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            quantity: u32_from_be_bytes(&data[12..=15])?, 
+            reason: CancelReason::parse(data[16])?;
+            optional_appendage: OptionalAppendage::parse(&data[17..])?
+        })
     }
 
 }
@@ -70,9 +86,28 @@ pub struct AiqCanceled {
 
 impl AiqCanceled {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 33 {
+            return Err(OuchError::Parse("AiqCanceled".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            decrement_shares: u32_from_be_bytes(&data[12..=15])?, 
+            reason: CancelReason::parse(data[16])?,
+            quantity_prevented: u32_from_be_bytes(&data[17..=20])?, 
+            execution_price: Price::parse(&data[21..=28])?,
+            liquidity_flag: LiquidityFlag::parse(&data[29])?,
+            aiq_strategy: AiqStrategy::parse(&data[30])?,
+            optional_appendage: OptionalAppendage::parse(&data[31..])?
+        })
     }
 
 }
@@ -88,9 +123,22 @@ pub struct CancelPending {
 
 impl CancelPending {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 14 {
+            return Err(OuchError::Parse("CancelPending".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            optional_appendage: OptionalAppendage::parse(&data[12..])?
+        })
     }
 
 }
@@ -106,9 +154,22 @@ pub struct CancelRejected {
 
 impl CancelRejected {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 14 {
+            return Err(OuchError::Parse("CancelRejected".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            optional_appendage: OptionalAppendage::parse(&data[12..])?
+        })
     }
 
 }
@@ -126,9 +187,24 @@ pub struct MassCancelResponse {
 
 impl MassCancelResponse {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 26 {
+            return Err(OuchError::Parse("MassCancelResponse".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            firm: FirmId::parse(&data[12..=15])?,
+            symbol: StockSymbol::parse(&data[16..=23])?,
+            optional_appendage: OptionalAppendage::parse(&data[24..])?
+        })
     }
 
 }

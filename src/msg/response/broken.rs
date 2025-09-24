@@ -6,7 +6,6 @@ use crate::{
     error::OuchError,
     options::OptionalAppendage,
     helper::{ 
-        u32_from_be_bytes, 
         u64_from_be_bytes,
         nanosec_from_midnight
     }
@@ -14,16 +13,8 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum,
-    Side,
-    StockSymbol, 
-    Price,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
-    OrderRefNum,
     MatchNumber,
+    BrokenReason,
     OrderToken
 };
 
@@ -41,9 +32,25 @@ pub struct BrokenTrade {
 
 impl BrokenTrade {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo!{}
+        if data.len() < 38 {
+            return Err(OuchError::Parse("BrokenTrade".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            match_number: u64_from_be_bytes(&data[12..=19])?,
+            broken_reason: BrokenReason::parse(&data[20])?;
+            order_token: OrderToken::parse(&data[21..=35])?,
+            optional_appendage: OptionalAppendage::parse(&data[36..])?
+        })
     }
 
 }

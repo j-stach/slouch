@@ -48,47 +48,38 @@ pub struct OrderReplaced {
 
 impl OrderReplaced {
 
-    // TODO
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        /*
-        if data.len() < 39 {
-            return Err(OuchError::Parse("OrderAccepted".to_string()))
+        if data.len() < 67 {
+            return Err(OuchError::Parse("OrderReplaced".to_string()))
         }
 
-        let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14])
-                .trim_end()
-                .to_string()
-        )?;
-
-        let ts = u64_from_be_bytes(&data[14..22])?;
-        let timestamp = nanosec_from_midnight(ts);
-
-        let shares = u32_from_be_bytes(&data[22..26])?;
-
-        let stock_symbol = StockSymbol::new(
-            String::from_utf8_lossy(&data[26..34])
-                .trim_end()
-                .to_string()
-        )?;
-
-        let price = u32_from_be_bytes(&data[34..38])?;
-
-        // TODO Enum
-        let buy_sell_indicator = data[38] as char;
-
-        Ok(OrderAccepted {
-            order_token,
-            timestamp,
-            shares,
-            stock_symbol,
-            price,
-            buy_sell_indicator,
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..8])?;
+                nanosec_from_midnight(ts)
+            },
+            old_user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            new_user_ref_num: UserRefNum::parse(&data[12..=15])?,
+            side: Side::parse(data[16])?, 
+            quantity: u32_from_be_bytes(&data[17..=20])?, 
+            symbol: StockSymbol::parse(&data[21..=28])?,
+            price: Price::parse(&data[29..=36])?,
+            time_in_force: TimeInForce::parse(data[37])?,
+            display: Display::parse(data[38])?,
+            order_ref_num: u64_from_be_bytes(&data[39..=46])?,
+            capacity: Capacity::parse(data[47])?,
+            intermarket_sweep_eligibility: match data[48] {
+                b'Y' => true,
+                b'N' => false,
+            },
+            cross_type: CrossType::parse(&data[49])?,
+            order_state: OrderState::parse(&data[50])?,
+            order_token: OrderToken::parse(&data[51..=64])?,
+            optional_appendage: OptionalAppendage::parse(&data[65..])?
         })
-        */
-
-        todo![]
     }
 
 }

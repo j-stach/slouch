@@ -37,10 +37,24 @@ pub struct OrderModified {
 
 impl OrderModified {
 
-    // TODO
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo![]
+        if data.len() < 20 {
+            return Err(OuchError::Parse("OrderModified".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            side: Side::parse(data[12])?, 
+            quantity: u32_from_be_bytes(&data[13..=16])?, 
+            optional_appendage: OptionalAppendage::parse(&data[18..])?
+        })
     }
 
 }

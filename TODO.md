@@ -8,6 +8,7 @@
 
 
 ## TODO for library:
+- [ ] Debug helpers
 
 ### For client:
 - [ ] Finish send/recv for `OuchClient`
@@ -21,10 +22,9 @@
 - [ ] Strong types for optional fields (there are many)
 
 ### For `OuchResponse`
-- [x] `RejectReason`
-- [x] `u16_from_be_bytes` helper function
-- [x] `AiqStrategy`
+- [ ] `RestateReason` type overlooked
 
-- [ ] `parse` and `options` methods
+- [x] `parse`
+- [ ] `options` methods
 - [ ] Comments & documentation (Copy from protocol PDF)
 

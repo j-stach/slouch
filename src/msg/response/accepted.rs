@@ -47,47 +47,38 @@ pub struct OrderAccepted {
 
 impl OrderAccepted {
 
-    // TODO
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        /*
-        if data.len() < 39 {
+        if data.len() < 63 {
             return Err(OuchError::Parse("OrderAccepted".to_string()))
         }
 
-        let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14])
-                .trim_end()
-                .to_string()
-        )?;
-
-        let ts = u64_from_be_bytes(&data[14..22])?;
-        let timestamp = nanosec_from_midnight(ts);
-
-        let shares = u32_from_be_bytes(&data[22..26])?;
-
-        let stock_symbol = StockSymbol::new(
-            String::from_utf8_lossy(&data[26..34])
-                .trim_end()
-                .to_string()
-        )?;
-
-        let price = u32_from_be_bytes(&data[34..38])?;
-
-        // TODO Enum
-        let buy_sell_indicator = data[38] as char;
-
-        Ok(OrderAccepted {
-            order_token,
-            timestamp,
-            shares,
-            stock_symbol,
-            price,
-            buy_sell_indicator,
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            side: Side::parse(data[12])?, 
+            quantity: u32_from_be_bytes(&data[13..=16])?, 
+            symbol: StockSymbol::parse(&data[17..=24])?,
+            price: Price::parse(&data[25..=32])?,
+            time_in_force: TimeInForce::parse(data[33])?,
+            display: Display::parse(data[34])?,
+            order_ref_num: u64_from_be_bytes(&data[35..=42])?,
+            capacity: Capacity::parse(data[43])?,
+            intermarket_sweep_eligibility: match data[44] {
+                b'Y' => true,
+                b'N' => false,
+            },
+            cross_type: CrossType::parse(&data[45])?,
+            order_state: OrderState::parse(&data[46])?,
+            order_token: OrderToken::parse(&data[47..=60])?,
+            optional_appendage: OptionalAppendage::parse(&data[61..])?
         })
-        */
-
-        todo![]
     }
 
 }
+

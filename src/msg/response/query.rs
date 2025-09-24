@@ -5,26 +5,11 @@ use chrono::NaiveTime;
 
 use crate::{
     error::OuchError,
-    helper::{ 
-        u32_from_be_bytes, 
+    helper::{
         u64_from_be_bytes,
         nanosec_from_midnight
-    }
-};
-
-use crate::types::{ 
-    UserRefNum,
-    Side,
-    StockSymbol, 
-    Price,
-    TimeInForce,
-    FirmId,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
-    OrderRefNum,
-    OrderToken
+    },
+    types::UserRefNum,
 };
 
 
@@ -38,10 +23,22 @@ pub struct AccountQueryResponse {
 
 impl AccountQueryResponse {
 
-    // TODO
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        todo![]
+        if data.len() < 14 {
+            return Err(OuchError::Parse("AccountQueryResponse".to_string()))
+        }
+
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            next_user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            optional_appendage: OptionalAppendage::parse(&data[12..])?
+        })
     }
 
 }

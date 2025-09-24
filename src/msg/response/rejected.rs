@@ -38,28 +38,24 @@ pub struct OrderRejected {
 
 impl OrderRejected {
 
+    // Data contains package without type tag, 
+    // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        /*
-        if data.len() < 15 {
+        if data.len() < 30 {
             return Err(OuchError::Parse("OrderRejected".to_string()))
         }
-        
-        let order_token = OrderToken::new(
-            String::from_utf8_lossy(&data[0..14])
-                .trim_end()
-                .to_string()
-        )?;
 
-        // TODO Enum
-        let reason = data[14] as char;
-
-        Ok(OrderRejected {
-            order_token,
-            reason
+        Ok(Self {
+            timestamp: {
+                let ts = u64_from_be_bytes(&data[0..=7])?;
+                nanosec_from_midnight(ts)
+            },
+            user_ref_num: UserRefNum::parse(&data[8..=11])?,
+            rejected_reason: RejectedReason::parse(&data[12..=13])?,
+            order_token: OrderToken::parse(&data[14..=27])?,
+            optional_appendage: OptionalAppendage::parse(&data[28..])?
         })
-        */
-        todo!{}
     }
 
 }

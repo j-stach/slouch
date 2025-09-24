@@ -66,7 +66,7 @@ pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
     let secs = (time / d) as u32;
     let nano = (time % d) as u32;
 
-    // DEBUG: Is this safe to expect?
+    // TODO: DEBUG: Is this safe to expect?
     NaiveTime::from_num_seconds_from_midnight_opt(secs, nano)
         .expect("Timestamp is a valid time")
 } 
