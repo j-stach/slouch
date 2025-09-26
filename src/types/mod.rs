@@ -17,6 +17,12 @@ mod cancel_reason;
 mod broken_reason;
 mod reject_reason;
 
+mod price_type;
+mod customer_type;
+mod bbo_weight_indicator;
+mod handle_inst;
+mod signed_price;
+
 pub use self::{
     firm_id::FirmId;
     stock_symbol::StockSymbol,
@@ -35,5 +41,11 @@ pub use self::{
     broken_reason::BrokenReason,
     reject_reason::RejectedReason,
     aiq_strategy::AiqStrategy,
+
+    price_type::PriceType,
+    customer_type::CustomerType,
+    bbo_weight_indicator::BboWeightIndicator,
+    handle_inst::HandleInst,
+    signed_price::SignedPrice,
 }
 

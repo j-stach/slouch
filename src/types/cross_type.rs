@@ -4,6 +4,7 @@ use crate::error::BadElementError;
 /// 
 pub enum CrossType {
 
+    ///
     ContinuousMarket,
 
     /// NASDAQ Only
@@ -40,6 +41,7 @@ impl CrossType {
             Halt             => b'H',
             Supplemental     => b'S',
             Retail           => b'R',
+            ExtendedLife     => b'E',
             AfterHoursClose  => b'A',
         }
     }
@@ -54,6 +56,7 @@ impl CrossType {
             b'H' => Ok(Halt),
             b'S' => Ok(Supplemental),
             b'R' => Ok(Retail),
+            b'E' => Ok(ExtendedLife),
             b'A' => Ok(AfterHoursClose),
             _ => BadElementError::InvalidEnum(
                 data as char, 
