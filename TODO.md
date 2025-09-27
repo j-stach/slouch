@@ -4,9 +4,9 @@
 - [ ] Test OUCH compliance (via emulator API?)
 - [ ] Unit testing
 - [ ] Control `pub` for clean API
-- [ ] `README.md` minimal examples
+- [ ] `README.md` with minimal examples
 - [ ] `async` and `log` features
-- [ ] Add citation to dev resources for [AIQ Strategy values](https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8)
+- [x] Add citation to dev resources for AIQ Strategy values
 
 
 ## TODO for library:
@@ -24,14 +24,11 @@
 - [ ] Check each message when adding options to ensure types accepted
 
 ### Strong types fixed
-- [ ] Double-check compliance for type quirks
+Double-check compliance for type quirks:
 - [ ] `Alpha` type and `ElapsedTime` type for compliance
 - [ ] Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields
 - [ ] `FirmId` check for capitalization
 - [ ] `UserRefNum` begins at 1, not 0
-- [x] `SignedPrice`
-- [x] `RouteId`
-- [x] `BrokerId`
 
 
