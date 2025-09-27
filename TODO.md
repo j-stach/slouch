@@ -27,14 +27,10 @@
 
 ### For `OptionalAppendage`
 #### Options need types 
-- [ ] `TagValue` and `OptionValue` combined as a single enum
-- [ ] `OptionalAppendage` must slice raw byte array using length-mark bytes 
+- [x] `TagValue` and `OptionValue` combined as a single enum
+- [x] `OptionalAppendage` must slice raw byte array using length-mark bytes 
 #### Strong types for optional fields (there are many)
-- [x] `PriceType`
 - [ ] `SignedPrice`
-- [x] `HandleInst`
-- [x] `BboWeightIndicator`
-- [x] `CustomerType`
 - [ ] `Route`
 - [ ] `Broker`
 
