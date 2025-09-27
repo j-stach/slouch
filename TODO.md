@@ -11,6 +11,7 @@
 
 ## TODO for library:
 - [ ] Debug helpers
+- [ ] `i32_from_be_bytes` and `u8_from_be_bytes` helpers
 - [ ] `BadElementError::InvalidEnum` needs to accept non-`char` values  
 
 ### For client:
@@ -18,20 +19,19 @@
 
 ## TODO for Messages
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [ ] `FirmId` check for capitalization
 - [ ] Macros for easy type and message creation
-- [ ] Some enums have a "None" == b' ' that is not listed
-- [ ] `Default` implemented for applicable fields
 - [ ] `options` methods for messages
 - [ ] Check each message when adding options to ensure types accepted
 
-### For `OptionalAppendage`
-#### Options need types 
-- [x] `TagValue` and `OptionValue` combined as a single enum
-- [x] `OptionalAppendage` must slice raw byte array using length-mark bytes 
-#### Strong types for optional fields (there are many)
-- [ ] `SignedPrice`
-- [ ] `Route`
-- [ ] `Broker`
+### Strong types fixed
+- [ ] Double-check compliance for type quirks
+- [ ] `Alpha` type and `ElapsedTime` type for compliance
+- [ ] Some enums have a "None" == b' ' that is not listed
+- [ ] `Default` implemented for applicable fields
+- [ ] `FirmId` check for capitalization
+- [ ] `UserRefNum` begins at 1, not 0
+- [x] `SignedPrice`
+- [x] `RouteId`
+- [x] `BrokerId`
 
 

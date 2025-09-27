@@ -15,9 +15,9 @@ pub(crate) fn check_string_compliance(
         );
     }
 
-    if !s.chars().all(|c| c.is_ascii()) {
+    if !s.chars().all(|c| c.is_ascii_alphanumeric() || c == ' ') {
         return Err(
-            BadElementError::NotAscii(name.to_string())
+            BadElementError::NotValidAscii(name.to_string())
         );
     }
 
@@ -25,6 +25,35 @@ pub(crate) fn check_string_compliance(
 
 }
 
+pub(crate) fn check_string_uppercase(
+    s: &str,
+    name: &str
+) -> Result<(), BadElementError> {
+    
+    if !s.chars().all(|c| c.is_ascii_uppercase()) {
+        return Err(
+            BadElementError::NotUppercaseAlpha(name.to_string())
+        );
+    }
+
+    Ok(())
+}
+
+pub(crate) fn check_string_alpha(
+    s: &str,
+    name: &str
+) -> Result<(), BadElementError> {
+    
+    if !s.chars().all(|c| c.is_ascii_alphabetic()) {
+        return Err(
+            BadElementError::NotAlpha(name.to_string())
+        );
+    }
+
+    Ok(())
+}
+
+// TODO: Debug (to_be_bytes?)
 pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
     let mut buf = vec![b' '; len];
     let bytes = s.as_bytes();

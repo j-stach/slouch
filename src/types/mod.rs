@@ -22,6 +22,8 @@ mod customer_type;
 mod bbo_weight_indicator;
 mod handle_inst;
 mod signed_price;
+mod broker_id;
+mod route_id;
 
 pub use self::{
     firm_id::FirmId;
@@ -47,5 +49,7 @@ pub use self::{
     bbo_weight_indicator::BboWeightIndicator,
     handle_inst::HandleInst,
     signed_price::SignedPrice,
+    broker_id::BrokerId,
+    route_id::RouteId,
 }
 

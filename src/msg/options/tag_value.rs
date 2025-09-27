@@ -16,8 +16,8 @@ use crate::types::{
     SignedPrice,
     HandleInst,
     BboWeightIndicator,
-    Route,
-    Broker,
+    RouteId,
+    BrokerId,
     Side
 };
 
@@ -70,7 +70,7 @@ pub enum TagValue {
 
     ///
     // TODO: Send email to ask if there are any restrictions to this.
-    Route(Route),
+    Route(RouteId),
 
     /// Seconds to live. 
     /// Must be less than 86400 (number of seconds in a day).
@@ -103,7 +103,7 @@ pub enum TagValue {
 
     /// Broker code from which the locate has been acquired 
     /// for short sale orders.
-    LocateBroker(Broker),
+    LocateBroker(BrokerId),
 
     /// 
     Side(Side),
