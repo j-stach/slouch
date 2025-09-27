@@ -8,14 +8,15 @@ use crate::{
 /// Unsigned number used to differentiate requests.
 /// These are day-unique and must be strictly increasing.
 /// The `OuchClient` from this crate will automatically increment 
-/// the `UserRefNum` for each new request.
+/// the `UserRefNum` for each request that requires a unique number.
 pub struct UserRefNum(u32);
 
 impl UserRefNum {
 
     /// Fresh number to start the day.
+    /// UserRefNum begins at 1.
     pub fn new() -> Self {
-        UserRefNum(0u32)
+        UserRefNum(1u32)
     }
 
     pub(crate) fn encode(&self) -> Vec<u8> {
