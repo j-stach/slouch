@@ -20,8 +20,9 @@ impl EventCode {
         match data {
             b'S' => Ok(StartOfDay),
             b'E' => Ok(EndOfDay),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "EventCode".to_string()
             )
         }

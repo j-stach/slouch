@@ -32,7 +32,7 @@ impl AiqStrategy {
             b'y' => Ok(DecrementBothNoDetailsOrgId),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "AiqStrategy".to_string()
             )
         }

@@ -40,8 +40,9 @@ impl FirmId {
         encode_fixed_str(&*self, 4)
     }
 
+    // Assumes the strings from NASDAQ are compliant.
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        ascii_from_utf8(data)
+        Ok(Self(ascii_from_utf8(data)?))
     }
 }
 

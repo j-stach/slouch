@@ -27,8 +27,9 @@ impl Display {
             b'Y' => Ok(Visible),
             b'N' => Ok(Hidden),
             b'A' => Ok(Attributable),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "Display".to_string()
             )
         }

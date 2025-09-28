@@ -31,8 +31,9 @@ impl Capacity {
             b'P' => Ok(Principal),
             b'R' => Ok(Riskless),
             b'O' => Ok(Other),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "Capacity".to_string()
             )
         }

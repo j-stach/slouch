@@ -21,7 +21,7 @@ impl CustomerType {
             b'N' => Ok(NotRetail),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "CustomerType".to_string()
             )
         }

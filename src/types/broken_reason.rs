@@ -28,8 +28,9 @@ impl BrokenReason {
             b'C' => Ok(Consent),
             b'S' => Ok(Supervisory),
             b'X' => Ok(External),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "BrokenReason".to_string()
             )
         }

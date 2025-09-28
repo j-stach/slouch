@@ -76,7 +76,7 @@ impl BrokenReason {
             b'e' => Ok(ExceedsAllowableShares),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "CancelReason".to_string()
             )
         }

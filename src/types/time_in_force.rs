@@ -39,8 +39,9 @@ impl TimeInForce {
             b'5' => GTX,
             b'6' => GTT,
             b'E' => E,
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "TimeInForce".to_string()
             )
         }

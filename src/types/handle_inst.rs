@@ -41,7 +41,7 @@ impl HandleInst {
             b' ' => Ok(NoInstructions),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "HandleInst".to_string()
             )
         }

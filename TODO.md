@@ -7,13 +7,15 @@
 - [ ] `async` and `log` features
 
 ### Contact dev team for advice on odd types:
-- [ ] `RouteId`, `BrokerId`: Any restrictions?
-- [ ] `SignedPrice`: Any bounds?
+- `RouteId`, `BrokerId`: Any restrictions?
+- `SignedPrice`: Any bounds?
+- Some enums (e.g., `LiquidityFlag`) contain numbers despite labeled as "Alpha"
+- Is "m = midpoint" a variant for `PriceType`?
 
 
 ## TODO for library:
-- [x] `i32_from_be_bytes` helpers
-- [ ] `BadElementError::InvalidEnum` needs to accept non-`char` values  
+- [x] `BadElementError::InvalidEnum` needs to accept non-`char` values  
+- [x] `InvalidEnum` changed to `String`, `String` for all types
 
 ### Client:
 - [ ] Finish send/recv for `OuchClient`
@@ -42,4 +44,5 @@ Double-check compliance for type quirks:
 - [ ] Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields
 - [ ] `ElapsedTime` type
+- [x] Fix `StockSymbol` a la firm id
 

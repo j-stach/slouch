@@ -58,8 +58,9 @@ impl CrossType {
             b'R' => Ok(Retail),
             b'E' => Ok(ExtendedLife),
             b'A' => Ok(AfterHoursClose),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "CrossType".to_string()
             )
         }

@@ -40,7 +40,7 @@ impl PriceType {
             b'm' => Ok(Midpoint),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "PriceType".to_string()
             )
         }

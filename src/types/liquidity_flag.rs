@@ -118,7 +118,7 @@ impl LiquidityFlag {
             b'1' => Ok(RpiNonRpii),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "LiquidityFlag".to_string()
             )
         }

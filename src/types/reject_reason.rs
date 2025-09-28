@@ -133,7 +133,7 @@ impl RejectReason {
             0x0033 => Ok(IpoMarketBuyNotAllowed),
 
             _ => BadElementError::InvalidEnum(
-                data as char, //TODO: as hexidecimal (2 bytes)
+                format!("{:#x}", data),
                 "RejectReason".to_string()
             )
         }

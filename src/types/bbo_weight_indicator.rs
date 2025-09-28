@@ -42,7 +42,7 @@ impl BboWeightIndicator {
             b' ' => Ok(Unspecified),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "BboWeightIndicator".to_string()
             )
         }

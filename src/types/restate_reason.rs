@@ -21,7 +21,7 @@ impl RestateReason {
             b'P' => Ok(Update),
 
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "OrderState".to_string()
             )
         }

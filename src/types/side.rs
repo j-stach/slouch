@@ -30,8 +30,9 @@ impl Side {
             b'S' => Ok(Sell),
             b'T' => Ok(SellShort),
             b'E' => Ok(SellShortExempt),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "Side".to_string()
             )
         }

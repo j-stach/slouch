@@ -19,8 +19,9 @@ impl EventCode {
         match data {
             b'L' => Ok(Live),
             b'D' => Ok(Dead),
+
             _ => BadElementError::InvalidEnum(
-                data as char, 
+                (data as char).to_string(), 
                 "OrderState".to_string()
             )
         }
