@@ -12,8 +12,7 @@
 
 
 ## TODO for library:
-- [x] Debug helpers, consolidate where possible
-- [ ] `i32_from_be_bytes` and `u8_from_be_bytes` helpers
+- [x] `i32_from_be_bytes` helpers
 - [ ] `BadElementError::InvalidEnum` needs to accept non-`char` values  
 
 ### Client:
@@ -43,13 +42,4 @@ Double-check compliance for type quirks:
 - [ ] Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields
 - [ ] `ElapsedTime` type
-- [x] `parse` for `RouteId`, `FirmId`, `BrokerId`
-
-#### Alpha
-- [x] Re-do helper functions for string compliance
-- [x] `Alpha` types must contain upper & lowercase letters
-- [x] Fixed-width fields are padded to the right with spaces
-(Except for `FirmId`, which must contain uppercase only, no spaces)
-- [x] `Alpha`, `char`, and `u8` do not need BE conversion (duh-ble check)
-
 

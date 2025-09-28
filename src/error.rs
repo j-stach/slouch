@@ -35,6 +35,7 @@ pub enum BadElementError {
     InvalidAscii(#[from] std::string::FromUtf8Error),
 
     #[error("{0} is an invalid option for {1}")]
+    // TODO: Change this to support hex, char, and string? for {0}
     InvalidEnum(char, String),
 
     #[error("Invalid value for {0}")]
@@ -42,7 +43,6 @@ pub enum BadElementError {
 
     #[error("Invalid option tag for {0}")]
     InvalidOption(String),
-
 }
 
 

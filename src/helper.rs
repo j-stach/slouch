@@ -85,6 +85,16 @@ pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
     }
 }
 
+// Simplifies conversion.
+pub(crate) fn i32_from_be_bytes(data: &[u8]) -> Result<i32, BadElementError> {
+
+    if let Ok(bytes) = data.try_into() {
+        Ok(i32::from_be_bytes(bytes))
+    } else {
+        Err(BadElementError::WrongSize("i32".to_string(), 4, data.len()))
+    }
+}
+
 // Convert from encoded timestamp to Rust-friendly type.
 pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
 
@@ -97,3 +107,4 @@ pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
     NaiveTime::from_num_seconds_from_midnight_opt(secs, nano)
         .expect("Timestamp is a valid time")
 } 
+
