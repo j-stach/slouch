@@ -1,15 +1,18 @@
 
 ## TODO for crate:
-- [ ] Contact dev team for advice on odd types 
 - [ ] Test OUCH compliance (via emulator API?)
 - [ ] Unit testing
 - [ ] Control `pub` for clean API
 - [ ] `README.md` with minimal examples
 - [ ] `async` and `log` features
 
+### Contact dev team for advice on odd types:
+- [ ] `RouteId`, `BrokerId`: Any restrictions?
+- [ ] `SignedPrice`: Any bounds?
+
 
 ## TODO for library:
-- [ ] Debug helpers, consolidate where possible
+- [x] Debug helpers, consolidate where possible
 - [ ] `i32_from_be_bytes` and `u8_from_be_bytes` helpers
 - [ ] `BadElementError::InvalidEnum` needs to accept non-`char` values  
 
@@ -39,9 +42,14 @@ my_struct!{ field1: 0u32, field2: true};
 Double-check compliance for type quirks:
 - [ ] Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields
-- [ ] `Alpha` type to simplify string validation
 - [ ] `ElapsedTime` type
-- [x] `FirmId` check for capitalization
-- [x] `UserRefNum` begins at 1, not 0
+- [x] `parse` for `RouteId`, `FirmId`, `BrokerId`
+
+#### Alpha
+- [x] Re-do helper functions for string compliance
+- [x] `Alpha` types must contain upper & lowercase letters
+- [x] Fixed-width fields are padded to the right with spaces
+(Except for `FirmId`, which must contain uppercase only, no spaces)
+- [x] `Alpha`, `char`, and `u8` do not need BE conversion (duh-ble check)
 
 

@@ -1,11 +1,11 @@
 
+use std::fmt;
 use derive_more::{ Deref, DerefMut };
 use serde::{ Deserialize, Serialize };
 
 use crate::{ 
     helper::{ 
-        check_string_compliance,
-        check_string_alpha,
+        check_alpha_compliance,
         encode_fixed_str 
     }, 
     error::BadElementError 
@@ -21,22 +21,25 @@ impl BrokerId {
     pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
-        check_string_compliance(s, 4, "BrokerId")?;
-        check_string_alpha(s, "BrokerId")?;
+        check_alpha_compliance(s, 4, "BrokerId")?;
 
-        Ok(FirmId(s.to_string()))
+        Ok(BrokerId(s.to_string()))
     }
 
-    /// BrokerId should have its length checked when it is created.
-    /// This method will encode it into a fixed length of 4 bytes.
+    // BrokerId should have its length checked when it is created.
+    // This method will encode it into a fixed length of 4 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 4)
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
+        ascii_from_utf8(data)
+    }
+}
 
-        // TODO
-        todo!{}
+impl fmt::Display for BrokerId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
     }
 }
 

@@ -25,14 +25,14 @@ pub enum BadElementError {
     #[error("{0} should be {1} bytes, found {2}")]
     WrongSize(String, usize, usize),
 
-    #[error("{0} is not alphanumeric ASCII (or space)")]
-    NotValidAscii(String),
-
     #[error("{0} is not uppercase alphabetic ASCII")]
     NotUppercaseAlpha(String),
 
-    #[error("{0} is not alphabetic ASCII (or space)")]
+    #[error("{0} is not alphabetic ASCII")]
     NotAlpha(String),
+
+    #[error("Invalid string: {0}")]
+    InvalidAscii(#[from] std::string::FromUtf8Error),
 
     #[error("{0} is an invalid option for {1}")]
     InvalidEnum(char, String),

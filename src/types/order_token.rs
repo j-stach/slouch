@@ -4,7 +4,11 @@ use serde::{ Deserialize, Serialize };
 use derive_more::{ Deref, DerefMut };
 
 use crate::{
-    helper::{ check_string_compliance, encode_fixed_str },
+    helper::{ 
+        check_alpha_compliance, 
+        ascii_from_utf8,
+        encode_fixed_str 
+    },
     error::BadElementError
 };
 
@@ -20,7 +24,7 @@ impl OrderToken {
     pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
-        check_string_compliance(s, 14, "OrderToken")?;
+        check_alpha_compliance(s, 14, "OrderToken")?;
 
         Ok(OrderToken(s.to_string()))
     }
@@ -28,18 +32,15 @@ impl OrderToken {
     /// Get the OrderToken as a string.
     pub fn as_str(&self) -> &str { &*self }
 
-    /// OrderToken should have its length checked when it is created.
-    /// This method will encode it into a fixed length of 14 bytes.
+    // OrderToken should have its length checked when it is created.
+    // This method will encode it into a fixed length of 14 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {
         encode_fixed_str(&*self, 14)
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
-        
-        // TODO:
-        todo!{}
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
+        ascii_from_utf8(data)
     }
-
 }
 
 impl fmt::Display for OrderToken {

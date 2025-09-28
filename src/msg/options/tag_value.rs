@@ -131,21 +131,19 @@ impl TagValue {
             DiscretionPriceType(val)    => (10, val.encode()),
             DiscretionPegOffset(val)    => (11, val.encode()),
             PostOnly(val)               => (12, {
-                let data = match val {
-                    true => b'P'.to_be_bytes(),
-                    false => b'N'.to_be_bytes(),
-                };
-                vec![data]
+                vec![ match val {
+                    true => b'P',
+                    false => b'N',
+                }]
             }), 
             RandomReserves(val)         => (13, val.to_be_bytes()),
             Route(val)                  => (14, val.encode()),
             ExpireTime(val)             => (15, val.to_be_bytes()), //TODO
             TradeNow(val)               => (16, {
-                let data = match val {
-                    true => b'Y'.to_be_bytes(),
-                    false => b'N'.to_be_bytes(),
-                };
-                vec![data]
+                vec![ match val {
+                    true => b'Y',
+                    false => b'N',
+                }]
             }), 
             HandleInst(val)             => (17, val.encode()),
             BboWeightIndicator(val)     => (18, val.encode()),
@@ -153,11 +151,10 @@ impl TagValue {
             DisplayPrice(val)           => (23, val.encode()),
             GroupId(val)                => (24, val.to_be_bytes()),
             SharesLocated(val)          => (25, {
-                let data = match val {
-                    true => b'Y'.to_be_bytes(),
-                    false => b'N'.to_be_bytes(),
-                };
-                vec![data]
+                vec![ match val {
+                    true => b'Y',
+                    false => b'N',
+                }]
             }), 
             LocateBroker(val)           => (26, val.encode()),
             Side(val)                   => (27, val.encode()),
@@ -231,7 +228,7 @@ impl TagValue {
                 .map(Self::DiscretionPegOffset)),
 
             12 => {
-                let val = u8::from_be_bytes(payload);
+                let val = payload[0];
                 match val {
                     b'P' => Ok(true.map(Self::PostOnly)),
                     b'N' => Ok(false.map(Self::PostOnly)),
@@ -253,7 +250,7 @@ impl TagValue {
                 .map(Self::ExpireTime)),
 
             16 => {
-                let val = u8::from_be_bytes(payload);
+                let val = payload[0];
                 match val {
                     b'Y' => Ok(true.map(Self::TradeNow)),
                     b'N' => Ok(false.map(Self::TradeNow)),
@@ -281,7 +278,7 @@ impl TagValue {
                 .map(Self::GroupId)),
 
             25 => {
-                let val = u8::from_be_bytes(payload);
+                let val = payload[0];
                 match val {
                     b'Y' => Ok(true.map(Self::SharesLocated)),
                     b'N' => Ok(false.map(Self::SharesLocated)),

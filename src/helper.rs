@@ -1,31 +1,33 @@
 
 use chrono::NaiveTime;
-
 use crate::error::BadElementError;
 
-pub(crate) fn check_string_compliance(
+
+// `Alpha` fields may contain only upper- and lowercase letters,
+// and must fit within the alloted fixed length. 
+pub(crate) fn check_alpha_compliance(
     s: &str,
     len: usize,
     name: &str
 ) -> Result<(), BadElementError> {
 
-    if s.len() != len {
+    if s.len() > len  {
         return Err(
             BadElementError::WrongSize(name.to_string(), len, s.len())
         );
     }
 
-    if !s.chars().all(|c| c.is_ascii_alphanumeric() || c == ' ') {
+    if !s.chars().all(|c| c.is_ascii_alphabetical()) {
         return Err(
-            BadElementError::NotValidAscii(name.to_string())
+            BadElementError::NotAlpha(name.to_string())
         );
     }
 
     Ok(())
-
 }
 
-pub(crate) fn check_string_uppercase(
+// Used in fields where uppercase letters are required (e.g., `FirmId`)
+pub(crate) fn check_alpha_uppercase(
     s: &str,
     name: &str
 ) -> Result<(), BadElementError> {
@@ -39,21 +41,7 @@ pub(crate) fn check_string_uppercase(
     Ok(())
 }
 
-pub(crate) fn check_string_alpha(
-    s: &str,
-    name: &str
-) -> Result<(), BadElementError> {
-    
-    if !s.chars().all(|c| c.is_ascii_alphabetic()) {
-        return Err(
-            BadElementError::NotAlpha(name.to_string())
-        );
-    }
-
-    Ok(())
-}
-
-// TODO: Debug (to_be_bytes?)
+// Encode fixed string by padding to the right with spaces.
 pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
     let mut buf = vec![b' '; len];
     let bytes = s.as_bytes();
@@ -62,6 +50,12 @@ pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
     buf
 }
 
+// Simplifies conversion.
+pub(crate) fn ascii_from_uft8(data: &[u8]) -> Result<String, BadElementError> {
+    std::str::from_uft8(data)?.to_string()
+}
+
+// Simplifies conversion.
 pub(crate) fn u64_from_be_bytes(data: &[u8]) -> Result<u64, BadElementError> {
 
     if let Ok(bytes) = data.try_into() {
@@ -71,6 +65,7 @@ pub(crate) fn u64_from_be_bytes(data: &[u8]) -> Result<u64, BadElementError> {
     }
 }
 
+// Simplifies conversion.
 pub(crate) fn u32_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
 
     if let Ok(bytes) = data.try_into() {
@@ -80,6 +75,7 @@ pub(crate) fn u32_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
     }
 }
 
+// Simplifies conversion.
 pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
 
     if let Ok(bytes) = data.try_into() {
@@ -89,13 +85,15 @@ pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
     }
 }
 
+// Convert from encoded timestamp to Rust-friendly type.
 pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
 
     let d = 10u64.pow(9);
     let secs = (time / d) as u32;
     let nano = (time % d) as u32;
 
-    // TODO: DEBUG: Is this safe to expect?
+    // TODO: TBD: Is this safe to expect?
+    // It is the same convention used by OUCH, so it should not be invalid.
     NaiveTime::from_num_seconds_from_midnight_opt(secs, nano)
         .expect("Timestamp is a valid time")
 } 
