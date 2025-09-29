@@ -51,7 +51,7 @@ impl Price {
         price.to_be_bytes()
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
 
         let price = u64_from_be_bytes(&data)?;
         // OUCH price has four decimals implied.

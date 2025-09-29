@@ -11,11 +11,13 @@
 - `SignedPrice`: Any bounds?
 - Some enums (e.g., `LiquidityFlag`) contain numbers despite labeled as "Alpha"
 - Is "m = midpoint" a variant for `PriceType`?
+- Do the defaults (e.g. blank) for optional fields apply when they are 
+a non-optional part of a message? How best to handle these?
+- `ExpireTime` must be "<" or "<=" 86400?
 
 
 ## TODO for library:
-- [x] `BadElementError::InvalidEnum` needs to accept non-`char` values  
-- [x] `InvalidEnum` changed to `String`, `String` for all types
+- [ ] Debug compilation errors
 
 ### Client:
 - [ ] Finish send/recv for `OuchClient`
@@ -43,6 +45,5 @@ my_struct!{ field1: 0u32, field2: true};
 Double-check compliance for type quirks:
 - [ ] Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields
-- [ ] `ElapsedTime` type
-- [x] Fix `StockSymbol` a la firm id
+- [x] `ElapsedTime` type with bounds & sanity checks
 
