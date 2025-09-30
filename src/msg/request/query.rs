@@ -1,4 +1,9 @@
 
+use crate::msg::options::{
+    OptionalAppendage,
+    TagValue
+};
+
 ///
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AccountQuery {
@@ -16,6 +21,33 @@ impl AccountQuery {
         bytes.extend(self.optional_appendage.encode());
 
         bytes
+    }
+
+    /// Add a `TagValue` to the optional appendage.
+    /// Available options for this message type are:
+    /// - UserRefIndex
+    pub fn add_option(
+        &mut self, 
+        option: TagValue
+    ) -> Result<(), BadElementError> {
+
+        // Filter out unacceptable TagValue types.
+        match option {
+            TagValue::UserRefIndex(..) => { /* Continue */ },
+
+            _ => {
+                return BadElementError::InvalidOption(
+                    "AccountQuery".to_string()
+                )
+            },
+        }
+
+        Ok(self.optional_appendage.add(option))
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 } 
 

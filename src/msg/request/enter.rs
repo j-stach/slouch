@@ -12,7 +12,11 @@ use crate::types::{
     CrossType,
     OrderToken
 };
-use super::options::OptionalAppendage;
+
+use crate::msg::options::{ 
+    OptionalAppendage,
+    TagValue
+};
 
 
 /// Enter a new order.
@@ -27,7 +31,6 @@ pub struct EnterOrder {
     pub time_in_force: TimeInForce,
     pub display: Display,
     pub capacity: Capacity,
-    // true -> Y, false -> N
     pub intermarket_sweep_eligibility: bool,
     pub cross_type: CrossType,
     pub order_token: OrderToken,
@@ -36,24 +39,58 @@ pub struct EnterOrder {
 
 impl EnterOrder {
 
-    /// Add an optional field to the optional appendage.
+    /// Add a `TagValue` to the optional appendage.
+    /// Available options for this message type are:
+    /// - Firm
+    /// - MinQty
+    /// - CustomerType
+    /// - MaxFloor
+    /// - PriceType
+    /// - PegOffset
+    /// - DiscretionPrice
+    /// - DiscretionPriceType
+    /// - DiscretionPegOffset
+    /// - PostOnly
+    /// - RandomReserves
+    /// - ExpireTime
+    /// - TradeNow
+    /// - HandleInst
+    /// - GroupId
+    /// - SharesLocated
+    /// - LocateBroker
+    /// - UserRefIndex
     pub fn add_option(
         &mut self, 
-        option: OptionValue
+        option: TagValue
     ) -> Result<(), BadElementError> {
 
-        // Filter out unacceptable OptionValues for EnterOrder.
+        // Filter out unacceptable TagValue types.
+        use TagValue::*;
         match option {
-            Route ||
-            BboWeightIndicator ||
-            DisplayQuantity ||
-            DisplayPrice => {
+            Firm(..) ||
+            MinQty(..) ||
+            CustomerType(..) ||
+            MaxFloor(..) ||
+            PriceType(..) ||
+            PegOffset(..) ||
+            DiscretionPrice(..) ||
+            DiscretionPriceType(..) ||
+            DiscretionPegOffset(..) ||
+            PostOnly(..) ||
+            RandomReserves(..) ||
+            ExpireTime(..) ||
+            TradeNow(..) ||
+            HandleInst(..) ||
+            GroupId(..) ||
+            SharesLocated(..) ||
+            LocateBroker(..) ||
+            UserRefIndex(..) => { /* Continue */ },
+
+            _ => {
                 return BadElementError::InvalidOption(
                     "EnterOrder".to_string()
                 )
             },
-
-            _ => {/* Do nothing */},
         }
 
         Ok(self.optional_appendage.add(option))
@@ -80,6 +117,11 @@ impl EnterOrder {
         bytes.extend(self.optional_appendage.encode());
 
         bytes
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 } 
 

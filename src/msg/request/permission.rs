@@ -3,7 +3,11 @@ use crate::types::{
     UserRefNum,
     Firm
 };
-use crate::msg::options::OptionalAppendage;
+
+use crate::msg::options::{
+    OptionalAppendage,
+    TagValue
+};
 
 
 ///
@@ -27,6 +31,33 @@ impl DisableOrderEntry {
 
         bytes
     }
+
+    /// Add a `TagValue` to the optional appendage.
+    /// Available options for this message type are:
+    /// - UserRefIndex
+    pub fn add_option(
+        &mut self, 
+        option: TagValue
+    ) -> Result<(), BadElementError> {
+
+        // Filter out unacceptable TagValue types.
+        match option {
+            TagValue::UserRefIndex(..) => { /* Continue */ },
+
+            _ => {
+                return BadElementError::InvalidOption(
+                    "DisableOrderEntry".to_string()
+                )
+            },
+        }
+
+        Ok(self.optional_appendage.add(option))
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 } 
 
 ///
@@ -49,6 +80,33 @@ impl EnableOrderEntry {
         bytes.extend(self.optional_appendage.encode());
 
         bytes
+    }
+
+    /// Add a `TagValue` to the optional appendage.
+    /// Available options for this message type are:
+    /// - UserRefIndex
+    pub fn add_option(
+        &mut self, 
+        option: TagValue
+    ) -> Result<(), BadElementError> {
+
+        // Filter out unacceptable TagValue types.
+        match option {
+            TagValue::UserRefIndex(..) => { /* Continue */ },
+
+            _ => {
+                return BadElementError::InvalidOption(
+                    "EnableOrderEntry".to_string()
+                )
+            },
+        }
+
+        Ok(self.optional_appendage.add(option))
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 } 
 

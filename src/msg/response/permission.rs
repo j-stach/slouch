@@ -55,6 +55,11 @@ impl DisableOrderEntryResponse {
             optional_appendage: OptionalAppendage::parse(&data[16..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }
 
@@ -87,6 +92,11 @@ impl EnableOrderEntryResponse {
             firm: FirmId::parse(&data[12..=15])?,
             optional_appendage: OptionalAppendage::parse(&data[16..])?
         })
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 
 }

@@ -40,5 +40,10 @@ impl AccountQueryResponse {
             optional_appendage: OptionalAppendage::parse(&data[12..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }

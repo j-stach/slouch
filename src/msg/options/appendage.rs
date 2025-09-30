@@ -3,7 +3,7 @@ use super::TagValue;
 
 /// Contains optional fields that may be included in a Request/Response.
 #[derive(Debug, Serialize, Deserialize)]
-pub(crate) struct OptionalAppendage {
+pub struct OptionalAppendage {
     tag_values: Vec<TagValue>
 }
 
@@ -18,6 +18,9 @@ impl OptionalAppendage {
     // NOTE: Does not check for validity of an option for each message type:
     // filter valid options within the message's `add_option` method.
     pub(crate) fn add(tag_value: TagValue) {
+
+        // TODO: Check that option does not already exist in appendage
+        // If so, overwrite it
         self.tag_values.push(tag_value)
     }
 

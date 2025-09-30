@@ -109,6 +109,11 @@ impl AiqCanceled {
             optional_appendage: OptionalAppendage::parse(&data[31..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }
 
@@ -140,6 +145,11 @@ impl CancelPending {
             optional_appendage: OptionalAppendage::parse(&data[12..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }
 
@@ -170,6 +180,11 @@ impl CancelRejected {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             optional_appendage: OptionalAppendage::parse(&data[12..])?
         })
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 
 }
@@ -205,6 +220,11 @@ impl MassCancelResponse {
             symbol: StockSymbol::parse(&data[16..=23])?,
             optional_appendage: OptionalAppendage::parse(&data[24..])?
         })
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 
 }

@@ -57,6 +57,11 @@ impl OrderPriorityUpdate {
             optional_appendage: OptionalAppendage::parse(&data[29..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }
 
@@ -89,6 +94,11 @@ impl OrderRestated {
             reason: RestateReason::parse(&data[12])?,
             optional_appendage: OptionalAppendage::parse(&data[13..])?
         })
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
     }
 
 }

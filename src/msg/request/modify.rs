@@ -27,5 +27,37 @@ impl ModifyOrder {
 
         bytes
     }
+
+    /// Add a `TagValue` to the optional appendage.
+    /// Available options for this message type are:
+    /// - SharesLocated
+    /// - LocateBroker
+    /// - UserRefIndex
+    pub fn add_option(
+        &mut self, 
+        option: TagValue
+    ) -> Result<(), BadElementError> {
+
+        // Filter out unacceptable TagValue types.
+        use TagValue::*;
+        match option {
+            SharesLocated(..) ||
+            LocateBroker(..) ||
+            UserRefIndex(..) => { /* Continue */ },
+
+            _ => {
+                return BadElementError::InvalidOption(
+                    "ModifyOrder".to_string()
+                )
+            },
+        }
+
+        Ok(self.optional_appendage.add(option))
+    }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 } 
 
