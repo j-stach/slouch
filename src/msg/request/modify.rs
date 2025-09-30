@@ -6,7 +6,7 @@ use crate::types::{
 use crate::msg::options::OptionalAppendage;
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct ModifyOrder {
     pub user_ref_num: UserRefNum,
     pub side: Side,

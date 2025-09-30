@@ -1,7 +1,5 @@
 
 use std::fmt;
-use derive_more::{ Deref, DerefMut };
-use serde::{ Deserialize, Serialize };
 
 use crate::{ 
     helper::{ 
@@ -12,7 +10,7 @@ use crate::{
 };
 
 /// Strong type for broker IDs that ensures protocol compliance.
-#[derive(Debug, Clone, Deref, DerefMut, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrokerId(String);
 
 impl BrokerId {

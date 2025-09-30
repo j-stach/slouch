@@ -1,6 +1,4 @@
 
-// query::AccountQueryResponse
-
 use chrono::NaiveTime;
 
 use crate::{
@@ -14,7 +12,7 @@ use crate::{
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AccountQueryResponse {
     pub timestamp: NaiveTime,
     pub next_user_ref_num: UserRefNum,

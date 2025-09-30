@@ -9,6 +9,7 @@ use crate::{
 /// These are day-unique and must be strictly increasing.
 /// The `OuchClient` from this crate will automatically increment 
 /// the `UserRefNum` for each request that requires a unique number.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct UserRefNum(u32);
 
 impl UserRefNum {

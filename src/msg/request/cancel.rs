@@ -1,5 +1,4 @@
 
-use serde::{ Deserialize, Serialize };
 use crate::types::{
     UserRefNum,
     FirmId,
@@ -13,7 +12,7 @@ use crate::msg::options::{
 
 
 /// Cancel an active order.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct CancelOrder {
     pub user_ref_num: UserRefNum,
     pub quantity: u32,
@@ -64,7 +63,7 @@ impl CancelOrder {
 
 
 /// Cancel all active orders for a Symbol.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct MassCancel {
     pub user_ref_num: UserRefNum,
     pub firm: FirmId,

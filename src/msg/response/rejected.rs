@@ -1,6 +1,5 @@
 
 use chrono::NaiveTime;
-use serde::{ Deserialize, Serialize };
 
 use crate::{
     error::OuchError,
@@ -27,7 +26,7 @@ use crate::types::{
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct OrderRejected {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,

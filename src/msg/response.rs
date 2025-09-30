@@ -43,7 +43,7 @@ use crate::error::OuchError;
 
 
 ///
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum OuchResponse {
     OrderAccepted(OrderAccepted),
     OrderExecuted(OrderExecuted),

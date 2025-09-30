@@ -26,7 +26,7 @@ use crate::types::{
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OrderReplaced {
     pub timestamp: NaiveTime,
     pub old_user_ref_num: UserRefNum,

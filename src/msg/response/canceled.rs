@@ -1,7 +1,5 @@
 
-
 use chrono::NaiveTime;
-use serde::{ Deserialize, Serialize };
 
 use crate::{
     error::OuchError,
@@ -29,7 +27,7 @@ use crate::types::{
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct OrderCanceled {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -64,7 +62,7 @@ impl OrderCanceled {
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct AiqCanceled {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -119,7 +117,7 @@ impl AiqCanceled {
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct CancelPending {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -155,7 +153,7 @@ impl CancelPending {
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct CancelRejected {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -191,7 +189,7 @@ impl CancelRejected {
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct MassCancelResponse {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,

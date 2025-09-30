@@ -3,6 +3,7 @@ use crate::helper::u32_from_be_bytes;
 
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Price {
     /// Maximum accepted value is $199,999.9900
     dollars: u32,

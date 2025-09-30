@@ -25,7 +25,7 @@ use crate::types::{
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OrderPriorityUpdate {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -67,7 +67,7 @@ impl OrderPriorityUpdate {
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OrderRestated {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,

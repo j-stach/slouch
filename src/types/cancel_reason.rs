@@ -2,6 +2,7 @@
 use crate::error::BadElementError;
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CancelReason {
 
     /// The order cannot be executed because of a regulatory restriction

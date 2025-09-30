@@ -1,7 +1,5 @@
 
 use std::fmt;
-use serde::{ Deserialize, Serialize };
-use derive_more::{ Deref, DerefMut };
 
 use crate::{
     helper::{ 
@@ -15,7 +13,7 @@ use crate::{
 
 /// Strong type for `ClOrdId` that ensures protocol compliance.
 /// Will not be checked for day-uniqueness for each OUCH account.
-#[derive(Debug, Clone, Deref, DerefMut, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OrderToken(String);
 
 impl OrderToken {

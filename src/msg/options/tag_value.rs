@@ -18,6 +18,7 @@ use crate::types::{
     BboWeightIndicator,
     RouteId,
     BrokerId,
+    ElapsedTime,
     Side
 };
 
@@ -25,7 +26,7 @@ use crate::types::{
 /// 
 /// These names are kept as similar as possible to the corresponding options
 /// as documented in the OUCH 5.0 specifications.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub enum TagValue {
 
     /// An alternative order reference number used when publishing the order 
@@ -175,39 +176,23 @@ impl TagValue {
         data
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, OuchError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         // Length-marking byte of tag is not added to `data` when 
         // `OptionalAppendage::parse` calls this method.
-        let option_tag = u8::from_be_bytes(data[0]);
+        let option_tag = data[0];
         let payload = &data[1..];
 
         match option_tag {
 
-            1 => Ok(u64_from_be_bytes(payload)? 
-                .map(Self::SecondaryOrdRefNum)),
-
-            2 => Ok(FirmId::parse(payload)?
-                .map(Self::Firm)),
-
-            3 => Ok(u32_from_be_bytes(payload)?
-                .map(Self::MinQty)),
-
-            4 => Ok(CustomerType::parse(payload)?
-                .map(Self::CustomerType)),
-
-            5 => Ok(u34_from_be_bytes(payload)?
-                .map(Self::MaxFloor)),
-
-            6 => Ok(PriceType::parse(payload)?
-                .map(Self::PriceType)),
-
-            7 => Ok(SignedPrice::parse(payload)?
-                .map(Self::PegOffset)),
-
-            9 => Ok(Price::parse(payload)?
-                .map(Self::DiscretionPrice)),
-
+            1 => Ok(Self::SecondaryOrdRefNum(u64_from_be_bytes(payload)?)), 
+            2 => Ok(Self::Firm(FirmId::parse(payload)?)),
+            3 => Ok(Self::MinQty(u32_from_be_bytes(payload)?)),
+            4 => Ok(Self::CustomerType(CustomerType::parse(payload)?)),
+            5 => Ok(Self::MaxFloor(u34_from_be_bytes(payload)?)),
+            6 => Ok(Self::PriceType(PriceType::parse(payload)?)),
+            7 => Ok(Self::PegOffset(SignedPrice::parse(payload)?)),
+            9 => Ok(Self::DiscretionPrice(Price::parse(payload)?)),
             10 => {
                 let price_type = PriceType::parse(payload)?;
                 use PriceType::*;
@@ -220,18 +205,16 @@ impl TagValue {
                             "DiscretionPriceType".to_string()
                         ).into()
                     ),
-                    _ => Ok(price_type.map(Self::DiscretionPriceType))
+                    _ => Ok(Self::DiscretionPriceType(price_type))
                 }
             },
 
-            11 => Ok(SignedPrice::parse(payload)?
-                .map(Self::DiscretionPegOffset)),
-
+            11 => Ok(Self::DiscretionPegOffset(SignedPrice::parse(payload)?)),
             12 => {
                 let val = payload[0];
                 match val {
-                    b'P' => Ok(true.map(Self::PostOnly)),
-                    b'N' => Ok(false.map(Self::PostOnly)),
+                    b'P' => Ok(Self::PostOnly(true)),
+                    b'N' => Ok(Self::PostOnly(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
                             val as char, 
@@ -240,20 +223,14 @@ impl TagValue {
                 }
             },
 
-            13 => Ok(u32_from_be_bytes(payload)?
-                .map(Self::RandomReserves)),
-
-            14 => Ok(Route::parse(payload)?
-                .map(Self::Route)),
-
-            15 => Ok(u32_from_be_bytes(payload)? // TODO type
-                .map(Self::ExpireTime)),
-
+            13 => Ok(Self::RandomReserves(u32_from_be_bytes(payload)?)),
+            14 => Ok(Self::Route(RouteId::parse(payload)?)),
+            15 => Ok(Self::ExpireTime(ElapsedTime::parse(payload)?)),
             16 => {
                 let val = payload[0];
                 match val {
-                    b'Y' => Ok(true.map(Self::TradeNow)),
-                    b'N' => Ok(false.map(Self::TradeNow)),
+                    b'Y' => Ok(Self::TradeNow(true)),
+                    b'N' => Ok(Self::TradeNow(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
                             val as char, 
@@ -262,26 +239,19 @@ impl TagValue {
                 }
             },
 
-            17 => Ok(HandleInst::parse(payload)?
-                .map(Self::HandleInst)),
+            17 => Ok(Self::HandleInst(HandleInst::parse(payload)?)),
+            18 => Ok(Self::BboWeightIndicator(
+                    BboWeightIndicator::parse(payload)?
+            )),
 
-            18 => Ok(BboWeightIndicator::parse(payload)?
-                .map(Self::BboWeightIndicator)),
-
-            22 => Ok(u32_from_be_bytes(payload)?
-                .map(Self::DisplayQuantity)),
-
-            23 => Ok(Price::parse(payload)?
-                .map(Self::DisplayPrice)),
-
-            24 => Ok(u16_from_be_bytes(payload)?
-                .map(Self::GroupId)),
-
+            22 => Ok(Self::DisplayQuantity(u32_from_be_bytes(payload)?)),
+            23 => Ok(Self::DisplayPrice(Price::parse(payload)?)),
+            24 => Ok(Self::GroupId(u16_from_be_bytes(payload)?)),
             25 => {
                 let val = payload[0];
                 match val {
-                    b'Y' => Ok(true.map(Self::SharesLocated)),
-                    b'N' => Ok(false.map(Self::SharesLocated)),
+                    b'Y' => Ok(Self::SharesLocated(true)),
+                    b'N' => Ok(Self::SharesLocated(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
                             val as char, 
@@ -290,15 +260,9 @@ impl TagValue {
                 }
             },
 
-            26 => Ok(Broker::parse(payload)? 
-                .map(Self::LocateBroker)),
-
-            27 => Ok(Side::parse(payload)?
-                .map(Self::Side)),
-
-            28 => Ok(u8::from_be_bytes(payload)?
-                .map(Self::UserRefIndex)),
-
+            26 => Ok(Self::LocateBroker(Broker::parse(payload)?)),
+            27 => Ok(Self::Side(Side::parse(payload)?)),
+            28 => Ok(Self::UserRefIndex(payload[0])),
 
             _ => Err(BadElementError::InvalidEnum(
                 option_tag as char, 

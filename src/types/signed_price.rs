@@ -9,6 +9,7 @@ use crate::helper::u32_from_be_bytes;
 ///
 // TODO: Send email to ask if there are any limits to Peg Offsets
 // that I should hardcode into the SignedPrice type.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SignedPrice {
 
     negative: bool,

@@ -2,6 +2,7 @@
 use crate::error::BadElementError;
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BboWeightIndicator {
 
     /// 0% - 0.2%

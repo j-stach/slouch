@@ -16,9 +16,7 @@ pub use self::{
 };
 
 
-use serde::{ Deserialize, Serialize };
-
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub enum OuchRequest {
     EnterOrder(EnterOrder),
     CancelOrder(CancelOrder),

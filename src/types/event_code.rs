@@ -2,6 +2,7 @@
 use crate::error::BadElementError;
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EventCode {
 
     /// Indicates that exchange is open and is ready to accept orders.

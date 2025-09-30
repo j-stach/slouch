@@ -1,5 +1,4 @@
 
-use serde::{ Deserialize, Serialize };
 use crate::types::{
     OrderToken,
     UserRefNum,
@@ -17,7 +16,7 @@ use crate::msg::options::{
 ///
 /// If a `UserRefIndex` option is used on the original order, 
 /// it must also be added here.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct ReplaceOrder {
     pub user_ref_num: UserRefNum,
     pub quantity: u32,

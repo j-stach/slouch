@@ -1,7 +1,6 @@
 
 use chrono::NaiveTime;
 
-use serde::{ Deserialize, Serialize };
 use crate::{
     error::OuchError,
     types::EventCode,
@@ -13,7 +12,7 @@ use crate::{
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct SystemEvent {
     pub timestamp: NaiveTime,
     pub event_code: EventCode,

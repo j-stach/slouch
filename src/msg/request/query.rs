@@ -5,7 +5,7 @@ use crate::msg::options::{
 };
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct AccountQuery {
     /// This holds all optional fields included in the order.
     optional_appendage: OptionalAppendage

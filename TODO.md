@@ -24,17 +24,13 @@ a non-optional part of a message? How best to handle these?
 
 
 ## TODO for library:
+- [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] Debug compilation errors
 - [ ] Double-check logic for messages and types
 
 ### Client:
 - [ ] Finish send/recv for `OuchClient`
 - [ ] Update client to increment `UserRefNum` instead of generating tokens
-
-
-## TODO for Messages
-- [ ] Comments & documentation (Copy from protocol PDF)
-- [x] `OptionalAppendage` needs to overwrite like-variants where found
 
 ### Macros:
 - [ ] Macros for easy type and message creation

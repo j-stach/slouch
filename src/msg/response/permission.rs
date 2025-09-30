@@ -27,7 +27,7 @@ use crate::types::{
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DisableOrderEntryResponse {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
@@ -65,7 +65,7 @@ impl DisableOrderEntryResponse {
 
 
 /// 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct EnableOrderEntryResponse {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,

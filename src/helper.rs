@@ -17,7 +17,7 @@ pub(crate) fn check_alpha_compliance(
         );
     }
 
-    if !s.chars().all(|c| c.is_ascii_alphabetical()) {
+    if !s.chars().all(|c| c.is_ascii_alphabetic()) {
         return Err(
             BadElementError::NotAlpha(name.to_string())
         );
@@ -76,7 +76,7 @@ pub(crate) fn u32_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
 }
 
 // Simplifies conversion.
-pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
+pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u16, BadElementError> {
 
     if let Ok(bytes) = data.try_into() {
         Ok(u16::from_be_bytes(bytes))

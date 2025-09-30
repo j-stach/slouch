@@ -4,6 +4,7 @@ use crate::helper::u32_from_be_bytes;
 
 /// Used to set `TagValue::ExpireTime`.
 /// Seconds to live. Must be less than 86400 (number of seconds in a day).
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ElapsedTime(u32);
 
 impl ElapsedTime {

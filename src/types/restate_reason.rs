@@ -2,6 +2,7 @@
 use crate::error::BadElementError;
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RestateReason {
 
     /// Refresh of display (on an order with reserves)

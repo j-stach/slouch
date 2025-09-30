@@ -11,7 +11,7 @@ use crate::msg::options::{
 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct DisableOrderEntry {
     pub user_ref_num: UserRefNum,
     pub firm: Firm,
@@ -61,7 +61,7 @@ impl DisableOrderEntry {
 } 
 
 ///
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct EnableOrderEntry {
     pub user_ref_num: UserRefNum,
     pub firm: Firm,

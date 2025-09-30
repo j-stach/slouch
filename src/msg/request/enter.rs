@@ -1,6 +1,4 @@
 
-use serde::{ Deserialize, Serialize };
-
 use crate::types::{ 
     UserRefNum,
     Side,
@@ -20,7 +18,7 @@ use crate::msg::options::{
 
 
 /// Enter a new order.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct EnterOrder {
     /// Must be day-unique and strictly increasing for each OUCH account.
     pub user_ref_num: UserRefNum,

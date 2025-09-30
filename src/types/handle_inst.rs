@@ -2,6 +2,7 @@
 use crate::error::BadElementError;
 
 ///
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HandleInst {
 
     /// Imbalance only (CrossType::OpeningCross & CrossType::ClosingCross)
