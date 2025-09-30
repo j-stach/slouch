@@ -1,7 +1,10 @@
 
 use super::TagValue;
 
+
 /// Contains optional fields that may be included in a Request/Response.
+/// Only one instance of each variant of `TagValue` is allowed --
+/// if another is added, the old one will be overwritten.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OptionalAppendage {
     tag_values: Vec<TagValue>
@@ -17,11 +20,17 @@ impl OptionalAppendage {
 
     // NOTE: Does not check for validity of an option for each message type:
     // filter valid options within the message's `add_option` method.
-    pub(crate) fn add(tag_value: TagValue) {
+    pub(crate) fn add(&mut self, tag_value: TagValue) {
 
-        // TODO: Check that option does not already exist in appendage
-        // If so, overwrite it
-        self.tag_values.push(tag_value)
+        let tvs = &mut self.tag_values;
+
+        use std::mem::discriminant as dd;
+        if let Some(i) = tvs.iter().position(|tv| dd(tv) == dd(&tag_value)) {
+            tvs[i] = tag_value
+        } else {
+            tvs.push(tag_value)
+        }
+
     }
 
     pub(crate) fn encode(&self) -> Vec<u8> {

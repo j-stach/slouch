@@ -25,6 +25,7 @@ a non-optional part of a message? How best to handle these?
 
 ## TODO for library:
 - [ ] Debug compilation errors
+- [ ] Double-check logic for messages and types
 
 ### Client:
 - [ ] Finish send/recv for `OuchClient`
@@ -33,9 +34,7 @@ a non-optional part of a message? How best to handle these?
 
 ## TODO for Messages
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [x] `options` methods for messages
-- [x] Check each message when adding options to ensure types accepted
-- [ ] `OptionalAppendage` needs to overwrite like-variants where found
+- [x] `OptionalAppendage` needs to overwrite like-variants where found
 
 ### Macros:
 - [ ] Macros for easy type and message creation
