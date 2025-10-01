@@ -75,10 +75,8 @@ impl EnterOrder {
         })
     }
 
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
@@ -87,21 +85,21 @@ impl EnterOrder {
     pub fn symbol(&self) -> &StockSymbol { &self.symbol }
 
     /// Market side (Buy, Sell, etc.)
-    pub fn side(&self) -> &Side { &self.side }
+    pub fn side(&self) -> Side { self.side }
 
-    pub fn price(&self) -> &Price { &self.price }
+    pub fn price(&self) -> Price { self.price }
 
-    pub fn time_in_force(&self) -> &TimeInForce { &self.time_in_force }
+    pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
 
-    pub fn display(&self) -> &Display { &self.display }
+    pub fn display(&self) -> Display { self.display }
 
-    pub fn capacity(&self) -> &Capacity { &self.capacity }
+    pub fn capacity(&self) -> Capacity { self.capacity }
 
     pub fn intermarket_sweep_eligibility(&self) -> bool {
         self.intermarket_sweep_eligibility
     }
 
-    pub fn cross_type(&self) -> &CrossType { &self.cross_type }
+    pub fn cross_type(&self) -> CrossType { self.cross_type }
 
     pub fn order_token(&self) -> &OrderToken { &self.order_token }
     

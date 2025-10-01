@@ -5,7 +5,7 @@ use crate::{
 };
 
 ///
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Price {
     /// Maximum accepted value is $199,999.9900
     dollars: u32,

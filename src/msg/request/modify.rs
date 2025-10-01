@@ -40,17 +40,15 @@ impl ModifyOrder {
             optional_appendage: OptionalAppendage::new(),
         })
     }
-    
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
 
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
+    
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
     /// Market side (Buy, Sell, etc.)
-    pub fn side(&self) -> &Side { &self.side }
+    pub fn side(&self) -> Side { self.side }
 
     pub(super) fn encode(&self) -> Vec<u8> {
 

@@ -59,19 +59,17 @@ impl ReplaceOrder {
         })
     }
 
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
-    pub fn price(&self) -> &Price { &self.price }
+    pub fn price(&self) -> Price { self.price }
 
-    pub fn time_in_force(&self) -> &TimeInForce { &self.time_in_force }
+    pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
 
-    pub fn display(&self) -> &Display { &self.display }
+    pub fn display(&self) -> Display { self.display }
 
     pub fn intermarket_sweep_eligibility(&self) -> bool {
         self.intermarket_sweep_eligibility

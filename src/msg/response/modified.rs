@@ -50,15 +50,15 @@ impl OrderModified {
         })
     }
     
-    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum {
+        self.user_ref_num
     }
 
     /// Market side (Buy, Sell, etc.)
-    pub fn side(&self) -> &Side { &self.side }
+    pub fn side(&self) -> Side { self.side }
 
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }

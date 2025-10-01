@@ -51,15 +51,11 @@ impl CancelOrder {
         })
     }
 
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Quantity of shares that will remain to be executed after canceling.
-    pub fn quantity(&self) -> u32 {
-        self.quantity
-    }
+    pub fn quantity(&self) -> u32 { self.quantity }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -128,10 +124,8 @@ impl MassCancel {
         })
     }
 
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> &FirmId { &self.firm }

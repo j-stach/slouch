@@ -29,7 +29,6 @@ a non-optional part of a message? How best to handle these?
 - [ ] Double-check logic for messages and types
 - [ ] `async` and `log` features for client
 - [ ] Use `assert!` to enforce macro errors at compile time?
-- [ ] Derive `Copy` for enums
 - [ ] Change `user_ref_num` function to get `UserRefNum` instead of `u32`
 
 ### Messages:

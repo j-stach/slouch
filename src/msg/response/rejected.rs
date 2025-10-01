@@ -50,14 +50,14 @@ impl OrderRejected {
         })
     }
     
-    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum {
+        self.user_ref_num
     }
-    
-    pub fn reason(&self) -> &RejectReason { &self.reason }
+
+    pub fn reason(&self) -> RejectReason { self.reason }
     
     pub fn order_token(&self) -> &OrderToken { &self.order_token }
     

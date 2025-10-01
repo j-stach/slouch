@@ -40,11 +40,11 @@ impl AccountQueryResponse {
         })
     }
     
-    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
-    /// Gets the user reference number.
-    pub fn next_user_ref_num(&self) -> &UserRefNum {
-        &self.next_user_ref_num
+    /// Gets the next available user reference number.
+    pub fn next_user_ref_num(&self) -> UserRefNum {
+        self.next_user_ref_num
     }
 
     /// Get read-only access to the OptionalAppendage.

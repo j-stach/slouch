@@ -53,16 +53,16 @@ impl OrderPriorityUpdate {
         })
     }
     
-    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum {
+        self.user_ref_num
     }
 
-    pub fn price(&self) -> &Price { &self.price }
+    pub fn price(&self) -> Price { self.price }
 
-    pub fn display(&self) -> &Display { &self.display }
+    pub fn display(&self) -> Display { self.display }
 
     pub fn order_ref_num(&self) -> u64 { self.order_ref_num }
 
@@ -77,9 +77,9 @@ impl OrderPriorityUpdate {
 /// 
 #[derive(Debug, Clone)]
 pub struct OrderRestated {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub reason: RestateReason,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    reason: RestateReason,
     optional_appendage: OptionalAppendage
 }
 
@@ -104,6 +104,15 @@ impl OrderRestated {
         })
     }
     
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
+    
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum {
+        self.user_ref_num
+    }
+
+    pub fn reason(&self) -> RestateReason { self.reason }
+
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage

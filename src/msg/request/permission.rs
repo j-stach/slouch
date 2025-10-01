@@ -33,12 +33,10 @@ impl DisableOrderEntry {
             optional_appendage: OptionalAppendage::new(),
         }
     }
-    
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
 
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
+    
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     
@@ -103,12 +101,10 @@ impl EnableOrderEntry {
             optional_appendage: OptionalAppendage::new(),
         }
     }
-    
-    /// Gets the user reference number as a u32.
-    pub fn user_ref_num(&self) -> u32 {
-        self.user_ref_num.val()
-    }
 
+    /// Gets the user reference number.
+    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
+    
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     

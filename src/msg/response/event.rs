@@ -37,9 +37,9 @@ impl SystemEvent {
         Ok(SystemEvent { timestamp, event_code })
     }
 
-    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
-    pub fn event_code(&self) -> &EventCode { &self.event_code }
+    pub fn event_code(&self) -> EventCode { self.event_code }
 
 }
 
