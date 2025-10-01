@@ -15,8 +15,8 @@ use crate::msg::options::{
 ///
 #[derive(Debug, Clone)]
 pub struct DisableOrderEntry {
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -33,6 +33,14 @@ impl DisableOrderEntry {
             optional_appendage: OptionalAppendage::new(),
         }
     }
+    
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -77,8 +85,8 @@ impl DisableOrderEntry {
 ///
 #[derive(Debug, Clone)]
 pub struct EnableOrderEntry {
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -95,6 +103,14 @@ impl EnableOrderEntry {
             optional_appendage: OptionalAppendage::new(),
         }
     }
+    
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

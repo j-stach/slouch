@@ -46,7 +46,7 @@ impl OuchClient {
         use OuchResponse::*;
         match response {
             AccountQueryResponse(aqr) => {
-                client.next_user_ref_num = aqr.next_user_ref_num;
+                client.next_user_ref_num = aqr.next_user_ref_num().clone();
                 Ok(client)
             },
             

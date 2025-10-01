@@ -20,9 +20,9 @@ use crate::msg::options::OptionalAppendage;
 /// 
 #[derive(Debug, Clone)]
 pub struct DisableOrderEntryResponse {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -47,6 +47,16 @@ impl DisableOrderEntryResponse {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
+    
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage
@@ -58,9 +68,9 @@ impl DisableOrderEntryResponse {
 /// 
 #[derive(Debug, Clone)]
 pub struct EnableOrderEntryResponse {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -84,6 +94,16 @@ impl EnableOrderEntryResponse {
             optional_appendage: OptionalAppendage::parse(&data[16..])?
         })
     }
+    
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
     
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {

@@ -14,9 +14,9 @@ use crate::msg::options::{
 ///
 #[derive(Debug, Clone)]
 pub struct ModifyOrder {
-    pub user_ref_num: UserRefNum,
-    pub side: Side,
-    pub quantity: u32,
+    user_ref_num: UserRefNum,
+    side: Side,
+    quantity: u32,
     optional_appendage: OptionalAppendage
 }
 
@@ -41,6 +41,17 @@ impl ModifyOrder {
         })
     }
     
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Quantity of shares to be ordered.
+    pub fn quantity(&self) -> u32 { self.quantity }
+    
+    /// Market side (Buy, Sell, etc.)
+    pub fn side(&self) -> &Side { &self.side }
+
     pub(super) fn encode(&self) -> Vec<u8> {
 
         let mut bytes: Vec<u8> = Vec::new();

@@ -26,10 +26,10 @@ use crate::msg::options::OptionalAppendage;
 ///
 #[derive(Debug, Clone)]
 pub struct OrderCanceled {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub quantity: u32,
-    pub reason: CancelReason,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    quantity: u32,
+    reason: CancelReason,
     optional_appendage: OptionalAppendage
 }
 
@@ -55,6 +55,17 @@ impl OrderCanceled {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    pub fn quantity(&self) -> u32 { self.quantity }
+    
+    pub fn reason(&self) -> &CancelReason { &self.reason }
+    
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage
@@ -66,21 +77,14 @@ impl OrderCanceled {
 ///
 #[derive(Debug, Clone)]
 pub struct AiqCanceled {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    /// The number of shares just decremented from the order. 
-    /// This number is incremental, not cumulative.
-    pub decrement_shares: u32,
-    /// For an AIQ Cancel message, this value will always be "Q".
-    pub reason: CancelReason,
-    /// Shares that would have executed if the trade had occurred.
-    pub quantity_prevented: u32,
-    /// Price at which the trade would have occurred.
-    pub execution_price: Price,
-    /// Liquidity flag the order would have received.
-    pub liquidity_flag: LiquidityFlag,
-    /// AIQ strategy used on the cancelled order.
-    pub aiq_strategy: AiqStrategy,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    decrement_shares: u32,
+    reason: CancelReason,
+    quantity_prevented: u32,
+    execution_price: Price,
+    liquidity_flag: LiquidityFlag,
+    aiq_strategy: AiqStrategy,
     optional_appendage: OptionalAppendage
 }
 
@@ -110,6 +114,36 @@ impl AiqCanceled {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Liquidity flag the order would have received.
+    pub fn liquidity_flag(&self) -> &LiquidityFlag {
+        &self.liquidity_flag
+    }
+
+    /// Price at which the trade would have occurred.
+    pub fn execution_price(&self) -> &Price { &self.execution_price }
+
+    /// AIQ strategy used on the cancelled order.
+    pub fn aiq_strategy(&self) -> &AiqStrategy { &self.aiq_strategy }
+
+    /// The number of shares just decremented from the order. 
+    /// This number is incremental, not cumulative.
+    pub fn decrement_shares(&self) -> u32 {
+        self.decrement_shares
+    }
+
+    /// Shares that would have executed if the trade had occurred.
+    pub fn quantity_prevented(&self) -> u32 { self.quantity_prevented }
+    
+    /// For an AIQ Cancel message, this value will always be "Q".
+    pub fn reason(&self) -> &CancelReason { &self.reason }
+    
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage
@@ -121,8 +155,8 @@ impl AiqCanceled {
 ///
 #[derive(Debug, Clone)]
 pub struct CancelPending {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
     optional_appendage: OptionalAppendage
 }
 
@@ -146,6 +180,13 @@ impl CancelPending {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage
@@ -157,8 +198,8 @@ impl CancelPending {
 ///
 #[derive(Debug, Clone)]
 pub struct CancelRejected {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
     optional_appendage: OptionalAppendage
 }
 
@@ -182,6 +223,13 @@ impl CancelRejected {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage
@@ -193,10 +241,10 @@ impl CancelRejected {
 ///
 #[derive(Debug, Clone)]
 pub struct MassCancelResponse {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
-    pub symbol: StockSymbol,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
+    symbol: StockSymbol,
     optional_appendage: OptionalAppendage
 }
 
@@ -221,6 +269,19 @@ impl MassCancelResponse {
             optional_appendage: OptionalAppendage::parse(&data[24..])?
         })
     }
+    
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
+    
+    /// Gets the symbol for which the orders will be canceled.
+    pub fn symbol(&self) -> &StockSymbol { &self.symbol }
     
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {

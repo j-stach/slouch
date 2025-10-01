@@ -15,8 +15,8 @@ use crate::{
 /// 
 #[derive(Debug, Clone)]
 pub struct AccountQueryResponse {
-    pub timestamp: NaiveTime,
-    pub next_user_ref_num: UserRefNum,
+    timestamp: NaiveTime,
+    next_user_ref_num: UserRefNum,
     optional_appendage: OptionalAppendage
 }
 
@@ -40,6 +40,13 @@ impl AccountQueryResponse {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    /// Gets the user reference number.
+    pub fn next_user_ref_num(&self) -> &UserRefNum {
+        &self.next_user_ref_num
+    }
+
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage

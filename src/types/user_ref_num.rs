@@ -26,6 +26,9 @@ impl UserRefNum {
         self.0 += 1
     }
 
+    /// Gets the value as a u32.
+    pub fn val(&self) -> u32 { self.0 }
+
     pub(crate) fn encode(&self) -> [u8; 4] {
         self.0.to_be_bytes()
     }

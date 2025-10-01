@@ -13,16 +13,16 @@ use crate::msg::options::{
 };
 
 
-/// Cancel an active order.
+/// Cancel shares on an active order.
 #[derive(Debug, Clone)]
 pub struct CancelOrder {
-    pub user_ref_num: UserRefNum,
-    /// This is the new intended order size. 
+    user_ref_num: UserRefNum,
+    // This is the new intended order size. 
     // TODO: TBD: Does going over orig quantity do nothing?
-    /// This limits the maximum number of shares that can potentially 
-    /// be executed in total after the cancel is applied. 
-    /// Entering `0` will cancel any remaining open shares on this order.
-    pub quantity: u32,
+    // This limits the maximum number of shares that can potentially 
+    // be executed in total after the cancel is applied. 
+    // Entering `0` will cancel any remaining open shares on this order.
+    quantity: u32,
     optional_appendage: OptionalAppendage
 }
 
@@ -49,6 +49,16 @@ impl CancelOrder {
             quantity,
             optional_appendage: OptionalAppendage::new(),
         })
+    }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Quantity of shares that will remain to be executed after canceling.
+    pub fn quantity(&self) -> u32 {
+        self.quantity
     }
     
     pub(super) fn encode(&self) -> Vec<u8> {
@@ -95,9 +105,9 @@ impl CancelOrder {
 /// Cancel all active orders for a symbol.
 #[derive(Debug, Clone)]
 pub struct MassCancel {
-    pub user_ref_num: UserRefNum,
-    pub firm: FirmId,
-    pub symbol: StockSymbol,
+    user_ref_num: UserRefNum,
+    firm: FirmId,
+    symbol: StockSymbol,
     optional_appendage: OptionalAppendage
 }
 
@@ -117,6 +127,17 @@ impl MassCancel {
             optional_appendage: OptionalAppendage::new(),
         })
     }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Gets the ID for the firm for whom the orders will be canceled.
+    pub fn firm(&self) -> &FirmId { &self.firm }
+    
+    /// Gets the symbol for which the orders will be canceled.
+    pub fn symbol(&self) -> &StockSymbol { &self.symbol }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

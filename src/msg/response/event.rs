@@ -14,8 +14,8 @@ use crate::{
 ///
 #[derive(Debug, Clone)]
 pub struct SystemEvent {
-    pub timestamp: NaiveTime,
-    pub event_code: EventCode,
+    timestamp: NaiveTime,
+    event_code: EventCode,
 }
 
 impl SystemEvent {
@@ -36,6 +36,10 @@ impl SystemEvent {
 
         Ok(SystemEvent { timestamp, event_code })
     }
+
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    pub fn event_code(&self) -> &EventCode { &self.event_code }
 
 }
 

@@ -22,12 +22,12 @@ use crate::msg::options::OptionalAppendage;
 ///
 #[derive(Debug, Clone)]
 pub struct OrderExecuted {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub quantity: u32,
-    pub price: Price,
-    pub liquidity_flag: LiquidityFlag,
-    pub match_number: u64,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    quantity: u32,
+    price: Price,
+    liquidity_flag: LiquidityFlag,
+    match_number: u64,
     optional_appendage: OptionalAppendage
 }
 
@@ -55,6 +55,24 @@ impl OrderExecuted {
         })
     }
     
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Quantity of shares to be ordered.
+    pub fn quantity(&self) -> u32 { self.quantity }
+    
+    pub fn price(&self) -> &Price { &self.price }
+
+    pub fn match_number(&self) -> u64 { self.match_number }
+
+    pub fn liquidity_flag(&self) -> &LiquidityFlag {
+        &self.liquidity_flag
+    }
+
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
         &self.optional_appendage

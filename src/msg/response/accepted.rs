@@ -28,20 +28,20 @@ use crate::msg::options::OptionalAppendage;
 /// 
 #[derive(Debug, Clone)]
 pub struct OrderAccepted {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub side: Side,
-    pub quantity: u32,
-    pub symbol: StockSymbol,
-    pub price: Price,
-    pub time_in_force: TimeInForce,
-    pub display: Display,
-    pub order_ref_num: u64,
-    pub capacity: Capacity,
-    pub intermarket_sweep_eligibility: bool,
-    pub cross_type: CrossType,
-    pub order_state: OrderState,
-    pub order_token: OrderToken,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    side: Side,
+    quantity: u32,
+    symbol: StockSymbol,
+    price: Price,
+    time_in_force: TimeInForce,
+    display: Display,
+    order_ref_num: u64,
+    capacity: Capacity,
+    intermarket_sweep_eligibility: bool,
+    cross_type: CrossType,
+    order_state: OrderState,
+    order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }
 
@@ -84,6 +84,42 @@ impl OrderAccepted {
             optional_appendage: OptionalAppendage::parse(&data[61..])?
         })
     }
+
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Quantity of shares to be ordered.
+    pub fn quantity(&self) -> u32 { self.quantity }
+    
+    /// Gets the symbol for which the orders will be placed.
+    pub fn symbol(&self) -> &StockSymbol { &self.symbol }
+
+    /// Market side (Buy, Sell, etc.)
+    pub fn side(&self) -> &Side { &self.side }
+
+    pub fn price(&self) -> &Price { &self.price }
+
+    pub fn time_in_force(&self) -> &TimeInForce { &self.time_in_force }
+
+    pub fn display(&self) -> &Display { &self.display }
+
+    pub fn order_ref_num(&self) -> u64 { self.order_ref_num }
+
+    pub fn order_state(&self) -> &OrderState { &self.order_state }
+
+    pub fn capacity(&self) -> &Capacity { &self.capacity }
+
+    pub fn intermarket_sweep_eligibility(&self) -> bool {
+        self.intermarket_sweep_eligibility
+    }
+
+    pub fn cross_type(&self) -> &CrossType { &self.cross_type }
+
+    pub fn order_token(&self) -> &OrderToken { &self.order_token }
     
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {

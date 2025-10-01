@@ -21,10 +21,10 @@ use crate::msg::options::OptionalAppendage;
 /// 
 #[derive(Debug, Clone)]
 pub struct OrderModified {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub side: Side,
-    pub quantity: u32,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    side: Side,
+    quantity: u32,
     optional_appendage: OptionalAppendage
 }
 
@@ -49,6 +49,19 @@ impl OrderModified {
             optional_appendage: OptionalAppendage::parse(&data[18..])?
         })
     }
+    
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Market side (Buy, Sell, etc.)
+    pub fn side(&self) -> &Side { &self.side }
+
+    /// Quantity of shares to be ordered.
+    pub fn quantity(&self) -> u32 { self.quantity }
     
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {

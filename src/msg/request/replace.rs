@@ -20,13 +20,13 @@ use crate::msg::options::{
 /// it must also be added here.
 #[derive(Debug, Clone)]
 pub struct ReplaceOrder {
-    pub user_ref_num: UserRefNum,
-    pub quantity: u32,
-    pub price: Price,
-    pub time_in_force: TimeInForce,
-    pub display: Display,
-    pub intermarket_sweep_eligibility: bool,
-    pub order_token: OrderToken,
+    user_ref_num: UserRefNum,
+    quantity: u32,
+    price: Price,
+    time_in_force: TimeInForce,
+    display: Display,
+    intermarket_sweep_eligibility: bool,
+    order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }
 
@@ -59,6 +59,26 @@ impl ReplaceOrder {
         })
     }
 
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    /// Quantity of shares to be ordered.
+    pub fn quantity(&self) -> u32 { self.quantity }
+    
+    pub fn price(&self) -> &Price { &self.price }
+
+    pub fn time_in_force(&self) -> &TimeInForce { &self.time_in_force }
+
+    pub fn display(&self) -> &Display { &self.display }
+
+    pub fn intermarket_sweep_eligibility(&self) -> bool {
+        self.intermarket_sweep_eligibility
+    }
+
+    pub fn order_token(&self) -> &OrderToken { &self.order_token }
+    
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 
     /// in this message, except for `Firm` and `GroupId`, which are inherited

@@ -21,11 +21,11 @@ use crate::msg::options::OptionalAppendage;
 ///
 #[derive(Debug, Clone)]
 pub struct BrokenTrade {
-    pub timestamp: NaiveTime,
-    pub user_ref_num: UserRefNum,
-    pub match_number: u64,
-    pub broken_reason: BrokenReason,
-    pub order_token: OrderToken,
+    timestamp: NaiveTime,
+    user_ref_num: UserRefNum,
+    match_number: u64,
+    reason: BrokenReason,
+    order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }
 
@@ -46,11 +46,24 @@ impl BrokenTrade {
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             match_number: u64_from_be_bytes(&data[12..=19])?,
-            broken_reason: BrokenReason::parse(data[20])?,
+            reason: BrokenReason::parse(data[20])?,
             order_token: OrderToken::parse(&data[21..=35])?,
             optional_appendage: OptionalAppendage::parse(&data[36..])?
         })
     }
+    
+    pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
+    
+    pub fn match_number(&self) -> u64 { self.match_number }
+
+    /// Gets the user reference number as a u32.
+    pub fn user_ref_num(&self) -> u32 {
+        self.user_ref_num.val()
+    }
+
+    pub fn reason(&self) -> &BrokenReason { &self.reason }
+
+    pub fn order_token(&self) -> &OrderToken { &self.order_token }
     
     /// Get read-only access to the OptionalAppendage.
     pub fn options(&self) -> &OptionalAppendage {
