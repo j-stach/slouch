@@ -27,7 +27,7 @@ impl OrderToken {
         Ok(OrderToken(s.to_string()))
     }
 
-    /// Get the OrderToken as a string.
+    /// Get the OrderToken as a string slice.
     pub fn as_str(&self) -> &str { &self.0 }
 
     // OrderToken should have its length checked when it is created.

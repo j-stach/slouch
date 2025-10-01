@@ -32,6 +32,33 @@ pub struct ReplaceOrder {
 
 impl ReplaceOrder {
     
+    ///
+    pub fn new(
+        user_ref_num: UserRefNum,
+        quantity: u32,
+        price: Price,
+        time_in_force: TimeInForce,
+        display: Display,
+        intermarket_sweep_eligibility: bool,
+        order_token: OrderToken,
+    ) -> Result<Self, BadElementError> {
+
+        if quantity >= 1_000_000 {
+            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+        }
+
+        Ok(Self {
+            user_ref_num,
+            quantity,
+            price,
+            time_in_force,
+            display,
+            intermarket_sweep_eligibility,
+            order_token,
+            optional_appendage: OptionalAppendage::new()
+        })
+    }
+
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 
     /// in this message, except for `Firm` and `GroupId`, which are inherited

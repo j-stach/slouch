@@ -21,6 +21,25 @@ pub struct ModifyOrder {
 }
 
 impl ModifyOrder {
+
+    ///
+    pub fn new(
+        user_ref_num: UserRefNum,
+        side: Side,
+        quantity: u32,
+    ) -> Result<Self, BadElementError> {
+
+        if quantity >= 1_000_000 {
+            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+        }
+
+        Ok(Self {
+            user_ref_num,
+            side,
+            quantity,
+            optional_appendage: OptionalAppendage::new(),
+        })
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

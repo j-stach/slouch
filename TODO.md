@@ -2,7 +2,7 @@
 ## TODO for crate:
 - [ ] Test OUCH compliance (via emulator API?)
 - [ ] Unit testing
-- [ ] Control `pub` for clean API
+- [ ] Control `pub` for clean & safe API
 - [ ] `README.md` with minimal examples
 - [ ] `async` and `log` features
 
@@ -15,6 +15,7 @@ Is this an exception, or are there other cases where this may apply?
 - Is "m = midpoint" a variant for `PriceType`?
 - `CustomerType` is not accpeted on `ReplaceOrder`, and `Side` is, 
 but these are not addressed in the prose of the note.
+- For `CancelOrder` request, does `quantity` > original do nothing?
 
 #### Defaults in message elements
 - Do the defaults (e.g. blank) for optional fields apply when they are 
@@ -26,13 +27,13 @@ a non-optional part of a message? How best to handle these?
 ## TODO for library:
 - [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] Double-check logic for messages and types
-- [ ] More efficient encoding than `Vec<u8>` heap allocation?
 
 ### Client:
-- [ ] Restart `OuchClient`
-- [ ] Update client to increment `UserRefNum` instead of generating tokens
+- [ ] Rewrite `OuchClient`
+- [ ] Increment `UserRefNum` 
 
 ### Macros:
+- [x] `new` methods for requests
 - [ ] Macros for easy type and message creation
 ```
 macro_rules! my_struct {
@@ -46,4 +47,6 @@ my_struct!{ field1: 0u32, field2: true};
 
 ### Messages:
 - [ ] TBD: change `options` method to get `&Vec<TagValue` directly?
+- [ ] TBD: Use `assert` to enforce some errors at compile time?
+- [ ] TBD: More efficient encoding than `Vec<u8>` heap allocation?
 

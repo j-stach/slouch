@@ -25,6 +25,9 @@ impl RouteId {
         Ok(RouteId(s.to_string()))
     }
 
+    /// Get the RouteId as a string slice.
+    pub fn as_str(&self) -> &str { &self.0 }
+
     // RouteId should have its length checked when it is created.
     // This method will encode it into a fixed length of 4 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {

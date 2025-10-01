@@ -17,11 +17,39 @@ use crate::msg::options::{
 #[derive(Debug, Clone)]
 pub struct CancelOrder {
     pub user_ref_num: UserRefNum,
+    /// This is the new intended order size. 
+    // TODO: TBD: Does going over orig quantity do nothing?
+    /// This limits the maximum number of shares that can potentially 
+    /// be executed in total after the cancel is applied. 
+    /// Entering `0` will cancel any remaining open shares on this order.
     pub quantity: u32,
     optional_appendage: OptionalAppendage
 }
 
 impl CancelOrder {
+
+    /// Create a new Cancel order. 
+    ///
+    /// `quantity` limits the maximum number of shares that can potentially 
+    /// be executed in total after the cancel is applied. 
+    /// Entering over 1,000,000 (maximum shares per order) results in an error.
+    // TBD: Entering a value greater than the original quantity does nothing.
+    /// Entering `0` will cancel all remaining open shares on this order.
+    pub fn new(
+        user_ref_num: UserRefNum,
+        quantity: u32,
+    ) -> Result<Self, BadElementError> {
+
+        if quantity >= 1_000_000 {
+            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+        }
+
+        Ok(Self {
+            user_ref_num,
+            quantity,
+            optional_appendage: OptionalAppendage::new(),
+        })
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -64,7 +92,7 @@ impl CancelOrder {
 } 
 
 
-/// Cancel all active orders for a Symbol.
+/// Cancel all active orders for a symbol.
 #[derive(Debug, Clone)]
 pub struct MassCancel {
     pub user_ref_num: UserRefNum,
@@ -74,6 +102,21 @@ pub struct MassCancel {
 }
 
 impl MassCancel {
+
+    /// Create a new Mass Cancel order. 
+    pub fn new(
+        user_ref_num: UserRefNum,
+        firm: FirmId,
+        symbol: StockSymbol,
+    ) -> Result<Self, BadElementError> {
+
+        Ok(Self {
+            user_ref_num,
+            firm,
+            symbol,
+            optional_appendage: OptionalAppendage::new(),
+        })
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

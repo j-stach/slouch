@@ -20,6 +20,8 @@ use crate::msg::options::{
 
 
 /// Enter a new order.
+/// For `quantity`, entering over 1,000,000 (maximum shares per order) 
+/// results in an error.
 #[derive(Debug, Clone)]
 pub struct EnterOrder {
     /// Must be day-unique and strictly increasing for each OUCH account.
@@ -38,6 +40,41 @@ pub struct EnterOrder {
 }
 
 impl EnterOrder {
+
+    ///
+    pub fn new(
+        user_ref_num: UserRefNum,
+        side: Side,
+        quantity: u32,
+        symbol: StockSymbol,
+        price: Price,
+        time_in_force: TimeInForce,
+        display: Display,
+        capacity: Capacity,
+        intermarket_sweep_eligibility: bool,
+        cross_type: CrossType,
+        order_token: OrderToken,
+    ) -> Result<Self, BadElementError> {
+
+        if quantity >= 1_000_000 {
+            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+        }
+
+        Ok(Self {
+            user_ref_num,
+            side,
+            quantity,
+            symbol,
+            price,
+            time_in_force,
+            display,
+            capacity,
+            intermarket_sweep_eligibility,
+            cross_type,
+            order_token,
+            optional_appendage: OptionalAppendage::new()
+        })
+    }
 
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:

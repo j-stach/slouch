@@ -21,6 +21,18 @@ pub struct DisableOrderEntry {
 }
 
 impl DisableOrderEntry {
+
+    pub fn new(
+        user_ref_num: UserRefNum,
+        firm: FirmId,
+    ) -> Self {
+        
+        Self {
+            user_ref_num,
+            firm,
+            optional_appendage: OptionalAppendage::new(),
+        }
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -71,6 +83,18 @@ pub struct EnableOrderEntry {
 }
 
 impl EnableOrderEntry {
+
+    pub fn new(
+        user_ref_num: UserRefNum,
+        firm: FirmId,
+    ) -> Self {
+        
+        Self {
+            user_ref_num,
+            firm,
+            optional_appendage: OptionalAppendage::new(),
+        }
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

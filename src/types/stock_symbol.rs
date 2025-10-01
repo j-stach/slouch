@@ -31,6 +31,9 @@ impl StockSymbol {
             .expect("Creates blank StockSymbol from empty string")
     }
 
+    /// Get the FirmId as a string slice.
+    pub fn as_str(&self) -> &str { &self.0 }
+
     // StockSymbol should have its length checked when it is created.
     // This method will encode it into a fixed length of 8 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {

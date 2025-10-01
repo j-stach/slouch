@@ -14,6 +14,12 @@ pub struct AccountQuery {
 }
 
 impl AccountQuery {
+
+    pub fn new() -> Self {
+        Self {
+            optional_appendage: OptionalAppendage::new(),
+        }
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

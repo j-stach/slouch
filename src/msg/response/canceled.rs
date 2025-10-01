@@ -54,6 +54,11 @@ impl OrderCanceled {
             optional_appendage: OptionalAppendage::parse(&data[17..])?
         })
     }
+    
+    /// Get read-only access to the OptionalAppendage.
+    pub fn options(&self) -> &OptionalAppendage {
+        &self.optional_appendage
+    }
 
 }
 

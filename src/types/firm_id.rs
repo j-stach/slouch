@@ -32,6 +32,9 @@ impl FirmId {
         Ok(FirmId(s.to_string()))
     }
 
+    /// Get the FirmId as a string slice.
+    pub fn as_str(&self) -> &str { &self.0 }
+
     // FirmId should have its length checked when it is created.
     // This method will encode it into a fixed length of 4 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {
