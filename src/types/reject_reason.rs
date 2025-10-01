@@ -140,6 +140,7 @@ impl RejectReason {
         }
     }
 
+    #[allow(dead_code)] // Future use
     pub(crate) fn encode(&self) -> [u8; 2] {
         
         use RejectReason::*;

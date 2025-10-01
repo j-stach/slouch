@@ -29,6 +29,7 @@ impl EventCode {
         }
     }
 
+    #[allow(dead_code)] // Future use
     pub(crate) fn encode(&self) -> u8 {
         
         use EventCode::*;
