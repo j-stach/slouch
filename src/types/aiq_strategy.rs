@@ -4,7 +4,7 @@ use crate::error::BadElementError;
 /// I am trusting the user to know what these mean.
 /// If you do not know, then chances are you will not need them.
 /// https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AiqStrategy {
     CancelOldestMpid,
     CancelNewestMpid,
