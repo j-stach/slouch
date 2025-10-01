@@ -1,7 +1,6 @@
 
 ## TODO for crate:
-- [ ] Test OUCH compliance (via emulated API?)
-- [ ] Unit testing
+- [ ] Update `cargo.toml` with necessary info
 - [ ] `README.md` with minimal examples
 
 ### Contact dev team for advice on odd types:
@@ -26,10 +25,15 @@ a non-optional part of a message? How best to handle these?
 
 ## TODO for library:
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [ ] Double-check logic for messages and types
-- [ ] `async` and `log` features for client
+- [ ] `async` version of client using `tokio`
+- [x] `log` features for client
 
-### Messages:
-- [x] No `Vec<u8>` for types encode, use fixed-length arrays
-- [x] `Copy` for fixed length string types
+## Testing:
+### Unit testing
+- [ ] `test` module within `src` 
+- [ ] Double-check logic for messages and types
+- [ ] Ensure types & bounds are enforced in edge cases
+### Integration testing
+- [ ] `test` module outside of `src`
+- [ ] Test OUCH compliance (via emulated API?)
 

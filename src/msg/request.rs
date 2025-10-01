@@ -6,6 +6,8 @@ mod modify;
 mod permission;
 mod query;
 
+use std::fmt;
+
 pub use self::{ 
     enter::EnterOrder, 
     cancel::{ CancelOrder, MassCancel }, 
@@ -40,6 +42,23 @@ impl OuchRequest {
             OuchRequest::EnableOrderEntry(msg) => msg.encode(),
             OuchRequest::AccountQuery(msg) => msg.encode(),
         }
+    }
+}
+
+impl fmt::Display for OuchRequest {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let string = match self {
+            OuchRequest::EnterOrder(..) => "EnterOrder",
+            OuchRequest::CancelOrder(..) => "CancelOrder",
+            OuchRequest::ReplaceOrder(..) => "ReplaceOrder",
+            OuchRequest::ModifyOrder(..) => "ModifyOrder",
+            OuchRequest::MassCancel(..) => "MassCancel",
+            OuchRequest::DisableOrderEntry(..) => "DisableOrderEntry",
+            OuchRequest::EnableOrderEntry(..) => "EnableOrderEntry",
+            OuchRequest::AccountQuery(..) => "AccountQuery",
+        };
+
+        string.to_string().fmt(f)
     }
 }
 

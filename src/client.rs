@@ -26,10 +26,23 @@ impl OuchClient {
         timeout: Duration, 
     ) -> Result<Self, OuchError> {
 
-        // TODO: logs
+        #[cfg(feature = "logs")] {
+            log::info!("Creating new OuchClient instance...");
+            log::debug!("Connecting to {}", &addr);
+        }
+
         let stream = TcpStream::connect(addr)?;
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Setting stream R/W timeout...");
+        }
+
         stream.set_read_timeout(Some(timeout))?;
         stream.set_write_timeout(Some(timeout))?;
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Stream timeout set.");
+        }
 
         let mut client = OuchClient {
             stream,
@@ -38,21 +51,39 @@ impl OuchClient {
             next_user_ref_num: UserRefNum::new(),
         };
 
+        #[cfg(feature = "logs")] {
+            log::info!("Syncing account with server...");
+        }
+
         // Send AccountQuery to verify connection & get next UserRefNum
-        // TODO: logs
         client.send(crate::account_query!())?;
         let response = client.recv()?;
 
         use OuchResponse::*;
         match response {
+
             AccountQueryResponse(aqr) => {
                 client.next_user_ref_num = aqr.next_user_ref_num().clone();
+
+                #[cfg(feature = "logs")] {
+                    log::info!("Sync successful, new OuchClient connected.");
+                }
+
                 Ok(client)
             },
             
             // TBD: What if you have no account, or connection is rejected?
             // Will it simply timeout?
-            _ => Err(OuchError::UnexpectedResponse),
+            _ => {
+
+                let error = OuchError::UnexpectedResponse;
+
+                #[cfg(feature = "logs")] {
+                    log::error!("OuchClient encountered an error: {}", &error);
+                }
+
+                Err(error)
+            },
         }
 
     }
@@ -62,10 +93,19 @@ impl OuchClient {
 
 
     /// Configure the TCP stream to time out after this duration.
-    pub fn set_timeout(&mut self, duration: Duration) -> Result<(), OuchError> { 
+    pub fn set_timeout(&mut self, duration: Duration) -> Result<(), OuchError> {
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Setting stream R/W timeout...");
+        }
 
         self.stream.set_read_timeout(Some(duration))?;
         self.stream.set_write_timeout(Some(duration))?;
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Stream timeout set.");
+        }
+
         Ok(self.timeout = duration)
     }
 
@@ -95,15 +135,33 @@ impl OuchClient {
     /// Send OUCH message to the server.
     pub fn send(&mut self, msg: OuchRequest) -> Result<(), OuchError> {
 
+        #[cfg(feature = "logs")] {
+            log::debug!("Sending {} request to server...", &msg);
+        }
+
         let bytes = msg.to_bytes();
         self.stream.write_all(&bytes)?;
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Request sent.");
+        }
+
         Ok(())
     }
 
     /// Receive OUCH message from the server.
     pub fn recv(&mut self) -> Result<OuchResponse, OuchError> {
 
+        #[cfg(feature = "logs")] {
+            log::debug!("Waiting for response from server...");
+        }
+
         let n = self.stream.read(&mut self.buffer)?;
+
+        #[cfg(feature = "logs")] {
+            log::debug!("Response recieved.");
+        }
+
         OuchResponse::try_from(&self.buffer[..n])
     }
 }
