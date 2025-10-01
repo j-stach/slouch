@@ -83,16 +83,18 @@ macro_rules! mass_cancel {
 }
 
 /// Create a CancelOrder request message.
+/// WARN: Panics! This constructor will panic if quantity >= 1,000,000.
 #[macro_export]
 macro_rules! cancel {
     (user_ref_num: $f1:expr, quantity: $f2:expr $(,)?) => {
         crate::msg::OuchRequest::CancelOrder(
-            crate::msg::CancelOrder::new($f1, $f2)
+            crate::msg::CancelOrder::assert_new($f1, $f2)
         )
     }
 }
 
 /// Create an EnterOrder request message.
+/// WARN: Panics! This constructor will panic if quantity >= 1,000,000.
 #[macro_export]
 macro_rules! enter {
     (
@@ -109,7 +111,7 @@ macro_rules! enter {
         order_token: $f11:expr $(,)?
     ) => {
         crate::msg::OuchRequest::EnterOrder(
-            crate::msg::EnterOrder::new(
+            crate::msg::EnterOrder::assert_new(
                 $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, $f11
             )
         )
@@ -117,6 +119,7 @@ macro_rules! enter {
 }
 
 /// Create a ReplaceOrder request message.
+/// WARN: Panics! This constructor will panic if quantity >= 1,000,000.
 #[macro_export]
 macro_rules! replace {
     (
@@ -129,17 +132,20 @@ macro_rules! replace {
         order_token: $f7:expr $(,)?
     ) => {
         crate::msg::OuchRequest::ReplaceOrder(
-            crate::msg::ReplaceOrder::new($f1, $f2, $f3, $f4, $f5, $f6, $f7)
+            crate::msg::ReplaceOrder::assert_new(
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7
+            )
         )
     };
 }
 
 /// Create a ModifyOrder request message.
+/// WARN: Panics! This constructor will panic if quantity >= 1,000,000.
 #[macro_export]
 macro_rules! modify {
-    (user_ref_num: $f1:expr, side: $f2:expr, quantity: $f3:expr$(,)?) => {
+    (user_ref_num: $f1:expr, side: $f2:expr, quantity: $f3:expr $(,)?) => {
         crate::msg::OuchRequest::ModifyOrder(
-            crate::msg::ModifyOrder::new($f1, $f2, $f3)
+            crate::msg::ModifyOrder::assert_new($f1, $f2, $f3)
         )
     };
 }

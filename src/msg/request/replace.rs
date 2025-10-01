@@ -59,6 +59,30 @@ impl ReplaceOrder {
         })
     }
 
+    /// WARN: Panics!
+    /// This constructor will panic if quantity >= 1,000,000.
+    pub fn assert_new(
+        user_ref_num: UserRefNum,
+        quantity: u32,
+        price: Price,
+        time_in_force: TimeInForce,
+        display: Display,
+        intermarket_sweep_eligibility: bool,
+        order_token: OrderToken,
+    ) -> Self {
+
+        assert!(quantity < 1_000_000);
+        Self::new(
+            user_ref_num,
+            quantity,
+            price,
+            time_in_force,
+            display,
+            intermarket_sweep_eligibility,
+            order_token
+        ).expect("Quantity is acceptable value")
+    }
+
     /// Gets the user reference number.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 

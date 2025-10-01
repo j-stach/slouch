@@ -41,6 +41,19 @@ impl ModifyOrder {
         })
     }
 
+    /// WARN: Panics!
+    /// This constructor will panic if quantity >= 1,000,000.
+    pub fn assert_new(
+        user_ref_num: UserRefNum,
+        side: Side,
+        quantity: u32,
+    ) -> Self {
+
+        assert!(quantity < 1_000_000);
+        Self::new(user_ref_num, side, quantity)
+            .expect("Quantity is acceptable value")
+    }
+
     /// Gets the user reference number.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
     

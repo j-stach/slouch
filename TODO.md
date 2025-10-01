@@ -28,8 +28,7 @@ a non-optional part of a message? How best to handle these?
 - [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] Double-check logic for messages and types
 - [ ] `async` and `log` features for client
-- [ ] Use `assert!` to enforce macro errors at compile time?
-- [ ] Change `user_ref_num` function to get `UserRefNum` instead of `u32`
+- [x] Use `assert!` to enforce macro errors at compile time?
 
 ### Messages:
 - [ ] TBD: change `options` method to get `&Vec<TagValue>` directly?
