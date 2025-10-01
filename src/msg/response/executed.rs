@@ -14,8 +14,9 @@ use crate::types::{
     UserRefNum,
     Price,
     LiquidityFlag,
-    MatchNumber,
 };
+
+use crate::msg::options::OptionalAppendage;
 
 
 ///
@@ -48,7 +49,7 @@ impl OrderExecuted {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             quantity: u32_from_be_bytes(&data[12..=15])?, 
             price: Price::parse(&data[17..=23])?,
-            liquidity_flag: LiquidityFlag::parse(&data[24])?,
+            liquidity_flag: LiquidityFlag::parse(data[24])?,
             match_number: u64_from_be_bytes(&data[25..=32])?,
             optional_appendage: OptionalAppendage::parse(&data[33..])?
         })

@@ -90,7 +90,7 @@ impl LiquidityFlag {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use LiquidityFlag::*;
         match data {
             b'A' => Ok(Added),
             b'R' => Ok(Removed),
@@ -118,16 +118,16 @@ impl LiquidityFlag {
             b'8' => Ok(QbboSetWhileJoining),
             b'1' => Ok(RpiNonRpii),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "LiquidityFlag".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use LiquidityFlag::*;
         match self {
 
              Added                                => b'A',

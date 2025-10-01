@@ -15,7 +15,7 @@ impl Capacity {
 
     pub(crate) fn encode(&self) -> u8 {
 
-        use Self::*;
+        use Capacity::*;
         match self {
             Agency => b'A',
             Principal => b'P',
@@ -26,17 +26,17 @@ impl Capacity {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use Capacity::*;
         match data {
             b'A' => Ok(Agency),
             b'P' => Ok(Principal),
             b'R' => Ok(Riskless),
             b'O' => Ok(Other),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "Capacity".to_string()
-            )
+            ))
         }
     }
 }

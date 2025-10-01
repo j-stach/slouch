@@ -12,25 +12,25 @@ pub enum OrderState {
     Dead
 }
 
-impl EventCode {
+impl OrderState {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use OrderState::*;
         match data {
             b'L' => Ok(Live),
             b'D' => Ok(Dead),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "OrderState".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use OrderState::*;
         match self {
             Live => b'L',
             Dead => b'D',

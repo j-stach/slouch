@@ -13,16 +13,9 @@ use crate::{
 use crate::types::{ 
     UserRefNum,
     Side,
-    StockSymbol, 
-    Price,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
-    OrderRefNum,
-    OrderToken
 };
+
+use crate::msg::options::OptionalAppendage;
 
 
 /// 

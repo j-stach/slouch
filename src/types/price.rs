@@ -1,6 +1,8 @@
 
-use crate::helper::u32_from_be_bytes;
-
+use crate::{
+    helper::u64_from_be_bytes,
+    error::BadElementError,
+};
 
 ///
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -20,8 +22,8 @@ impl Price {
     pub fn new(dollars: u32, cents: u16) -> Result<Self, BadElementError> {
 
         // Ensures price is within limits.
-        if dollars > 199_999 (dollars == 199_999 && cents >= 9900) {
-            return BadElementError::InvalidValue("Price".to_string())
+        if dollars > 199_999 || (dollars == 199_999 && cents >= 9900) {
+            return Err(BadElementError::InvalidValue("Price".to_string()))
         }
 
         Ok(Price { dollars, cents })
@@ -46,9 +48,9 @@ impl Price {
 
 impl Price {
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> [u8; 8] {
         // OUCH price has four decimals implied.
-        let price = self.dollars * 10_000 + self.cents;
+        let price: u64 = self.dollars as u64 * 10_000 + self.cents as u64;
         price.to_be_bytes()
     }
 

@@ -23,23 +23,23 @@ impl BrokenReason {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use BrokenReason::*;
         match data {
             b'E' => Ok(Erroneous),
             b'C' => Ok(Consent),
             b'S' => Ok(Supervisory),
             b'X' => Ok(External),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "BrokenReason".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use BrokenReason::*;
         match self {
             Erroneous   => b'E',
             Consent     => b'C',

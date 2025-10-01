@@ -16,6 +16,7 @@ mod aiq_strategy;
 mod cancel_reason;
 mod broken_reason;
 mod reject_reason;
+mod restate_reason;
 
 mod price_type;
 mod customer_type;
@@ -24,9 +25,11 @@ mod handle_inst;
 mod signed_price;
 mod broker_id;
 mod route_id;
+mod elapsed_time;
+mod liquidity_flag;
 
 pub use self::{
-    firm_id::FirmId;
+    firm_id::FirmId,
     stock_symbol::StockSymbol,
     order_token::OrderToken,
     price::Price,
@@ -41,8 +44,9 @@ pub use self::{
     order_state::OrderState,
     cancel_reason::CancelReason,
     broken_reason::BrokenReason,
-    reject_reason::RejectedReason,
+    reject_reason::RejectReason,
     aiq_strategy::AiqStrategy,
+    restate_reason::RestateReason,
 
     price_type::PriceType,
     customer_type::CustomerType,
@@ -51,5 +55,7 @@ pub use self::{
     signed_price::SignedPrice,
     broker_id::BrokerId,
     route_id::RouteId,
-}
+    elapsed_time::ElapsedTime,
+    liquidity_flag::LiquidityFlag,
+};
 

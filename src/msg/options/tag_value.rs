@@ -1,6 +1,6 @@
 
 use crate::{
-    error::OuchError,
+    error::{ OuchError, BadElementError },
     helper::{
         u16_from_be_bytes,
         u32_from_be_bytes,
@@ -75,8 +75,7 @@ pub enum TagValue {
 
     /// Seconds to live. 
     /// Must be less than 86400 (number of seconds in a day).
-    // TODO: Limited duration using secs
-    ExpireTime(u32),
+    ExpireTime(ElapsedTime),
 
     ///
     TradeNow(bool),
@@ -118,8 +117,9 @@ impl TagValue {
 
     pub(crate) fn encode(&self) -> Vec<u8> {
 
+        use TagValue::*;
         // Take note of missing tags => 8, 19-21
-        let (option_tag: u8, encoded_value: Vec<u8>) = match self {
+        let (option_tag, encoded_value) = match self {
             
             SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes()),
             Firm(val)                   => (2,  val.encode()),
@@ -139,7 +139,7 @@ impl TagValue {
             }), 
             RandomReserves(val)         => (13, val.to_be_bytes()),
             Route(val)                  => (14, val.encode()),
-            ExpireTime(val)             => (15, val.to_be_bytes()), //TODO
+            ExpireTime(val)             => (15, val.encode()), 
             TradeNow(val)               => (16, {
                 vec![ match val {
                     true => b'Y',
@@ -188,20 +188,20 @@ impl TagValue {
             1 => Ok(Self::SecondaryOrdRefNum(u64_from_be_bytes(payload)?)), 
             2 => Ok(Self::Firm(FirmId::parse(payload)?)),
             3 => Ok(Self::MinQty(u32_from_be_bytes(payload)?)),
-            4 => Ok(Self::CustomerType(CustomerType::parse(payload)?)),
-            5 => Ok(Self::MaxFloor(u34_from_be_bytes(payload)?)),
-            6 => Ok(Self::PriceType(PriceType::parse(payload)?)),
+            4 => Ok(Self::CustomerType(CustomerType::parse(payload[0])?)),
+            5 => Ok(Self::MaxFloor(u32_from_be_bytes(payload)?)),
+            6 => Ok(Self::PriceType(PriceType::parse(payload[0])?)),
             7 => Ok(Self::PegOffset(SignedPrice::parse(payload)?)),
             9 => Ok(Self::DiscretionPrice(Price::parse(payload)?)),
             10 => {
-                let price_type = PriceType::parse(payload)?;
+                let price_type = PriceType::parse(payload[0])?;
                 use PriceType::*;
                 match price_type {
                     // Valid PriceType for DiscretionPriceType 
                     // excludes "Q" and "m".
-                    MarketMakerPeg(..) || Midpoint(..) => Err(
+                    MarketMakerPeg | Midpoint => Err(
                         BadElementError::InvalidEnum(
-                            price_type.encode() as char, 
+                            (price_type.encode() as char).to_string(), 
                             "DiscretionPriceType".to_string()
                         ).into()
                     ),
@@ -217,7 +217,7 @@ impl TagValue {
                     b'N' => Ok(Self::PostOnly(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
-                            val as char, 
+                            (val as char).to_string(), 
                             "PostOnly".to_string()
                         ).into())
                 }
@@ -233,15 +233,15 @@ impl TagValue {
                     b'N' => Ok(Self::TradeNow(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
-                            val as char, 
+                            (val as char).to_string(), 
                             "TradeNow".to_string()
                         ).into())
                 }
             },
 
-            17 => Ok(Self::HandleInst(HandleInst::parse(payload)?)),
+            17 => Ok(Self::HandleInst(HandleInst::parse(payload[0])?)),
             18 => Ok(Self::BboWeightIndicator(
-                    BboWeightIndicator::parse(payload)?
+                    BboWeightIndicator::parse(payload[0])?
             )),
 
             22 => Ok(Self::DisplayQuantity(u32_from_be_bytes(payload)?)),
@@ -254,18 +254,18 @@ impl TagValue {
                     b'N' => Ok(Self::SharesLocated(false)),
 
                     _ => Err(BadElementError::InvalidEnum(
-                            val as char, 
+                            (val as char).to_string(), 
                             "SharesLocated".to_string()
                         ).into())
                 }
             },
 
-            26 => Ok(Self::LocateBroker(Broker::parse(payload)?)),
-            27 => Ok(Self::Side(Side::parse(payload)?)),
+            26 => Ok(Self::LocateBroker(BrokerId::parse(payload)?)),
+            27 => Ok(Self::Side(Side::parse(payload[0])?)),
             28 => Ok(Self::UserRefIndex(payload[0])),
 
             _ => Err(BadElementError::InvalidEnum(
-                option_tag as char, 
+                (option_tag as char).to_string(), 
                 "TagValue".to_string()
             ).into()),
         }

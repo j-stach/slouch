@@ -101,7 +101,7 @@ impl RejectReason {
 
         let data = u16_from_be_bytes(data)?;
 
-        use Self::*;
+        use RejectReason::*;
         match data {
 
             0x0018 => Ok(Test),
@@ -133,17 +133,17 @@ impl RejectReason {
             0x0032 => Ok(ShoStateNotAvailable),
             0x0033 => Ok(IpoMarketBuyNotAllowed),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 format!("{:#x}", data),
                 "RejectReason".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> [u8; 2] {
         
-        use Self::*;
-        let data = match self {
+        use RejectReason::*;
+        let data: u16 = match self {
 
              Test                          => 0x0018,
              LateLocTooAggressive          => 0x0019,
@@ -173,7 +173,7 @@ impl RejectReason {
              MaxQuantityExceeded           => 0x0031,
              ShoStateNotAvailable          => 0x0032,
              IpoMarketBuyNotAllowed        => 0x0033,
-        }
+        };
 
         data.to_be_bytes()
     }

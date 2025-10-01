@@ -20,7 +20,7 @@ impl AiqStrategy {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use AiqStrategy::*;
         match data {
 
             b'O' => Ok(CancelOldestMpid),
@@ -32,16 +32,16 @@ impl AiqStrategy {
             b'd' => Ok(DecrementBothOrgId),
             b'y' => Ok(DecrementBothNoDetailsOrgId),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "AiqStrategy".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use AiqStrategy::*;
         match self {
 
              CancelOldestMpid               => b'O',

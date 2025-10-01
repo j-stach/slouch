@@ -1,10 +1,8 @@
 
-// TODO
-pub struct SignedPrice;
-
-
-use crate::helper::u32_from_be_bytes;
-
+use crate::{
+    helper::i32_from_be_bytes,
+    error::BadElementError,
+};
 
 ///
 // TODO: Send email to ask if there are any limits to Peg Offsets
@@ -43,14 +41,14 @@ impl SignedPrice {
 
 impl SignedPrice {
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> [u8; 4] {
         // OUCH price has four decimals implied.
-        let price: i32 = self.dollars as i32 * 10_000 + self.cents as i32;
+        let mut price: i32 = self.dollars as i32 * 10_000 + self.cents as i32;
         if self.negative { price = price * -1 }
         price.to_be_bytes()
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
 
         // TODO: Helper function
         let mut price = i32_from_be_bytes(&data)?;

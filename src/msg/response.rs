@@ -50,6 +50,7 @@ pub enum OuchResponse {
     OrderCanceled(OrderCanceled),
     OrderRejected(OrderRejected),
     OrderModified(OrderModified),
+    OrderReplaced(OrderReplaced),
     AiqCanceled(AiqCanceled),
     CancelPending(CancelPending),
     CancelRejected(CancelRejected),
@@ -77,58 +78,42 @@ impl TryFrom<&[u8]> for OuchResponse {
 
         match msg_type {
 
-            b'A' => Ok(OrderAccepted::parse(payload)?
-                .map(OuchResponse::OrderAccepted)),
+            b'A' => Ok(Self::OrderAccepted(OrderAccepted::parse(payload)?)),
+            b'E' => Ok(Self::OrderExecuted(OrderExecuted::parse(payload)?)),
+            b'C' => Ok(Self::OrderCanceled(OrderCanceled::parse(payload)?)),
+            b'M' => Ok(Self::OrderModified(OrderModified::parse(payload)?)),
+            b'J' => Ok(Self::OrderRejected(OrderRejected::parse(payload)?)),
+            b'U' => Ok(Self::OrderReplaced(OrderReplaced::parse(payload)?)),
+            b'D' => Ok(Self::AiqCanceled(AiqCanceled::parse(payload)?)),
+            b'P' => Ok(Self::CancelPending(CancelPending::parse(payload)?)),
+            b'I' => Ok(Self::CancelRejected(CancelRejected::parse(payload)?)),
+            b'T' => Ok(Self::OrderPriorityUpdate(
+                OrderPriorityUpdate::parse(payload)?
+            )),
 
-            b'E' => Ok(OrderExecuted::parse(payload)?
-                .map(OuchResponse::OrderExecuted)),
+            b'R' => Ok(Self::OrderRestated(OrderRestated::parse(payload)?)),
+            b'X' => Ok(Self::MassCancelResponse(
+                MassCancelResponse::parse(payload)?
+            )),
 
-            b'C' => Ok(OrderCanceled::parse(payload)?
-                .map(OuchResponse::OrderCanceled)),
+            b'G' => Ok(Self::DisableOrderEntryResponse(
+                DisableOrderEntryResponse::parse(payload)?
+            )),
 
-            b'M' => Ok(OrderModified::parse(payload)?
-                .map(OuchResponse::OrderModified)),
+            b'K' => Ok(Self::EnableOrderEntryResponse(
+                EnableOrderEntryResponse::parse(payload)?
+            )),
 
-            b'J' => Ok(OrderRejected::parse(payload)?
-                .map(OuchResponse::OrderRejected)),
+            b'B' => Ok(Self::BrokenTrade(BrokenTrade::parse(payload)?)),
+            b'Q' => Ok(Self::AccountQueryResponse(
+                    AccountQueryResponse::parse(payload)?
+            )),
 
-            b'U' => Ok(OrderReplaced::parse(payload)?
-                .map(OuchResponse::OrderReplaced)),
+            b'S' => Ok(Self::SystemEvent(SystemEvent::parse(payload)?)),
 
-            b'D' => Ok(AiqCanceled::parse(payload)?
-                .map(OuchResponse::AiqCanceled)),
-
-            b'P' => Ok(CancelPending::parse(payload)?
-                .map(OuchResponse::CancelPending)),
-
-            b'I' => Ok(CancelRejected::parse(payload)?
-                .map(OuchResponse::CancelRejected)),
-
-            b'T' => Ok(OrderPriorityUpdate::parse(payload)?
-                .map(OuchResponse::OrderPriorityUpdate)),
-
-            b'R' => Ok(OrderRestated::parse(payload)?
-                .map(OuchResponse::OrderRestated)),
-
-            b'X' => Ok(MassCancelResponse::parse(payload)?
-                .map(OuchResponse::MassCancelResponse)),
-
-            b'G' => Ok(DisableOrderEntryResponse::parse(payload)?
-                .map(OuchResponse::DisableOrderEntryResponse)),
-
-            b'K' => Ok(EnableOrderEntryResponse::parse(payload)?
-                .map(OuchResponse::EnableOrderEntryResponse)),
-
-            b'B' => Ok(BrokenTrade::parse(payload)?
-                .map(OuchResponse::BrokenTrade)),
-
-            b'Q' => Ok(AccountQueryResponse::parse(payload)?
-                .map(OuchResponse::AccountQueryResponse)),
-
-            b'S' => Ok(SystemEvent::parse(payload)?
-                .map(OuchResponse::SystemEvent)),
-
-            typ => Err(OuchError::UnknownResponse(typ, payload)),
+            typ => Err(
+                OuchError::UnknownResponse(typ as char, payload.to_vec())
+            ),
         }
     }
 }

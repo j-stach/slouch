@@ -17,21 +17,21 @@ impl EventCode {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use EventCode::*;
         match data {
             b'S' => Ok(StartOfDay),
             b'E' => Ok(EndOfDay),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "EventCode".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use EventCode::*;
         match self {
             StartOfDay  => b'S',
             EndOfDay    => b'E',

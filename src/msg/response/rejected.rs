@@ -4,7 +4,6 @@ use chrono::NaiveTime;
 use crate::{
     error::OuchError,
     helper::{ 
-        u32_from_be_bytes, 
         u64_from_be_bytes,
         nanosec_from_midnight
     }
@@ -12,17 +11,11 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum,
-    Side,
-    StockSymbol, 
-    Price,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
-    RejectedReason,
+    RejectReason,
     OrderToken
 };
+
+use crate::msg::options::OptionalAppendage;
 
 
 ///
@@ -30,7 +23,7 @@ use crate::types::{
 pub struct OrderRejected {
     pub timestamp: NaiveTime,
     pub user_ref_num: UserRefNum,
-    pub rejected_reason: RejectedReason,
+    pub rejected_reason: RejectReason,
     pub order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }
@@ -51,7 +44,7 @@ impl OrderRejected {
                 nanosec_from_midnight(ts)
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            rejected_reason: RejectedReason::parse(&data[12..=13])?,
+            rejected_reason: RejectReason::parse(&data[12..=13])?,
             order_token: OrderToken::parse(&data[14..=27])?,
             optional_appendage: OptionalAppendage::parse(&data[28..])?
         })

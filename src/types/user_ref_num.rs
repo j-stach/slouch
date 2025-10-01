@@ -20,11 +20,11 @@ impl UserRefNum {
         UserRefNum(1u32)
     }
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> [u8; 4] {
         self.0.to_be_bytes()
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, BadElementError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
 
         let val = u32_from_be_bytes(data)?;
         Ok(UserRefNum(val))

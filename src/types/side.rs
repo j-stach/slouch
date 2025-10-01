@@ -14,7 +14,7 @@ impl Side {
     
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use Side::*;
         match self {
             Buy => b'B',
             Sell => b'S',
@@ -25,17 +25,17 @@ impl Side {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use Side::*;
         match data {
             b'B' => Ok(Buy),
             b'S' => Ok(Sell),
             b'T' => Ok(SellShort),
             b'E' => Ok(SellShortExempt),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "Side".to_string()
-            )
+            ))
         }
     }
 }

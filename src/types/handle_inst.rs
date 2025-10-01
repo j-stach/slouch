@@ -31,7 +31,7 @@ impl HandleInst {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use HandleInst::*;
         match data {
             b'I' => Ok(ImbalanceOnly),
             b'O' => Ok(RetailOrder1),
@@ -41,16 +41,16 @@ impl HandleInst {
             b'D' => Ok(DirectListingCapitalRaise),
             b' ' => Ok(NoInstructions),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "HandleInst".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use HandleInst::*;
         match self {
              ImbalanceOnly              => b'I',
              RetailOrder1               => b'O',

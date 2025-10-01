@@ -1,4 +1,6 @@
 
+use crate::error::BadElementError;
+
 use crate::msg::options::{
     OptionalAppendage,
     TagValue
@@ -36,9 +38,9 @@ impl AccountQuery {
             TagValue::UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "AccountQuery".to_string()
-                )
+                ))
             },
         }
 

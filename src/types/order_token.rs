@@ -28,16 +28,16 @@ impl OrderToken {
     }
 
     /// Get the OrderToken as a string.
-    pub fn as_str(&self) -> &str { &*self }
+    pub fn as_str(&self) -> &str { &self.0 }
 
     // OrderToken should have its length checked when it is created.
     // This method will encode it into a fixed length of 14 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {
-        encode_fixed_str(&*self, 14)
+        encode_fixed_str(&self.0, 14)
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        ascii_from_utf8(data)
+        Ok(Self(ascii_from_utf8(data)?))
     }
 }
 

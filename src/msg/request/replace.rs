@@ -1,4 +1,6 @@
 
+use crate::error::BadElementError;
+
 use crate::types::{
     OrderToken,
     UserRefNum,
@@ -61,27 +63,27 @@ impl ReplaceOrder {
         // Filter out unacceptable TagValue types.
         use TagValue::*;
         match option {
-            MinQty(..) ||
-            MaxFloor(..) ||
-            PriceType(..) ||
-            PegOffset(..) ||
-            DiscretionPrice(..) ||
-            DiscretionPriceType(..) ||
-            DiscretionPegOffset(..) ||
-            PostOnly(..) ||
-            RandomReserves(..) ||
-            ExpireTime(..) ||
-            TradeNow(..) ||
-            HandleInst(..) ||
-            Side(..) ||
-            SharesLocated(..) ||
-            LocateBroker(..) ||
+            MinQty(..) |
+            MaxFloor(..) |
+            PriceType(..) |
+            PegOffset(..) |
+            DiscretionPrice(..) |
+            DiscretionPriceType(..) |
+            DiscretionPegOffset(..) |
+            PostOnly(..) |
+            RandomReserves(..) |
+            ExpireTime(..) |
+            TradeNow(..) |
+            HandleInst(..) |
+            Side(..) |
+            SharesLocated(..) |
+            LocateBroker(..) |
             UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "ReplaceOrder".to_string()
-                )
+                ))
             },
         }
 
@@ -96,8 +98,8 @@ impl ReplaceOrder {
         bytes.extend(self.user_ref_num.encode());
         bytes.extend(self.quantity.to_be_bytes());
         bytes.extend(self.price.encode());
-        bytes.extend(self.time_in_force.encode());
-        bytes.extend(self.display.encode());
+        bytes.push(self.time_in_force.encode());
+        bytes.push(self.display.encode());
         bytes.push(match self.intermarket_sweep_eligibility {
             true => b'Y',
             false => b'N',

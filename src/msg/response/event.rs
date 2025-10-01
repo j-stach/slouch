@@ -2,7 +2,7 @@
 use chrono::NaiveTime;
 
 use crate::{
-    error::OuchError,
+    error::{ OuchError, BadElementError },
     types::EventCode,
     helper::{
         nanosec_from_midnight,
@@ -31,10 +31,10 @@ impl SystemEvent {
         let ts = u64_from_be_bytes(&data[0..=7])?;
         let timestamp = nanosec_from_midnight(ts);
 
-        let ec = &data[8];
+        let ec = data[8];
         let event_code = EventCode::parse(ec)?;
 
-        Ok(SystemEvent { timstamp, event_code })
+        Ok(SystemEvent { timestamp, event_code })
     }
 
 }

@@ -16,21 +16,21 @@ impl RestateReason {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use RestateReason::*;
         match data {
             b'R' => Ok(Refresh),
             b'P' => Ok(Update),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "OrderState".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use RestateReason::*;
         match self {
             Refresh => b'R',
             Update  => b'P',

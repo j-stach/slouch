@@ -4,9 +4,10 @@ use std::fmt;
 use crate::{ 
     helper::{ 
         check_alpha_compliance,
-        encode_fixed_str 
+        encode_fixed_str,
+        ascii_from_utf8,
     }, 
-    error::BadElementError 
+    error::BadElementError,
 };
 
 /// Strong type for broker IDs that ensures protocol compliance.
@@ -27,7 +28,7 @@ impl BrokerId {
     // BrokerId should have its length checked when it is created.
     // This method will encode it into a fixed length of 4 bytes.
     pub(crate) fn encode(&self) -> Vec<u8> {
-        encode_fixed_str(&*self, 4)
+        encode_fixed_str(&self.0, 4)
     }
 
     // Assumes the strings from NASDAQ are compliant.

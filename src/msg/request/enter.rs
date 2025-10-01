@@ -1,4 +1,6 @@
 
+use crate::error::BadElementError;
+
 use crate::types::{ 
     UserRefNum,
     Side,
@@ -65,29 +67,29 @@ impl EnterOrder {
         // Filter out unacceptable TagValue types.
         use TagValue::*;
         match option {
-            Firm(..) ||
-            MinQty(..) ||
-            CustomerType(..) ||
-            MaxFloor(..) ||
-            PriceType(..) ||
-            PegOffset(..) ||
-            DiscretionPrice(..) ||
-            DiscretionPriceType(..) ||
-            DiscretionPegOffset(..) ||
-            PostOnly(..) ||
-            RandomReserves(..) ||
-            ExpireTime(..) ||
-            TradeNow(..) ||
-            HandleInst(..) ||
-            GroupId(..) ||
-            SharesLocated(..) ||
-            LocateBroker(..) ||
+            Firm(..) |
+            MinQty(..) |
+            CustomerType(..) |
+            MaxFloor(..) |
+            PriceType(..) |
+            PegOffset(..) |
+            DiscretionPrice(..) |
+            DiscretionPriceType(..) |
+            DiscretionPegOffset(..) |
+            PostOnly(..) |
+            RandomReserves(..) |
+            ExpireTime(..) |
+            TradeNow(..) |
+            HandleInst(..) |
+            GroupId(..) |
+            SharesLocated(..) |
+            LocateBroker(..) |
             UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "EnterOrder".to_string()
-                )
+                ))
             },
         }
 
@@ -100,17 +102,17 @@ impl EnterOrder {
 
         bytes.push(b'O'); // Type identifier for Enter Order Request
         bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.side.encode());
+        bytes.push(self.side.encode());
         bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.stock_symbol.encode());
-        bytes.extend(self.time_in_force.encode());
-        bytes.extend(self.display.encode());
-        bytes.extend(self.capacity.encode());
+        bytes.extend(self.symbol.encode());
+        bytes.push(self.time_in_force.encode());
+        bytes.push(self.display.encode());
+        bytes.push(self.capacity.encode());
         bytes.push(match self.intermarket_sweep_eligibility {
             true => b'Y',
             false => b'N',
         });
-        bytes.extend(self.cross_type.encode());
+        bytes.push(self.cross_type.encode());
         bytes.extend(self.order_token.encode());
         bytes.extend(self.optional_appendage.encode());
 

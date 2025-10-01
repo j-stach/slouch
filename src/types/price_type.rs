@@ -31,7 +31,7 @@ impl PriceType {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use PriceType::*;
         match data {
             b'L' => Ok(Limit),
             b'P' => Ok(MarketPeg),
@@ -40,16 +40,16 @@ impl PriceType {
             b'Q' => Ok(MarketMakerPeg),
             b'm' => Ok(Midpoint),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "PriceType".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use PriceType::*;
         match self {
             Limit           => b'L',
             MarketPeg       => b'P',

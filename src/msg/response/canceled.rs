@@ -12,18 +12,15 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum,
-    Side,
     StockSymbol, 
     Price,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
     CancelReason,
     AiqStrategy,
-    OrderToken
+    FirmId,
+    LiquidityFlag
 };
+
+use crate::msg::options::OptionalAppendage;
 
 
 ///
@@ -53,7 +50,7 @@ impl OrderCanceled {
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             quantity: u32_from_be_bytes(&data[12..=15])?, 
-            reason: CancelReason::parse(data[16])?;
+            reason: CancelReason::parse(data[16])?,
             optional_appendage: OptionalAppendage::parse(&data[17..])?
         })
     }
@@ -102,8 +99,8 @@ impl AiqCanceled {
             reason: CancelReason::parse(data[16])?,
             quantity_prevented: u32_from_be_bytes(&data[17..=20])?, 
             execution_price: Price::parse(&data[21..=28])?,
-            liquidity_flag: LiquidityFlag::parse(&data[29])?,
-            aiq_strategy: AiqStrategy::parse(&data[30])?,
+            liquidity_flag: LiquidityFlag::parse(data[29])?,
+            aiq_strategy: AiqStrategy::parse(data[30])?,
             optional_appendage: OptionalAppendage::parse(&data[31..])?
         })
     }

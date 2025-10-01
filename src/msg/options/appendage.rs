@@ -1,4 +1,5 @@
 
+use crate::error::OuchError;
 use super::TagValue;
 
 
@@ -43,36 +44,44 @@ impl OptionalAppendage {
         // Sum the lengths of the encoded tags to get appendage length.
         let mut appendage_length = 0u16;
         for etv in encoded_tag_values.iter() { 
-            appendage_length += etv.len() 
+            appendage_length += etv.len() as u16 
         }
 
         // Build the final array, starting with the appendage length.
-        let mut encoded_appendage = vec![appendage_length.to_be_bytes()];
-        encoded_appendage.extend(encoded_tag_values.flatten());
+        let al_be = appendage_length.to_be_bytes();
+        let mut encoded_appendage = vec![al_be[0], al_be[1]];
+        let payload = encoded_tag_values
+            .into_iter()
+            .flatten()
+            .collect::<Vec<u8>>();
+        encoded_appendage.extend(payload);
 
         encoded_appendage
     }
 
-    pub(crate) fn parse(data: Vec<u8>) -> Result<Self, OuchError> {
+    pub(crate) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         let mut tag_values: Vec<TagValue> = Vec::new();
 
         // Ignore the first two bytes, they will contain the appendage length.
-        let mut tag_start = 2;
+        let mut tag_start = 2u8;
 
         // Repeat this until the array is parsed:
-        while tag_start < data.len() {
+        while tag_start < data.len() as u8 {
             // The first byte in the tag describes the length.
-            if let Some(tag_len) = data.get(tag_start) {
+            if let Some(tag_len) = data.get(tag_start as usize) {
                 // Use it to get the next X bytes (this one not included).
-                let tag_end = tag_start + tag_len;
-                if tag_end < data.len() {
-                    let raw_tag_value = &data[tag_start + 1..=tag_end];
+                // Assumes the length of a tag is always a u8.
+                let tag_end = tag_start + *tag_len;
+                if tag_end < data.len() as u8 {
+                    let raw_tag_value = &data[
+                        ((tag_start as usize) + 1)..=(tag_end as usize)
+                    ];
                     let tag_value = TagValue::parse(raw_tag_value)?;
                     tag_values.push(tag_value);
                     // The byte after (i.e., X + 1) will contain the length 
                     // of the next tag value (if there is one).
-                    tag_start = tag_end + 1;
+                    tag_start = tag_end as u8 + 1;
                 } else {
                     return Err(
                         OuchError::Parse("OptionalAppendage".to_string())

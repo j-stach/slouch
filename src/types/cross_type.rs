@@ -34,7 +34,7 @@ impl CrossType {
     
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use CrossType::*;
         match self {
             ContinuousMarket => b'N',
             OpeningCross     => b'O',
@@ -49,7 +49,7 @@ impl CrossType {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use CrossType::*;
         match data {
             b'N' => Ok(ContinuousMarket),
             b'O' => Ok(OpeningCross),
@@ -60,10 +60,10 @@ impl CrossType {
             b'E' => Ok(ExtendedLife),
             b'A' => Ok(AfterHoursClose),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "CrossType".to_string()
-            )
+            ))
         }
     }
 }

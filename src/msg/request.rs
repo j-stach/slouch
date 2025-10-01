@@ -12,7 +12,7 @@ pub use self::{
     replace::ReplaceOrder,
     modify::ModifyOrder,
     permission::{ EnableOrderEntry, DisableOrderEntry },
-    query::QueryOrder,
+    query::AccountQuery,
 };
 
 

@@ -2,7 +2,7 @@
 use chrono::NaiveTime;
 
 use crate::{
-    error::OuchError,
+    error::{ OuchError, BadElementError },
     helper::{ 
         u32_from_be_bytes, 
         u64_from_be_bytes,
@@ -20,10 +20,10 @@ use crate::types::{
     Capacity,
     CrossType,
     OrderState,
-    OrderRefNum,
     OrderToken
 };
 
+use crate::msg::options::OptionalAppendage;
 
 /// 
 #[derive(Debug, Clone)]
@@ -40,7 +40,7 @@ pub struct OrderAccepted {
     pub capacity: Capacity,
     pub intermarket_sweep_eligibility: bool,
     pub cross_type: CrossType,
-    pub order_state: OrderState
+    pub order_state: OrderState,
     pub order_token: OrderToken,
     optional_appendage: OptionalAppendage
 }
@@ -72,9 +72,14 @@ impl OrderAccepted {
             intermarket_sweep_eligibility: match data[44] {
                 b'Y' => true,
                 b'N' => false,
+
+                _ => return Err(BadElementError::InvalidEnum(
+                    (data[44] as char).to_string(), 
+                    "IntermarketSweepEligibility".to_string()
+                ).into())
             },
-            cross_type: CrossType::parse(&data[45])?,
-            order_state: OrderState::parse(&data[46])?,
+            cross_type: CrossType::parse(data[45])?,
+            order_state: OrderState::parse(data[46])?,
             order_token: OrderToken::parse(&data[47..=60])?,
             optional_appendage: OptionalAppendage::parse(&data[61..])?
         })

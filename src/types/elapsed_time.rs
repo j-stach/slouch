@@ -19,7 +19,7 @@ impl ElapsedTime {
             )
         }
 
-        Self(secs)
+        Ok(Self(secs))
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
@@ -29,7 +29,7 @@ impl ElapsedTime {
 
     // Limits should have been checked when ElapsedTime was created.
     pub(crate) fn encode(&self) -> Vec<u8> {
-        self.0.to_be_bytes()
+        self.0.to_be_bytes().to_vec()
     }
 }
 

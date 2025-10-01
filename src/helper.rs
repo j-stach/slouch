@@ -51,8 +51,8 @@ pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
 }
 
 // Simplifies conversion.
-pub(crate) fn ascii_from_uft8(data: &[u8]) -> Result<String, BadElementError> {
-    std::str::from_uft8(data)?.to_string()
+pub(crate) fn ascii_from_utf8(data: &[u8]) -> Result<String, BadElementError> {
+    Ok(std::str::from_utf8(data)?.to_string())
 }
 
 // Simplifies conversion.

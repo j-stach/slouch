@@ -1,9 +1,15 @@
 
+use crate::error::BadElementError;
+
 use crate::types::{
     UserRefNum,
     Side
 };
-use crate::msg::options::OptionalAppendage;
+
+use crate::msg::options::{
+    OptionalAppendage,
+    TagValue
+};
 
 ///
 #[derive(Debug, Clone)]
@@ -21,7 +27,7 @@ impl ModifyOrder {
         let mut bytes: Vec<u8> = Vec::new();
 
         bytes.push(b'X');
-        bytes.extend(self.side.encode());
+        bytes.push(self.side.encode());
         bytes.extend(self.quantity.to_be_bytes());
         bytes.extend(self.optional_appendage.encode());
 
@@ -41,14 +47,14 @@ impl ModifyOrder {
         // Filter out unacceptable TagValue types.
         use TagValue::*;
         match option {
-            SharesLocated(..) ||
-            LocateBroker(..) ||
+            SharesLocated(..) |
+            LocateBroker(..) |
             UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "ModifyOrder".to_string()
-                )
+                ))
             },
         }
 

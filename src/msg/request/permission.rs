@@ -1,7 +1,9 @@
 
+use crate::error::BadElementError;
+
 use crate::types::{
     UserRefNum,
-    Firm
+    FirmId
 };
 
 use crate::msg::options::{
@@ -14,7 +16,7 @@ use crate::msg::options::{
 #[derive(Debug, Clone)]
 pub struct DisableOrderEntry {
     pub user_ref_num: UserRefNum,
-    pub firm: Firm,
+    pub firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -45,9 +47,9 @@ impl DisableOrderEntry {
             TagValue::UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "DisableOrderEntry".to_string()
-                )
+                ))
             },
         }
 
@@ -64,7 +66,7 @@ impl DisableOrderEntry {
 #[derive(Debug, Clone)]
 pub struct EnableOrderEntry {
     pub user_ref_num: UserRefNum,
-    pub firm: Firm,
+    pub firm: FirmId,
     optional_appendage: OptionalAppendage
 }
 
@@ -95,9 +97,9 @@ impl EnableOrderEntry {
             TagValue::UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "EnableOrderEntry".to_string()
-                )
+                ))
             },
         }
 

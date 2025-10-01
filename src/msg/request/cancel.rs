@@ -1,4 +1,6 @@
 
+use crate::error::BadElementError;
+
 use crate::types::{
     UserRefNum,
     FirmId,
@@ -46,9 +48,9 @@ impl CancelOrder {
             TagValue::UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "CancelOrder".to_string()
-                )
+                ))
             },
         }
 
@@ -103,14 +105,14 @@ impl MassCancel {
         // Filter out unacceptable TagValue types.
         use TagValue::*;
         match option {
-            GroupId(..) ||
-            Side(..) ||
+            GroupId(..) |
+            Side(..) |
             UserRefIndex(..) => { /* Continue */ },
 
             _ => {
-                return BadElementError::InvalidOption(
+                return Err(BadElementError::InvalidOption(
                     "MassCancel".to_string()
-                )
+                ))
             },
         }
 

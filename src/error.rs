@@ -32,7 +32,7 @@ pub enum BadElementError {
     NotAlpha(String),
 
     #[error("Invalid string: {0}")]
-    InvalidAscii(#[from] std::string::FromUtf8Error),
+    InvalidAscii(#[from] std::str::Utf8Error),
 
     #[error("{0} is an invalid option for {1}")]
     InvalidEnum(String, String),

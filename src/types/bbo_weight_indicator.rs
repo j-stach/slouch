@@ -32,7 +32,7 @@ impl BboWeightIndicator {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use BboWeightIndicator::*;
         match data {
             b'0' => Ok(Micro),
             b'1' => Ok(Small),
@@ -42,16 +42,16 @@ impl BboWeightIndicator {
             b'N' => Ok(ImproveNbboOnEntry),
             b' ' => Ok(Unspecified),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "BboWeightIndicator".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use BboWeightIndicator::*;
         match self {
             Micro               => b'0',
             Small               => b'1',

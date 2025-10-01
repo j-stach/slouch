@@ -8,6 +8,7 @@ use crate::{
         nanosec_from_midnight
     },
     types::UserRefNum,
+    msg::options::OptionalAppendage,
 };
 
 

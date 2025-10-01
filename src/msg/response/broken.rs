@@ -3,7 +3,6 @@ use chrono::NaiveTime;
 
 use crate::{
     error::OuchError,
-    options::OptionalAppendage,
     helper::{ 
         u64_from_be_bytes,
         nanosec_from_midnight
@@ -12,10 +11,11 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum,
-    MatchNumber,
     BrokenReason,
     OrderToken
 };
+
+use crate::msg::options::OptionalAppendage;
 
 
 ///
@@ -46,7 +46,7 @@ impl BrokenTrade {
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             match_number: u64_from_be_bytes(&data[12..=19])?,
-            broken_reason: BrokenReason::parse(&data[20])?;
+            broken_reason: BrokenReason::parse(data[20])?,
             order_token: OrderToken::parse(&data[21..=35])?,
             optional_appendage: OptionalAppendage::parse(&data[36..])?
         })

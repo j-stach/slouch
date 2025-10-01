@@ -54,11 +54,11 @@ pub enum CancelReason {
 
 }
 
-impl BrokenReason {
+impl CancelReason {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use Self::*;
+        use CancelReason::*;
         match data {
 
             b'D' => Ok(RegulatoryRestriction),
@@ -76,16 +76,16 @@ impl BrokenReason {
             b'Z' => Ok(System),
             b'e' => Ok(ExceedsAllowableShares),
 
-            _ => BadElementError::InvalidEnum(
+            _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
                 "CancelReason".to_string()
-            )
+            ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use Self::*;
+        use CancelReason::*;
         match self {
 
              RegulatoryRestriction   => b'D',
