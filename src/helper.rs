@@ -41,12 +41,30 @@ pub(crate) fn check_alpha_uppercase(
     Ok(())
 }
 
-// Encode fixed string by padding to the right with spaces.
-pub(crate) fn encode_fixed_str(s: &str, len: usize) -> Vec<u8> {
-    let mut buf = vec![b' '; len];
-    let bytes = s.as_bytes();
-    let copy_len = usize::min(len, bytes.len());
-    buf[..copy_len].copy_from_slice(&bytes[..copy_len]);
+// Store fixed string with length 4 by padding to the right with spaces.
+pub(crate) fn fixed_str_4(s: &str) -> [u8; 4] {
+    let mut buf = [b' '; 4];
+    let chars = s.as_bytes();
+    let copy_len = usize::min(4, chars.len());
+    buf[..copy_len].copy_from_slice(&chars[..copy_len]);
+    buf
+}
+
+// Store fixed string with length 8 by padding to the right with spaces.
+pub(crate) fn fixed_str_8(s: &str) -> [u8; 8] {
+    let mut buf = [b' '; 8];
+    let chars = s.as_bytes();
+    let copy_len = usize::min(8, chars.len());
+    buf[..copy_len].copy_from_slice(&chars[..copy_len]);
+    buf
+}
+
+// Store fixed string with length 14 by padding to the right with spaces.
+pub(crate) fn fixed_str_14(s: &str) -> [u8; 14] {
+    let mut buf = [b' '; 14];
+    let chars = s.as_bytes();
+    let copy_len = usize::min(14, chars.len());
+    buf[..copy_len].copy_from_slice(&chars[..copy_len]);
     buf
 }
 

@@ -5,14 +5,14 @@ use crate::{
     helper::{ 
         check_alpha_compliance, 
         ascii_from_utf8,
-        encode_fixed_str 
+        fixed_str_8
     }, 
     error::BadElementError 
 };
 
 /// Strong type for stock symbols that ensures protocol compliance.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct StockSymbol(String);
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct StockSymbol([u8; 8]);
 
 impl StockSymbol {
 
@@ -22,7 +22,7 @@ impl StockSymbol {
         let s = s.as_ref();
         check_alpha_compliance(s, 8, "StockSymbol")?;
 
-        Ok(StockSymbol(s.to_string()))
+        Ok(StockSymbol(fixed_str_8(s)))
     }
 
     /// When Symbol is optional, you can use this to leave it blank.
@@ -31,24 +31,30 @@ impl StockSymbol {
             .expect("Creates blank StockSymbol from empty string")
     }
 
-    /// Get the FirmId as a string slice.
-    pub fn as_str(&self) -> &str { &self.0 }
+    /// Get the StockSymbol as a string, ignoring trailing spaces.
+    pub fn to_string(&self) -> String { 
+        self.0.iter()
+            .map(|b| *b as char)
+            .collect::<String>()
+            .trim_end()
+            .to_string()
+    }
 
     // StockSymbol should have its length checked when it is created.
     // This method will encode it into a fixed length of 8 bytes.
-    pub(crate) fn encode(&self) -> Vec<u8> {
-        encode_fixed_str(&self.0, 8)
+    pub(crate) fn encode(&self) -> [u8; 8] {
+        self.0
     }
 
     // Assumes the strings from NASDAQ are compliant.
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        Ok(Self(ascii_from_utf8(data)?))
+        Ok(Self::new(ascii_from_utf8(data)?)?)
     }
 }
 
 impl fmt::Display for StockSymbol {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.0.fmt(f)
+        self.to_string().fmt(f)
     }
 }
 

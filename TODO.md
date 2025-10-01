@@ -30,8 +30,6 @@ a non-optional part of a message? How best to handle these?
 - [ ] `async` and `log` features for client
 
 ### Messages:
-- [x] TBD: change `options` method to get `&Vec<TagValue>` directly?
-- [ ] TBD: More efficient encoding than `Vec<u8>` heap allocation? 
-- [x] Don't let `TagValue` dictate `encode`, it can convert to `Vec`.
-- [ ] `Copy` for fixed length string types
+- [x] No `Vec<u8>` for types encode, use fixed-length arrays
+- [x] `Copy` for fixed length string types
 

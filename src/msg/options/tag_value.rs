@@ -122,7 +122,7 @@ impl TagValue {
         let (option_tag, encoded_value) = match self {
             
             SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes().to_vec()),
-            Firm(val)                   => (2,  val.encode()),
+            Firm(val)                   => (2,  val.encode().to_vec()),
             MinQty(val)                 => (3,  val.to_be_bytes().to_vec()),
             CustomerType(val)           => (4,  vec![val.encode()]),
             MaxFloor(val)               => (5,  val.to_be_bytes().to_vec()),
@@ -138,8 +138,8 @@ impl TagValue {
                 }]
             }), 
             RandomReserves(val)         => (13, val.to_be_bytes().to_vec()),
-            Route(val)                  => (14, val.encode()),
-            ExpireTime(val)             => (15, val.encode()), 
+            Route(val)                  => (14, val.encode().to_vec()),
+            ExpireTime(val)             => (15, val.encode().to_vec()), 
             TradeNow(val)               => (16, {
                 vec![ match val {
                     true => b'Y',
@@ -157,7 +157,7 @@ impl TagValue {
                     false => b'N',
                 }]
             }), 
-            LocateBroker(val)           => (26, val.encode()),
+            LocateBroker(val)           => (26, val.encode().to_vec()),
             Side(val)                   => (27, vec![val.encode()]),
             UserRefIndex(val)           => (28, val.to_be_bytes().to_vec()),
         };

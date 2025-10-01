@@ -9,7 +9,7 @@ pub struct ElapsedTime(u32);
 
 impl ElapsedTime {
     
-    /// Create a new time limit for `TagValue::ExpireTime`.
+    /// Create a new time limit for use with `TagValue::ExpireTime`.
     /// `secs` must be less than 86400 (number of seconds in a day).
     pub fn new(secs: u32) -> Result<Self, BadElementError> {
         
@@ -28,8 +28,8 @@ impl ElapsedTime {
     }
 
     // Limits should have been checked when ElapsedTime was created.
-    pub(crate) fn encode(&self) -> Vec<u8> {
-        self.0.to_be_bytes().to_vec()
+    pub(crate) fn encode(&self) -> [u8; 4] {
+        self.0.to_be_bytes()
     }
 }
 
