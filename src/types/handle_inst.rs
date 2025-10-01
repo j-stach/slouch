@@ -48,10 +48,10 @@ impl HandleInst {
         }
     }
 
-    pub(crate) fn encode(&self) -> u8 {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         
         use HandleInst::*;
-        match self {
+        let data = match self {
              ImbalanceOnly              => b'I',
              RetailOrder1               => b'O',
              RetailOrder2               => b'T',
@@ -59,7 +59,9 @@ impl HandleInst {
              ExtendedContinuous         => b'B',
              DirectListingCapitalRaise  => b'D',
              NoInstructions             => b' ',
-        }
+        };
+
+        vec![data]
     }
 
 }

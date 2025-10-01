@@ -102,7 +102,7 @@ impl EnterOrder {
 
         bytes.push(b'O'); // Type identifier for Enter Order Request
         bytes.extend(self.user_ref_num.encode());
-        bytes.push(self.side.encode());
+        bytes.extend(self.side.encode());
         bytes.extend(self.quantity.to_be_bytes());
         bytes.extend(self.symbol.encode());
         bytes.push(self.time_in_force.encode());

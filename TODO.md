@@ -25,8 +25,9 @@ a non-optional part of a message? How best to handle these?
 
 ## TODO for library:
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [ ] Debug compilation errors
+- [x] Debug compilation errors
 - [ ] Double-check logic for messages and types
+- [ ] More efficient encoding than `Vec<u8>` heap allocation?
 
 ### Client:
 - [ ] Finish send/recv for `OuchClient`

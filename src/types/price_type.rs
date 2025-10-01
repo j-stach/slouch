@@ -47,17 +47,19 @@ impl PriceType {
         }
     }
 
-    pub(crate) fn encode(&self) -> u8 {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         
         use PriceType::*;
-        match self {
+        let data = match self {
             Limit           => b'L',
             MarketPeg       => b'P',
             MidpointPeg     => b'M',
             PrimaryPeg      => b'R',
             MarketMakerPeg  => b'Q',
             Midpoint        => b'm',
-        }
+        };
+
+        vec![data]
     }
 
 }

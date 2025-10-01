@@ -48,10 +48,10 @@ impl Price {
 
 impl Price {
 
-    pub(crate) fn encode(&self) -> [u8; 8] {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         // OUCH price has four decimals implied.
         let price: u64 = self.dollars as u64 * 10_000 + self.cents as u64;
-        price.to_be_bytes()
+        price.to_be_bytes().to_vec()
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {

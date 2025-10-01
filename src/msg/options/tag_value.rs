@@ -121,11 +121,11 @@ impl TagValue {
         // Take note of missing tags => 8, 19-21
         let (option_tag, encoded_value) = match self {
             
-            SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes()),
+            SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes().to_vec()),
             Firm(val)                   => (2,  val.encode()),
-            MinQty(val)                 => (3,  val.to_be_bytes()),
+            MinQty(val)                 => (3,  val.to_be_bytes().to_vec()),
             CustomerType(val)           => (4,  val.encode()),
-            MaxFloor(val)               => (5,  val.to_be_bytes()),
+            MaxFloor(val)               => (5,  val.to_be_bytes().to_vec()),
             PriceType(val)              => (6,  val.encode()),
             PegOffset(val)              => (7,  val.encode()),
             DiscretionPrice(val)        => (9,  val.encode()),
@@ -137,7 +137,7 @@ impl TagValue {
                     false => b'N',
                 }]
             }), 
-            RandomReserves(val)         => (13, val.to_be_bytes()),
+            RandomReserves(val)         => (13, val.to_be_bytes().to_vec()),
             Route(val)                  => (14, val.encode()),
             ExpireTime(val)             => (15, val.encode()), 
             TradeNow(val)               => (16, {
@@ -148,9 +148,9 @@ impl TagValue {
             }), 
             HandleInst(val)             => (17, val.encode()),
             BboWeightIndicator(val)     => (18, val.encode()),
-            DisplayQuantity(val)        => (22, val.to_be_bytes()),
+            DisplayQuantity(val)        => (22, val.to_be_bytes().to_vec()),
             DisplayPrice(val)           => (23, val.encode()),
-            GroupId(val)                => (24, val.to_be_bytes()),
+            GroupId(val)                => (24, val.to_be_bytes().to_vec()),
             SharesLocated(val)          => (25, {
                 vec![ match val {
                     true => b'Y',
@@ -159,16 +159,16 @@ impl TagValue {
             }), 
             LocateBroker(val)           => (26, val.encode()),
             Side(val)                   => (27, val.encode()),
-            UserRefIndex(val)           => (28, val.to_be_bytes()),
+            UserRefIndex(val)           => (28, val.to_be_bytes().to_vec()),
         };
 
         // Start encoded array with length (calculated, not tracked);
         // this is the start of the protocol's `TagValue` type.
         // Safely assume that length will be less than u8::MAX,
         // because each enum variant's inner type encodes to less.
-        let length: u8 = (encoded_value.len() as u8 + 1).to_be_bytes();
+        let length: u8 = encoded_value.len() as u8 + 1;
 
-        let mut data = vec![length, option_tag];
+        let mut data = vec![length, option_tag as u8];
         data.extend(encoded_value);
 
         // This is formatted as the protocol's TagValue, 
@@ -201,7 +201,7 @@ impl TagValue {
                     // excludes "Q" and "m".
                     MarketMakerPeg | Midpoint => Err(
                         BadElementError::InvalidEnum(
-                            (price_type.encode() as char).to_string(), 
+                            (price_type.encode()[0] as char).to_string(), 
                             "DiscretionPriceType".to_string()
                         ).into()
                     ),

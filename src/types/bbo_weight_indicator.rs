@@ -49,10 +49,10 @@ impl BboWeightIndicator {
         }
     }
 
-    pub(crate) fn encode(&self) -> u8 {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         
         use BboWeightIndicator::*;
-        match self {
+        let data = match self {
             Micro               => b'0',
             Small               => b'1',
             Medium              => b'2',
@@ -60,7 +60,9 @@ impl BboWeightIndicator {
             SetQbboWhileJoin    => b'S',
             ImproveNbboOnEntry  => b'N',
             Unspecified         => b' ',
-        }
+        };
+
+        vec![data]
     }
 
 }

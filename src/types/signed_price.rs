@@ -41,11 +41,11 @@ impl SignedPrice {
 
 impl SignedPrice {
 
-    pub(crate) fn encode(&self) -> [u8; 4] {
+    pub(crate) fn encode(&self) -> Vec<u8> {
         // OUCH price has four decimals implied.
         let mut price: i32 = self.dollars as i32 * 10_000 + self.cents as i32;
         if self.negative { price = price * -1 }
-        price.to_be_bytes()
+        price.to_be_bytes().to_vec()
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
