@@ -8,9 +8,9 @@ use crate::{
         nanosec_from_midnight
     },
     types::UserRefNum,
-    msg::options::OptionalAppendage,
 };
 
+use crate::msg::options::*;
 
 /// 
 #[derive(Debug, Clone)]
@@ -47,9 +47,9 @@ impl AccountQueryResponse {
         self.next_user_ref_num
     }
 
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

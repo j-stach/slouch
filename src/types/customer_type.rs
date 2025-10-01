@@ -28,15 +28,13 @@ impl CustomerType {
         }
     }
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> u8 {
         
         use CustomerType::*;
-        let data = match self {
+        match self {
             Retail => b'R',
             NotRetail  => b'N',
-        };
-
-        vec![data]
+        }
     }
 
 }

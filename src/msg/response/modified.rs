@@ -15,7 +15,7 @@ use crate::types::{
     Side,
 };
 
-use crate::msg::options::OptionalAppendage;
+use crate::msg::options::*;
 
 
 /// 
@@ -63,9 +63,9 @@ impl OrderModified {
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

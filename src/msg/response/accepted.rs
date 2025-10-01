@@ -23,7 +23,7 @@ use crate::types::{
     OrderToken
 };
 
-use crate::msg::options::OptionalAppendage;
+use crate::msg::options::*;
 
 /// 
 #[derive(Debug, Clone)]
@@ -119,9 +119,9 @@ impl OrderAccepted {
 
     pub fn order_token(&self) -> &OrderToken { &self.order_token }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

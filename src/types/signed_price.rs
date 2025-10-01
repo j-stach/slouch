@@ -7,7 +7,7 @@ use crate::{
 ///
 // TODO: Send email to ask if there are any limits to Peg Offsets
 // that I should hardcode into the SignedPrice type.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SignedPrice {
 
     negative: bool,

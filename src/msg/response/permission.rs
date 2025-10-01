@@ -14,7 +14,7 @@ use crate::types::{
     FirmId,
 };
 
-use crate::msg::options::OptionalAppendage;
+use crate::msg::options::*;
 
 
 /// 
@@ -57,9 +57,9 @@ impl DisableOrderEntryResponse {
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -105,9 +105,9 @@ impl EnableOrderEntryResponse {
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

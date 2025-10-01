@@ -19,7 +19,6 @@ pub enum TimeInForce {
 impl TimeInForce {
 
     pub(crate) fn encode(&self) -> u8 {
-        // TODO
 
         use TimeInForce::*;
         match self {

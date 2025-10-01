@@ -20,7 +20,7 @@ use crate::types::{
     LiquidityFlag
 };
 
-use crate::msg::options::OptionalAppendage;
+use crate::msg::options::*;
 
 
 ///
@@ -64,9 +64,9 @@ impl OrderCanceled {
     
     pub fn reason(&self) -> CancelReason { self.reason }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -136,9 +136,9 @@ impl AiqCanceled {
     /// For an AIQ Cancel message, this value will always be "Q".
     pub fn reason(&self) -> CancelReason { self.reason }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -177,9 +177,9 @@ impl CancelPending {
     /// Gets the user reference number.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -218,9 +218,9 @@ impl CancelRejected {
     /// Gets the user reference number.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -269,9 +269,9 @@ impl MassCancelResponse {
     /// Gets the symbol for which the orders will be canceled.
     pub fn symbol(&self) -> &StockSymbol { &self.symbol }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

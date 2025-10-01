@@ -16,7 +16,7 @@ use crate::types::{
     RestateReason
 };
 
-use crate::msg::options::OptionalAppendage;
+use crate::msg::options::*;
 
 
 /// 
@@ -66,9 +66,9 @@ impl OrderPriorityUpdate {
 
     pub fn order_ref_num(&self) -> u64 { self.order_ref_num }
 
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }
@@ -113,9 +113,9 @@ impl OrderRestated {
 
     pub fn reason(&self) -> RestateReason { self.reason }
 
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
 }

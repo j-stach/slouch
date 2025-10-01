@@ -12,17 +12,15 @@ pub enum Side {
 
 impl Side {
     
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> u8 {
         
         use Side::*;
-        let data = match self {
+        match self {
             Buy => b'B',
             Sell => b'S',
             SellShort => b'T',
             SellShortExempt => b'E',
-        };
-
-        vec![data]
+        }
     }
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {

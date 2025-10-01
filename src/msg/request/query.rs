@@ -53,9 +53,9 @@ impl AccountQuery {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the OptionalAppendage.
-    pub fn options(&self) -> &OptionalAppendage {
-        &self.optional_appendage
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 } 
 

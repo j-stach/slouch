@@ -28,11 +28,10 @@ a non-optional part of a message? How best to handle these?
 - [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] Double-check logic for messages and types
 - [ ] `async` and `log` features for client
-- [x] Use `assert!` to enforce macro errors at compile time?
 
 ### Messages:
-- [ ] TBD: change `options` method to get `&Vec<TagValue>` directly?
+- [x] TBD: change `options` method to get `&Vec<TagValue>` directly?
 - [ ] TBD: More efficient encoding than `Vec<u8>` heap allocation? 
-Don't let `TagValue` dictate `encode`, it can convert to `Vec` as it needs to.
+- [x] Don't let `TagValue` dictate `encode`, it can convert to `Vec`.
 - [ ] `Copy` for fixed length string types
 

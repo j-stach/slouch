@@ -124,12 +124,12 @@ impl TagValue {
             SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes().to_vec()),
             Firm(val)                   => (2,  val.encode()),
             MinQty(val)                 => (3,  val.to_be_bytes().to_vec()),
-            CustomerType(val)           => (4,  val.encode()),
+            CustomerType(val)           => (4,  vec![val.encode()]),
             MaxFloor(val)               => (5,  val.to_be_bytes().to_vec()),
-            PriceType(val)              => (6,  val.encode()),
+            PriceType(val)              => (6,  vec![val.encode()]),
             PegOffset(val)              => (7,  val.encode()),
             DiscretionPrice(val)        => (9,  val.encode()),
-            DiscretionPriceType(val)    => (10, val.encode()),
+            DiscretionPriceType(val)    => (10, vec![val.encode()]),
             DiscretionPegOffset(val)    => (11, val.encode()),
             PostOnly(val)               => (12, {
                 vec![ match val {
@@ -146,8 +146,8 @@ impl TagValue {
                     false => b'N',
                 }]
             }), 
-            HandleInst(val)             => (17, val.encode()),
-            BboWeightIndicator(val)     => (18, val.encode()),
+            HandleInst(val)             => (17, vec![val.encode()]),
+            BboWeightIndicator(val)     => (18, vec![val.encode()]),
             DisplayQuantity(val)        => (22, val.to_be_bytes().to_vec()),
             DisplayPrice(val)           => (23, val.encode()),
             GroupId(val)                => (24, val.to_be_bytes().to_vec()),
@@ -158,7 +158,7 @@ impl TagValue {
                 }]
             }), 
             LocateBroker(val)           => (26, val.encode()),
-            Side(val)                   => (27, val.encode()),
+            Side(val)                   => (27, vec![val.encode()]),
             UserRefIndex(val)           => (28, val.to_be_bytes().to_vec()),
         };
 
@@ -201,7 +201,7 @@ impl TagValue {
                     // excludes "Q" and "m".
                     MarketMakerPeg | Midpoint => Err(
                         BadElementError::InvalidEnum(
-                            (price_type.encode()[0] as char).to_string(), 
+                            (price_type.encode() as char).to_string(), 
                             "DiscretionPriceType".to_string()
                         ).into()
                     ),
