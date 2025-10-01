@@ -25,12 +25,11 @@ a non-optional part of a message? How best to handle these?
 
 ## TODO for library:
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [x] Debug compilation errors
 - [ ] Double-check logic for messages and types
 - [ ] More efficient encoding than `Vec<u8>` heap allocation?
 
 ### Client:
-- [ ] Finish send/recv for `OuchClient`
+- [ ] Restart `OuchClient`
 - [ ] Update client to increment `UserRefNum` instead of generating tokens
 
 ### Macros:
@@ -45,4 +44,6 @@ macro_rules! my_struct {
 my_struct!{ field1: 0u32, field2: true};
 ```
 
+### Messages:
+- [ ] TBD: change `options` method to get `&Vec<TagValue` directly?
 

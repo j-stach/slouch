@@ -19,6 +19,11 @@ impl OptionalAppendage {
         }
     }
 
+    /// Read the options in the optional appendage.
+    pub fn tag_values(&self) -> &Vec<TagValue> {
+        &self.tag_values
+    }
+
     // NOTE: Does not check for validity of an option for each message type:
     // filter valid options within the message's `add_option` method.
     pub(crate) fn add(&mut self, tag_value: TagValue) {
