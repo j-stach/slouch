@@ -1,9 +1,9 @@
 
-/// Contains types for responses from NASDAQ.
-mod response;
-
 /// Contains types for messages accepted by NASDAQ.
 mod request;
+
+/// Contains types for responses from NASDAQ.
+mod response;
 
 pub use request::*;
 pub use response::*;

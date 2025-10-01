@@ -1,19 +1,12 @@
 
-mod token_generator;
-mod token_prefix;
-
-pub use token_prefix::TokenPrefix;
-pub use token_generator::TokenGenerator;
-
-
-use std::io::{ Read, Write, Error, ErrorKind };
+use std::io::{ Read, Write };
 use std::net::{ TcpStream, SocketAddr };
 use std::time::Duration;
 
 use crate::{
-    msg::{ OuchOut, OuchIn },
-    types::{ OrderToken, FirmId, StockSymbol },
-    error::OuchError
+    msg::{ OuchResponse, OuchRequest },
+    error::OuchError,
+    types::UserRefNum,
 };
 
 
@@ -22,9 +15,7 @@ pub struct OuchClient {
     stream: TcpStream,
     buffer: Vec<u8>,
     timeout: Duration,
-    firm_id: FirmId,
-    // TODO: Will be changed to trait obj for flexibility
-    order_token_generator: TokenGenerator,
+    next_user_ref_num: UserRefNum,
 }
 
 impl OuchClient {
@@ -33,21 +24,37 @@ impl OuchClient {
     pub fn connect(
         addr: SocketAddr, 
         timeout: Duration, 
-        firm_id: FirmId, 
-        order_token_prefix: &str
     ) -> Result<Self, OuchError> {
 
+        // TODO: logs
         let stream = TcpStream::connect(addr)?;
         stream.set_read_timeout(Some(timeout))?;
         stream.set_write_timeout(Some(timeout))?;
 
-        Ok(OuchClient {
+        let mut client = OuchClient {
             stream,
             buffer: vec![0u8; 128],
             timeout,
-            firm_id,
-            order_token_generator: TokenGenerator::new(order_token_prefix)?,
-        })
+            next_user_ref_num: UserRefNum::new(),
+        };
+
+        // Send AccountQuery to verify connection & get next UserRefNum
+        // TODO: logs
+        client.send(crate::account_query!())?;
+        let response = client.recv()?;
+
+        use OuchResponse::*;
+        match response {
+            AccountQueryResponse(aqr) => {
+                client.next_user_ref_num = aqr.next_user_ref_num;
+                Ok(client)
+            },
+            
+            // TBD: What if you have no account, or connection is rejected?
+            // Will it simply timeout?
+            _ => Err(OuchError::UnexpectedResponse),
+        }
+
     }
 
     /// The TCP stream is configured to time out after this duration.
@@ -62,21 +69,31 @@ impl OuchClient {
         Ok(self.timeout = duration)
     }
 
-    /// The client is configured to use this firm ID for placing orders.
-    pub fn firm_id(&self) -> &FirmId { &self.firm_id }
-
-    /// The client uses this struct to generate order tokens.
-    /// NOTE: Returns a mutable reference, so be careful what you do with it.
-    pub fn token_generator(&mut self) -> &mut TokenGenerator { 
-        &mut self.order_token_generator 
+    /// Use this function to get the next valid UserRefNum.
+    /// Automatically increments, so only call this when you intend 
+    /// to use the value in a message.
+    /// To peek at the value of the next UserRefNum without incrementing, 
+    /// use the similarly-named `next_user_ref_num`.
+    pub fn new_user_ref_num(&mut self) -> UserRefNum {
+        let new_num = self.next_user_ref_num.clone();
+        self.next_user_ref_num.increment();
+        new_num
     }
 
+    /// Use this method to "peek" at the next UserRefNum.
+    /// Does not increment, so do not use this method to get a UserRefNum
+    /// to use in a message.
+    /// To get the value of the next UserRefNum and increment it, 
+    /// use the similarly-named `new_user_ref_num`.
+    pub fn next_user_ref_num(&self) -> &UserRefNum {
+        &self.next_user_ref_num
+    }
 }
 
 impl OuchClient {
 
     /// Send OUCH message to the server.
-    pub fn send(&mut self, msg: OuchOut) -> Result<(), OuchError> {
+    pub fn send(&mut self, msg: OuchRequest) -> Result<(), OuchError> {
 
         let bytes = msg.to_bytes();
         self.stream.write_all(&bytes)?;
@@ -84,10 +101,10 @@ impl OuchClient {
     }
 
     /// Receive OUCH message from the server.
-    pub fn recv(&mut self) -> Result<OuchIn, OuchError> {
+    pub fn recv(&mut self) -> Result<OuchResponse, OuchError> {
 
         let n = self.stream.read(&mut self.buffer)?;
-        OuchIn::try_from(&self.buffer[..n])
-            .map_err(|e| Error::new(ErrorKind::InvalidData, e).into())
+        OuchResponse::try_from(&self.buffer[..n])
     }
 }
+

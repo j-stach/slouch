@@ -20,6 +20,12 @@ impl UserRefNum {
         UserRefNum(1u32)
     }
 
+    /// Used by client.
+    pub fn increment(&mut self) {
+        // TODO: Check for overflow?
+        self.0 += 1
+    }
+
     pub(crate) fn encode(&self) -> [u8; 4] {
         self.0.to_be_bytes()
     }

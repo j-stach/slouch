@@ -16,6 +16,8 @@ Is this an exception, or are there other cases where this may apply?
 - `CustomerType` is not accpeted on `ReplaceOrder`, and `Side` is, 
 but these are not addressed in the prose of the note.
 - For `CancelOrder` request, does `quantity` > original do nothing?
+- What if you have no account, or connection is rejected?
+Will it simply timeout?
 
 #### Defaults in message elements
 - Do the defaults (e.g. blank) for optional fields apply when they are 
@@ -29,13 +31,14 @@ a non-optional part of a message? How best to handle these?
 - [ ] Double-check logic for messages and types
 
 ### Client:
-- [ ] Rewrite `OuchClient`
-- [ ] Increment `UserRefNum` 
+- [x] Rewrite `OuchClient`
+- [x] Increment `UserRefNum` 
+- [x] Set `UserRefNum` based on `AccountQueryResponse`
 
 ### Macros:
-- [x] `new` methods for requests
-- [ ] Macros for easy type and message creation
+- [x] Macros for easy message creation
 ```
+#[macro_export]
 macro_rules! my_struct {
     (field1: $f1:expr, field2: $f2:expr $(,)?) => {
         MyStruct::new($f1, $f2)

@@ -14,8 +14,13 @@ pub enum OuchError {
     #[error("Insufficient data to parse: {0}")]
     Parse(String),
 
+    /// This only occurs in the client.
     #[error("OuchClient suffered an IO error: {0}")]
     ClientIo(#[from] std::io::Error),
+
+    /// This only occurs in the client.
+    #[error("OuchClient encountered an unexpected response to initial Query")]
+    UnexpectedResponse,
 }
 
 /// Errors that occur from invalid message elements.
