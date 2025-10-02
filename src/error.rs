@@ -21,6 +21,12 @@ pub enum OuchError {
     /// This only occurs in the client.
     #[error("OuchClient encountered an unexpected response to initial Query")]
     UnexpectedResponse,
+
+    #[cfg(feature = "async")]
+    /// This only occurs in the client.
+    #[error("OuchClient timed out: {0}")]
+    AsyncTimeout(#[from] tokio::time::error::Elapsed),
+
 }
 
 /// Errors that occur from invalid message elements.

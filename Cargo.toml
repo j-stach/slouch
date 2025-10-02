@@ -9,7 +9,7 @@ chrono = { version = "0.4.41", default-features = false, features = ["std"] }
 thiserror = "2.0.12"
 
 # Feature-specific dependencies:
-tokio = { version = "1.28.2", features = ["rt", "rt-multi-thread", "sync", "macros", "net", "process"], optional = true }
+tokio = { version = "1.28.2", features = ["sync", "net", "time", "io-util"], optional = true }
 log = { version = "0.4.28", optional = true }
 
 [features]

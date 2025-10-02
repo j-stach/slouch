@@ -26,7 +26,6 @@ a non-optional part of a message? How best to handle these?
 ## TODO for library:
 - [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] `async` version of client using `tokio`
-- [x] `log` features for client
 
 ## Testing:
 ### Unit testing
