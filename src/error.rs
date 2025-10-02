@@ -30,7 +30,7 @@ pub enum OuchError {
 }
 
 /// Errors that occur from invalid message elements.
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq, Eq)]
 pub enum BadElementError {
 
     #[error("{0} should be {1} bytes, found {2}")]

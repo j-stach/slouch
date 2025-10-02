@@ -16,3 +16,6 @@ pub mod types;
 /// Helper functions used throughout the crate.
 pub mod helper;
 
+// Contains unit tests for the library (minus client)
+#[cfg(test)] mod test;
+

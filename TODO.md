@@ -1,6 +1,7 @@
 
 ## TODO for crate:
 - [ ] Update `cargo.toml` with necessary info
+- [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] `README.md` with minimal examples
 
 ### Contact dev team for advice on odd types:
@@ -10,7 +11,7 @@
 - Some enums (e.g., `LiquidityFlag`) contain numbers despite labeled as "Alpha"
 Is this an exception, or are there other cases where this may apply?
 - Is "m = midpoint" a variant for `PriceType`?
-- `CustomerType` is not accpeted on `ReplaceOrder`, and `Side` is, 
+- `CustomerType` is not accepted on `ReplaceOrder`, and `Side` is, 
 but these are not addressed in the prose of the note.
 - For `CancelOrder` request, does `quantity` > original do nothing?
 - What if you have no account, or connection is rejected by server? 
@@ -23,16 +24,17 @@ a non-optional part of a message? How best to handle these?
 - [ ] `Default` implemented for applicable fields, if necessary
 
 
-## TODO for library:
-- [ ] Comments & documentation (Copy from protocol PDF)
-- [ ] `async` version of client using `tokio`
-
 ## Testing:
 ### Unit testing
-- [ ] `test` module within `src` 
-- [ ] Double-check logic for messages and types
-- [ ] Ensure types & bounds are enforced in edge cases
+`test` module within `src` 
+- Double-check logic for messages and types
+- Ensure types & bounds are enforced in edge cases
+- [x] helpers
+- [ ] types
+- [ ] messages
+- [ ] `NaiveTime` timestamp helper test
+
 ### Integration testing
-- [ ] `test` module outside of `src`
+`test` module outside of `src`
 - [ ] Test OUCH compliance (via emulated API?)
 
