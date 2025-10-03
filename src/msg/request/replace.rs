@@ -18,7 +18,7 @@ use crate::msg::options::{
 ///
 /// If a `UserRefIndex` option is used on the original order, 
 /// it must also be added here.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReplaceOrder {
     user_ref_num: UserRefNum,
     quantity: u32,

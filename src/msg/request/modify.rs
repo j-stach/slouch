@@ -12,7 +12,7 @@ use crate::msg::options::{
 };
 
 ///
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ModifyOrder {
     user_ref_num: UserRefNum,
     side: Side,

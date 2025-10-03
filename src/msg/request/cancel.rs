@@ -14,7 +14,7 @@ use crate::msg::options::{
 
 
 /// Cancel shares on an active order.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CancelOrder {
     user_ref_num: UserRefNum,
     // This is the new intended order size. 
@@ -111,7 +111,7 @@ impl CancelOrder {
 
 
 /// Cancel all active orders for a symbol.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MassCancel {
     user_ref_num: UserRefNum,
     firm: FirmId,
@@ -126,14 +126,14 @@ impl MassCancel {
         user_ref_num: UserRefNum,
         firm: FirmId,
         symbol: StockSymbol,
-    ) -> Result<Self, BadElementError> {
+    ) -> Self {
 
-        Ok(Self {
+        Self {
             user_ref_num,
             firm,
             symbol,
             optional_appendage: OptionalAppendage::new(),
-        })
+        }
     }
 
     /// Gets the user reference number.

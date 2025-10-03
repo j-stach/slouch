@@ -13,7 +13,7 @@ use crate::msg::options::{
 
 
 ///
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DisableOrderEntry {
     user_ref_num: UserRefNum,
     firm: FirmId,
@@ -81,7 +81,7 @@ impl DisableOrderEntry {
 } 
 
 ///
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnableOrderEntry {
     user_ref_num: UserRefNum,
     firm: FirmId,

@@ -23,17 +23,16 @@ a non-optional part of a message? How best to handle these?
 - Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields, if necessary
 
-### Fix broken types
-- [x] `Price` and `SignedPrice` need bounds controlled more effectively
 
 ## Testing:
 ### Unit testing
 `test` module within `src` 
 - Double-check logic for messages and types
 - Ensure types & bounds are enforced in edge cases
-- [x] types
-- [ ] messages
 - [ ] `NaiveTime` timestamp helper test
+- [x] macro doctest
+- [ ] request
+- [ ] response
 
 ### Integration testing
 `test` module outside of `src`

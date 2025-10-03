@@ -6,7 +6,7 @@ use super::TagValue;
 /// Contains optional fields that may be included in a Request/Response.
 /// Only one instance of each variant of `TagValue` is allowed --
 /// if another is added, the old one will be overwritten.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OptionalAppendage {
     tag_values: Vec<TagValue>
 }

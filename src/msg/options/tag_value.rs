@@ -26,7 +26,7 @@ use crate::types::{
 /// 
 /// These names are kept as similar as possible to the corresponding options
 /// as documented in the OUCH 5.0 specifications.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TagValue {
 
     /// An alternative order reference number used when publishing the order 

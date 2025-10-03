@@ -22,7 +22,7 @@ use crate::msg::options::{
 /// Enter a new order.
 /// For `quantity`, entering over 1,000,000 (maximum shares per order) 
 /// results in an error.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnterOrder {
     user_ref_num: UserRefNum,
     side: Side,
