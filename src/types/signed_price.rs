@@ -30,9 +30,9 @@ impl SignedPrice {
     ) -> Result<Self, BadElementError> {
 
         // TODO: Ensure SignedPrice is within limits?
-        //if dollars > 199_999 (dollars == 199_999 && cents >= 9900) {
-        //    return BadElementError::InvalidValue("Price".to_string())
-        //}
+        if cents > 9999 { 
+            return Err(BadElementError::InvalidValue("SignedPrice".to_string()))
+        }
 
         Ok(SignedPrice { negative, dollars, cents })
     }
@@ -41,16 +41,15 @@ impl SignedPrice {
 
 impl SignedPrice {
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> [u8; 4] {
         // OUCH price has four decimals implied.
         let mut price: i32 = self.dollars as i32 * 10_000 + self.cents as i32;
         if self.negative { price = price * -1 }
-        price.to_be_bytes().to_vec()
+        price.to_be_bytes()
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
 
-        // TODO: Helper function
         let mut price = i32_from_be_bytes(&data)?;
 
         // Extract the sign.

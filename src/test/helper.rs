@@ -6,7 +6,7 @@ use crate::helper::{
     check_alpha_uppercase,
 };
 
-#[test] fn check_alpha_compliance_test() {
+#[test] fn alpha_compliance() {
 
     // These should be alpha compliant.
     let s1 = String::from("AAAA");
@@ -50,7 +50,7 @@ use crate::helper::{
         .expect("not_ascii is error");
 }
 
-#[test] fn check_alpha_uppercase_test() {
+#[test] fn alpha_uppercase() {
 
     // This should be alpha uppercase:
     let s1 = String::from("AAAA");
@@ -86,7 +86,7 @@ use crate::helper::{
     fixed_str_14,
 };
 
-#[test] fn fixed_str_test() {
+#[test] fn fixed_str() {
     
     let s = String::from("A");
     let s4 = String::from("AAAA");
@@ -112,7 +112,7 @@ use crate::helper::{
 
 use crate::helper::ascii_from_utf8;
 
-#[test] fn from_utf8_test() {
+#[test] fn from_utf8() {
 
     // Test correct behavior:
     let bytes = b"1Aa ";
@@ -131,7 +131,7 @@ use crate::helper::{
     u64_from_be_bytes,
 };
 
-#[test] fn from_be_bytes_test() {
+#[test] fn from_be_bytes() {
 
     // Test correct behavior:
     let bytes_a = u16::MIN.to_be_bytes();
@@ -204,9 +204,9 @@ use crate::helper::{
     );
 }
 
-use crate::helper::nanosec_from_midnight;
+//use crate::helper::nanosec_from_midnight;
 
-#[test] fn naivetime_test() {
+#[test] fn naivetime() {
     // TODO: Test that nanosec_from_midnight always works
     // 86400 secs? times 10e9?
 }

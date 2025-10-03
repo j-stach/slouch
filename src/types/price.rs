@@ -19,10 +19,12 @@ impl Price {
 
     /// Checks if custom price is a valid value (i.e., < $199,999.9900).
     /// Helps ensure message encoding is done correctly.
+    /// `cents` is actually hundredths of a cent ($0.99 -> 9900 "cents").
     pub fn new(dollars: u32, cents: u16) -> Result<Self, BadElementError> {
 
         // Ensures price is within limits.
-        if dollars > 199_999 || (dollars == 199_999 && cents >= 9900) {
+        if dollars > 199_999 || cents > 9999 || 
+            (dollars == 199_999 && cents >= 9900) {
             return Err(BadElementError::InvalidValue("Price".to_string()))
         }
 
@@ -48,10 +50,10 @@ impl Price {
 
 impl Price {
 
-    pub(crate) fn encode(&self) -> Vec<u8> {
+    pub(crate) fn encode(&self) -> [u8; 8] {
         // OUCH price has four decimals implied.
         let price: u64 = self.dollars as u64 * 10_000 + self.cents as u64;
-        price.to_be_bytes().to_vec()
+        price.to_be_bytes()
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {

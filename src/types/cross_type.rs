@@ -9,10 +9,10 @@ pub enum CrossType {
     ContinuousMarket,
 
     /// NASDAQ Only
-    OpeningCross,
+    Opening,
 
     /// NASDAQ Only
-    ClosingCross,
+    Closing,
 
     /// "Halt/IPO", NASDAQ Only
     Halt,
@@ -37,8 +37,8 @@ impl CrossType {
         use CrossType::*;
         match self {
             ContinuousMarket => b'N',
-            OpeningCross     => b'O',
-            ClosingCross     => b'C',
+            Opening          => b'O',
+            Closing          => b'C',
             Halt             => b'H',
             Supplemental     => b'S',
             Retail           => b'R',
@@ -52,8 +52,8 @@ impl CrossType {
         use CrossType::*;
         match data {
             b'N' => Ok(ContinuousMarket),
-            b'O' => Ok(OpeningCross),
-            b'C' => Ok(ClosingCross),
+            b'O' => Ok(Opening),
+            b'C' => Ok(Closing),
             b'H' => Ok(Halt),
             b'S' => Ok(Supplemental),
             b'R' => Ok(Retail),

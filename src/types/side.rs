@@ -16,9 +16,9 @@ impl Side {
         
         use Side::*;
         match self {
-            Buy => b'B',
-            Sell => b'S',
-            SellShort => b'T',
+            Buy             => b'B',
+            Sell            => b'S',
+            SellShort       => b'T',
             SellShortExempt => b'E',
         }
     }

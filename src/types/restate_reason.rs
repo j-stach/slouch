@@ -23,7 +23,7 @@ impl RestateReason {
 
             _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
-                "OrderState".to_string()
+                "RestateReason".to_string()
             ))
         }
     }

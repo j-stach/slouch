@@ -22,6 +22,8 @@ impl ElapsedTime {
         Ok(Self(secs))
     }
 
+    pub fn secs(&self) -> u32 { self.0 }
+
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
         let secs = u32_from_be_bytes(data)?;
         Self::new(secs)

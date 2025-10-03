@@ -127,10 +127,10 @@ impl TagValue {
             CustomerType(val)           => (4,  vec![val.encode()]),
             MaxFloor(val)               => (5,  val.to_be_bytes().to_vec()),
             PriceType(val)              => (6,  vec![val.encode()]),
-            PegOffset(val)              => (7,  val.encode()),
-            DiscretionPrice(val)        => (9,  val.encode()),
+            PegOffset(val)              => (7,  val.encode().to_vec()),
+            DiscretionPrice(val)        => (9,  val.encode().to_vec()),
             DiscretionPriceType(val)    => (10, vec![val.encode()]),
-            DiscretionPegOffset(val)    => (11, val.encode()),
+            DiscretionPegOffset(val)    => (11, val.encode().to_vec()),
             PostOnly(val)               => (12, {
                 vec![ match val {
                     true => b'P',
@@ -149,7 +149,7 @@ impl TagValue {
             HandleInst(val)             => (17, vec![val.encode()]),
             BboWeightIndicator(val)     => (18, vec![val.encode()]),
             DisplayQuantity(val)        => (22, val.to_be_bytes().to_vec()),
-            DisplayPrice(val)           => (23, val.encode()),
+            DisplayPrice(val)           => (23, val.encode().to_vec()),
             GroupId(val)                => (24, val.to_be_bytes().to_vec()),
             SharesLocated(val)          => (25, {
                 vec![ match val {

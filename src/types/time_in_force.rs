@@ -26,7 +26,7 @@ impl TimeInForce {
             IOC => b'3', 
             GTX => b'5', 
             GTT => b'6', 
-            E => b'E', 
+            E   => b'E', 
         }
     }
 
