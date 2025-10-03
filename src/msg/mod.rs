@@ -8,7 +8,7 @@ mod response;
 pub use request::*;
 pub use response::*;
 
-
 /// Contains types for optional message appendages.
 mod options;
+pub use options::TagValue;
 

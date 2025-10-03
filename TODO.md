@@ -23,16 +23,28 @@ a non-optional part of a message? How best to handle these?
 - Some enums have a "None" == b' ' that is not listed
 - [ ] `Default` implemented for applicable fields, if necessary
 
+## Fix in library:
+- [x] `OuchRequest` needs `options` and `add_option`
 
 ## Testing:
 ### Unit testing
 `test` module within `src` 
 - Double-check logic for messages and types
 - Ensure types & bounds are enforced in edge cases
+- [ ] Macros and helper functions for quickly rewriting similar tests
 - [ ] `NaiveTime` timestamp helper test
-- [x] macro doctest
-- [ ] request
-- [ ] response
+
+#### request
+- [ ] Test encodings for all other requests
+- [x] query
+- [ ] cancel
+- [ ] modify
+- [ ] permission
+- [ ] enter
+- [ ] replace
+
+#### response
+- [ ] Test response parsing and field access
 
 ### Integration testing
 `test` module outside of `src`

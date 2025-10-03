@@ -8,6 +8,8 @@ mod query;
 
 use std::fmt;
 
+use crate::error::OuchError;
+
 pub use self::{ 
     enter::EnterOrder, 
     cancel::{ CancelOrder, MassCancel }, 
@@ -16,6 +18,8 @@ pub use self::{
     permission::{ EnableOrderEntry, DisableOrderEntry },
     query::AccountQuery,
 };
+
+use super::options::TagValue;
 
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -31,31 +35,69 @@ pub enum OuchRequest {
 }
 
 impl OuchRequest {
-    pub fn to_bytes(&self) -> Vec<u8> {
+
+    /// 
+    pub fn options(&self) -> &Vec<TagValue> {
+
+        use OuchRequest::*;
         match self {
-            OuchRequest::EnterOrder(msg) => msg.encode(),
-            OuchRequest::CancelOrder(msg) => msg.encode(),
-            OuchRequest::ReplaceOrder(msg) => msg.encode(),
-            OuchRequest::ModifyOrder(msg) => msg.encode(),
-            OuchRequest::MassCancel(msg) => msg.encode(),
-            OuchRequest::DisableOrderEntry(msg) => msg.encode(),
-            OuchRequest::EnableOrderEntry(msg) => msg.encode(),
-            OuchRequest::AccountQuery(msg) => msg.encode(),
+            EnterOrder(msg) => msg.options(),
+            CancelOrder(msg) => msg.options(),
+            ReplaceOrder(msg) => msg.options(),
+            ModifyOrder(msg) => msg.options(),
+            MassCancel(msg) => msg.options(),
+            DisableOrderEntry(msg) => msg.options(),
+            EnableOrderEntry(msg) => msg.options(),
+            AccountQuery(msg) => msg.options(),
+        }
+    }
+
+    /// 
+    pub fn add_option(&mut self, option: TagValue) -> Result<(), OuchError> {
+
+        use OuchRequest::*;
+        Ok(match self {
+            EnterOrder(msg) => msg.add_option(option)?,
+            CancelOrder(msg) => msg.add_option(option)?,
+            ReplaceOrder(msg) => msg.add_option(option)?,
+            ModifyOrder(msg) => msg.add_option(option)?,
+            MassCancel(msg) => msg.add_option(option)?,
+            DisableOrderEntry(msg) => msg.add_option(option)?,
+            EnableOrderEntry(msg) => msg.add_option(option)?,
+            AccountQuery(msg) => msg.add_option(option)?,
+        })
+    }
+
+    /// 
+    pub fn to_bytes(&self) -> Vec<u8> {
+
+        use OuchRequest::*;
+        match self {
+            EnterOrder(msg) => msg.encode(),
+            CancelOrder(msg) => msg.encode(),
+            ReplaceOrder(msg) => msg.encode(),
+            ModifyOrder(msg) => msg.encode(),
+            MassCancel(msg) => msg.encode(),
+            DisableOrderEntry(msg) => msg.encode(),
+            EnableOrderEntry(msg) => msg.encode(),
+            AccountQuery(msg) => msg.encode(),
         }
     }
 }
 
 impl fmt::Display for OuchRequest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
+        use OuchRequest::*;
         let string = match self {
-            OuchRequest::EnterOrder(..) => "EnterOrder",
-            OuchRequest::CancelOrder(..) => "CancelOrder",
-            OuchRequest::ReplaceOrder(..) => "ReplaceOrder",
-            OuchRequest::ModifyOrder(..) => "ModifyOrder",
-            OuchRequest::MassCancel(..) => "MassCancel",
-            OuchRequest::DisableOrderEntry(..) => "DisableOrderEntry",
-            OuchRequest::EnableOrderEntry(..) => "EnableOrderEntry",
-            OuchRequest::AccountQuery(..) => "AccountQuery",
+            EnterOrder(..) => "EnterOrder",
+            CancelOrder(..) => "CancelOrder",
+            ReplaceOrder(..) => "ReplaceOrder",
+            ModifyOrder(..) => "ModifyOrder",
+            MassCancel(..) => "MassCancel",
+            DisableOrderEntry(..) => "DisableOrderEntry",
+            EnableOrderEntry(..) => "EnableOrderEntry",
+            AccountQuery(..) => "AccountQuery",
         };
 
         string.to_string().fmt(f)
