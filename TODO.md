@@ -4,26 +4,8 @@
 - [ ] Comments & documentation (Copy from protocol PDF)
 - [ ] `README.md` with minimal examples
 
-### Contact dev team for advice on odd types:
-- `RouteId`, `BrokerId`: Any restrictions?
-- `SignedPrice`: Any bounds?
-- `ExpireTime` must be "<" or "<=" 86400?
-- Some enums (e.g., `LiquidityFlag`, `TimeInForce`) contain numbers not "Alpha"
-- Is "m = midpoint" a variant for `PriceType`?
-- `CustomerType` is not accepted on `ReplaceOrder`, and `Side` is, 
-but these are not addressed in the prose of the note.
-- For `CancelOrder` request, does `quantity` > original do nothing?
-- What if you have no account, or connection is rejected by server? 
-Will it simply timeout?
-- `AiqStrategy` in listing has a repeated uppercase variant `O`, assuming typo
-
-#### Defaults in message elements
-- Do the defaults (e.g. blank) for optional fields apply when they are 
-a non-optional part of a message? How best to handle these?
-- Some enums have a "None" == b' ' that is not listed
-- [ ] `Default` implemented for applicable fields, if necessary
-
 ## Fix in library:
+- [ ] `OrderToken` needs to accept digits and spaces
 
 ## Testing:
 ### Unit testing
@@ -31,7 +13,6 @@ a non-optional part of a message? How best to handle these?
 - Double-check logic for messages and types
 - Ensure types & bounds are enforced in edge cases
 - [ ] Macros and helper functions for quickly rewriting similar tests
-- [x] `NaiveTime` timestamp helper test
 
 #### request
 - [ ] cancel
@@ -45,9 +26,8 @@ a non-optional part of a message? How best to handle these?
 
 #### options
 - [ ] Test all options' encodings to applicable requests
+- [ ] Test handling of inappropriate options for requests
 
 ### Integration testing
-`test` module outside of `src`
-- [ ] Test OUCH compliance (via emulated API?)
-
+- [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
 
