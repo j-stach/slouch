@@ -187,12 +187,28 @@ use crate::helper::{
         BadElementError::WrongSize(String::from("u16"), 2, 3)
     );
 
+    let bad_a = b"z";
+    let error_a = u16_from_be_bytes(bad_a).err()
+        .expect("Should be invalid u16");
+    assert_eq!(
+        error_a,
+        BadElementError::WrongSize(String::from("u16"), 2, 1)
+    );
+
     let bad_b = b"zzzzz";
     let error_b = u32_from_be_bytes(bad_b).err()
         .expect("Should be invalid u32");
     assert_eq!(
         error_b,
         BadElementError::WrongSize(String::from("u32"), 4, 5)
+    );
+
+    let bad_b = b"zzz";
+    let error_b = u32_from_be_bytes(bad_b).err()
+        .expect("Should be invalid u32");
+    assert_eq!(
+        error_b,
+        BadElementError::WrongSize(String::from("u32"), 4, 3)
     );
 
     let bad_c = b"zzzzzzzzz";
@@ -202,12 +218,30 @@ use crate::helper::{
         error_c,
         BadElementError::WrongSize(String::from("u64"), 8, 9)
     );
+
+    let bad_c = b"zzzzzzz";
+    let error_c = u64_from_be_bytes(bad_c).err()
+        .expect("Should be invalid u64");
+    assert_eq!(
+        error_c,
+        BadElementError::WrongSize(String::from("u64"), 8, 7)
+    );
 }
 
-//use crate::helper::nanosec_from_midnight;
+use crate::helper::nanosec_from_midnight;
 
 #[test] fn naivetime() {
-    // TODO: Test that nanosec_from_midnight always works
-    // 86400 secs? times 10e9?
+
+    // There are 86400 seconds from midnight to midnight
+    let nanosec_in_day = 86_399_999_999_999_u64;
+
+    let _time = nanosec_from_midnight(nanosec_in_day);
+
+    let no_time = 0u64;
+
+    let _time = nanosec_from_midnight(no_time);
+
+    // NOTE: Testing 'encode' is unnecessary at this stage --
+    // All timestamps originate from Responses
 }
 

@@ -24,7 +24,6 @@ a non-optional part of a message? How best to handle these?
 - [ ] `Default` implemented for applicable fields, if necessary
 
 ## Fix in library:
-- [x] `OuchRequest` needs `options` and `add_option`
 
 ## Testing:
 ### Unit testing
@@ -32,11 +31,9 @@ a non-optional part of a message? How best to handle these?
 - Double-check logic for messages and types
 - Ensure types & bounds are enforced in edge cases
 - [ ] Macros and helper functions for quickly rewriting similar tests
-- [ ] `NaiveTime` timestamp helper test
+- [x] `NaiveTime` timestamp helper test
 
 #### request
-- [ ] Test encodings for all other requests
-- [x] query
 - [ ] cancel
 - [ ] modify
 - [ ] permission
@@ -45,6 +42,9 @@ a non-optional part of a message? How best to handle these?
 
 #### response
 - [ ] Test response parsing and field access
+
+#### options
+- [ ] Test all options' encodings to applicable requests
 
 ### Integration testing
 `test` module outside of `src`
