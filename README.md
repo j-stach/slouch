@@ -70,4 +70,4 @@ Developer resources:
 - [OUCH 5.0 Specification](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf)
 - [AIQ Strategy Values](https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8)
 
-Contributions are welcome. Submit issues or pull requests to this repository.
+Contributions are welcome. Submit issues and pull requests to this repository.
