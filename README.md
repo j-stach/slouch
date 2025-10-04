@@ -27,7 +27,7 @@ let mut client = OuchClient::new(
     Duration::from_secs(5) // Timeout duration
 ).unwrap();
 ```
-3. Send a message and receive a response. 
+3. Send a message and receive a response. <br>
 `OuchResponse` is an enum that can be matched to extract message values.
 ```rust
 use slouch::account_query;
@@ -43,8 +43,8 @@ match response {
     _ => {/* Do something else */}
 }
 ```
-4. Each `OuchRequest` has a macro to simplify message creation.
-Check the documentation comment for each macro to see how it is used.
+4. Each `OuchRequest` has a macro to simplify message creation. <br>
+Check the documentation comment for a macro to see how it is used.
 ```rust
 use slouch::{ cancel, types::UserRefNum };
 
@@ -54,8 +54,8 @@ client.send(cancel!{
 }).unwrap();
 ```
 5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled by building slouch with the `logs` feature. 
-An asynchronous version of the client is supported by the [`tokio`] crate and can be enabled by building slouch with the `async` feature enabled.
-(By default, `OuchClient` is synchronous and its events are not logged.)
+An asynchronous version of the client is supported by the [`tokio`](https://docs.rs/tokio/latest/tokio/) crate and can be enabled by building slouch with the `async` feature enabled.
+By default, `OuchClient` is synchronous and its events are not logged.
 ```toml
 # Cargo.toml
 [dependencies]
