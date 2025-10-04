@@ -76,7 +76,7 @@ By default, `OuchClient` is synchronous and its events are not logged.
 [dependencies]
 slouch = { version = "0.0.0", features = ["logs", "async"] }
 ```
-6. `OuchRequest` and `OuchResponse` can also be used without an `OuchClient`.
+6. `OuchRequest` and `OuchResponse` may also be used without an `OuchClient`.
 ```rust
 use std::net;
 use slouch::{ account_query, msg::OuchResponse };
