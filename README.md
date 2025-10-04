@@ -43,8 +43,7 @@ match response {
 }
 ```
 4. Requests all have macros that simplify message creation.
-Check the documentation comment for each macro to see how it is used. <br>
-As an example:
+Check the documentation comment for each macro to see how it is used.
 ```rust
 use slouch::{ cancel, types::UserRefNum };
 
