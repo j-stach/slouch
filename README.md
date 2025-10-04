@@ -28,7 +28,7 @@ let mut client = OuchClient::new(
 ).unwrap();
 ```
 3. Send a message and receive a response. 
-Response is an enum that can be matched to extract message values.
+`OuchResponse` is an enum that can be matched to extract message values.
 ```rust
 use slouch::account_query;
 
