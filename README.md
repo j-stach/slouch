@@ -42,7 +42,7 @@ match response {
     _ => {/* Do something else */}
 }
 ```
-4. Requests all have macros that simplify message creation.
+4. Each `OuchRequest` has a macro to simplify message creation.
 Check the documentation comment for each macro to see how it is used.
 ```rust
 use slouch::{ cancel, types::UserRefNum };
