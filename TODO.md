@@ -1,8 +1,8 @@
 
 ## TODO for crate:
-- [ ] Update `cargo.toml` with necessary info
+- [x] Update `cargo.toml` with necessary info
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [ ] `README.md` with minimal examples
+- [x] `README.md` with minimal examples
 
 ## Fix in library:
 - [ ] `OrderToken` needs to accept digits and spaces

@@ -1,8 +1,15 @@
 
 [package]
 name = "slouch"
+authors = ["j-stach"]
 version = "0.0.0"
 edition = "2024"
+license = "MIT"
+readme = "README.md"
+description = "Simple OUCH 5.0 client & message types."
+keywords = ["OUCH", "Nasdaq", "NASDAQ"]
+
+exclude = [".git/**", "docs/**", "test/**", "src/test/**"]
 
 [dependencies]
 chrono = { version = "0.4.41", default-features = false, features = ["std"] }
