@@ -6,6 +6,7 @@ version = "0.0.0"
 edition = "2024"
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/j-stach/slouch"
 description = "Simple OUCH 5.0 client & message types."
 keywords = ["OUCH", "Nasdaq", "NASDAQ"]
 categories = ["protocol", "network-programming", "finance", "performance"]
