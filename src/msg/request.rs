@@ -244,17 +244,7 @@ macro_rules! cancel {
 /// ```
 /// use slouch::{ 
 ///     enter, 
-///     types::{ 
-///         UserRefNum,
-///         Side,
-///         StockSymbol,
-///         Price,
-///         TimeInForce,
-///         Display,
-///         Capacity,
-///         CrossType,
-///         OrderToken
-///     }
+///     types::*,
 /// };
 ///
 /// let request1 = enter!{
@@ -319,17 +309,7 @@ macro_rules! enter {
 /// ```
 /// use slouch::{ 
 ///     replace, 
-///     types::{ 
-///         UserRefNum,
-///         Side,
-///         StockSymbol,
-///         Price,
-///         TimeInForce,
-///         Display,
-///         Capacity,
-///         CrossType,
-///         OrderToken
-///     }
+///     types::*,
 /// };
 ///
 /// let request1 = replace!{

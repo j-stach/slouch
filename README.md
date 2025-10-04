@@ -39,19 +39,34 @@ let response = client.recv().unwrap();
 
 use slouch::msg::OuchResponse::*;
 match response {
-    AccountQueryResponse(val) => {/* Do something with val */},
+    AccountQueryResponse(aqr) => {
+        let _time: chrono::NaiveTime = aqr.timestamp();
+        let _num: UserRefNum = aqr.next_user_ref_num();
+        let _opts: &Vec<TagValue> = aqr.options();
+    },
     _ => {/* Do something else */}
 }
 ```
 4. Each `OuchRequest` has a macro to simplify message creation. <br>
 Check the documentation comment for a macro to see how it is used.
 ```rust
-use slouch::{ cancel, types::UserRefNum };
+use slouch::{ enter, types::* };
 
-client.send(cancel!{
-    user_ref_num: UserRefNum::new(),
-    quantity: 0u32,
-}).unwrap();
+let request = enter!{
+    user_ref_num: client.new_user_ref_num(),
+    side: Side::Buy,
+    quantity: 69u32,
+    symbol: StockSymbol::new("STONKS").unwrap(),
+    price: Price::new(3, 5000).unwrap(),
+    time_in_force: TimeInForce::Day,
+    display: Display::Visible,
+    capacity: Capacity::Agency,
+    intermarket_sweep_eligibility: false,
+    cross_type: CrossType::Opening,
+    order_token: OrderToken::new("OrderToken").unwrap()
+};
+
+client.send(request).unwrap();
 ```
 5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled through the `logs` feature. 
 An asynchronous version of the client is supported by the [`tokio`](https://docs.rs/tokio/latest/tokio/) crate and can be enabled through the `async` feature.
@@ -60,6 +75,22 @@ By default, `OuchClient` is synchronous and its events are not logged.
 # Cargo.toml
 [dependencies]
 slouch = { version = "0.0.0", features = ["logs", "async"] }
+```
+6. `OuchRequest` and `OuchResponse` can also be used without an `OuchClient`.
+```rust
+use std::net;
+use slouch::{ account_query, msg::OuchResponse };
+
+// OUCH Server port
+let addr = net::SocketAddr::new(/* IP address */, /* Port number */); 
+let mut stream = net::TcpStream::connect(addr).unwrap();
+
+let bytes = account_query!().to_bytes();
+stream.write_all(&bytes).unwrap();
+
+let mut buffer = vec![];
+let n = stream.read(&mut buffer).unwrap();
+let response = OuchResponse::try_from(&self.buffer[..n]).unwrap();
 ```
     
 
