@@ -8,10 +8,10 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/j-stach/slouch"
 description = "Simple OUCH 5.0 client & message types."
-keywords = ["OUCH", "Nasdaq", "NASDAQ"]
+keywords = ["ouch", "nasdaq", "trading", "finance", "low-latency"]
 categories = ["protocol", "network-programming", "finance", "performance"]
 
-exclude = [".git/**", "docs/**", "test/**", "src/test/**"]
+exclude = [".git/**", "docs/**", "test/**", "src/test/**", "TODO.md"]
 
 [dependencies]
 chrono = { version = "0.4.41", default-features = false, features = ["std"] }

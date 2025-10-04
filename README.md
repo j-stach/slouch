@@ -53,8 +53,8 @@ client.send(cancel!{
     quantity: 0u32,
 }).unwrap();
 ```
-5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled by building slouch with the `logs` feature. 
-An asynchronous version of the client is supported by the [`tokio`](https://docs.rs/tokio/latest/tokio/) crate and can be enabled by building slouch with the `async` feature.
+5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled through the `logs` feature. 
+An asynchronous version of the client is supported by the [`tokio`](https://docs.rs/tokio/latest/tokio/) crate and can be enabled through the `async` feature.
 By default, `OuchClient` is synchronous and its events are not logged.
 ```toml
 # Cargo.toml
@@ -70,3 +70,4 @@ Developer resources:
 - [OUCH 5.0 Specification](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf)
 - [AIQ Strategy Values](https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8)
 
+Contributions are welcome. Submit an issue or PR as you see fit.
