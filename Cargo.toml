@@ -8,6 +8,7 @@ license = "MIT"
 readme = "README.md"
 description = "Simple OUCH 5.0 client & message types."
 keywords = ["OUCH", "Nasdaq", "NASDAQ"]
+categories = ["protocol", "network-programming", "finance", "performance"]
 
 exclude = [".git/**", "docs/**", "test/**", "src/test/**"]
 
