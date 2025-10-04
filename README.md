@@ -4,7 +4,7 @@ Simple [OUCH 5.0](https://www.nasdaqtrader.com/content/technicalsupport/specific
 Contains strong types for messages and a simple client to send and receive them.
 
 ### WARNING: Work-in-progress
-`slouch` should be presumed non-functional until integration testing has been completed.
+`slouch` should be presumed experimental and non-functional until integration testing has been completed.
 If you are willing and able to assist with integration testing, please leave a response under 
 [this issue](https://github.com/j-stach/slouch/issues/1).
 
@@ -32,7 +32,8 @@ let mut client = OuchClient::new(
 ```rust
 use slouch::account_query;
 
-client.send(account_query!()).unwrap();
+let request = account_query!();
+client.send(request).unwrap();
 
 let response = client.recv().unwrap();
 
@@ -51,6 +52,14 @@ client.send(cancel!{
     user_ref_num: UserRefNum::new(),
     quantity: 0u32,
 }).unwrap();
+```
+5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled by building slouch with the `logs` feature. 
+An asynchronous version of the client is supported by the [`tokio`] crate and can be enabled by building slouch with the `async` feature enabled.
+(By default, `OuchClient` is synchronous and its events are not logged.)
+```toml
+# Cargo.toml
+[dependencies]
+slouch = { version = "0.0.0", features = ["logs", "async"] }
 ```
     
 
