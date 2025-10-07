@@ -3,7 +3,6 @@ use std::fmt;
 
 use crate::{
     helper::{ 
-        check_alpha_compliance, 
         ascii_from_utf8,
         fixed_str_14
     },

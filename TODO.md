@@ -3,14 +3,15 @@
 - [ ] Comments & documentation (Copy from protocol PDF)
 
 ## Fix in library:
-- [x] `OrderToken` needs to accept digits and spaces
+- [ ] `OuchRequest` field methods?
 
 
 ## Testing:
+
 ### Unit testing
 
 #### request
-- [ ] cancel
+- [x] cancel
 - [ ] modify
 - [ ] permission
 - [ ] enter
