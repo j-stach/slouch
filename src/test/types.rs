@@ -463,28 +463,21 @@ use crate::types::{
         .expect("Should be valid OrderToken");
     assert_eq!(ot.encode(), *b"Test          ");
 
+    let ot = OrderToken::new("Test 2")
+        .expect("Should be valid OrderToken");
+    assert_eq!(ot.to_string(), String::from("Test 2"));
+
+    let ot_bytes = b"Test 2";
+    let ot = OrderToken::parse(ot_bytes)
+        .expect("Should be valid OrderToken");
+    assert_eq!(ot.encode(), *b"Test 2        ");
+
     // Test new error behavior:
     let error = OrderToken::new("abcdefghijklmno").err()
         .expect("Should be invalid OrderToken");
     assert_eq!(
         error,
         BadElementError::WrongSize(String::from("OrderToken"), 14, 15)
-    );
-
-    let error = OrderToken::new("T3st").err()
-        .expect("Should be invalid OrderToken");
-    assert_eq!(
-        error,
-        BadElementError::NotAlpha(String::from("OrderToken"))
-    );
-
-    // Test parse error behavior:
-    let ot_bytes = b"T3st";
-    let error = OrderToken::parse(ot_bytes).err()
-        .expect("Should be valid OrderToken");
-    assert_eq!(
-        error,
-        BadElementError::NotAlpha(String::from("OrderToken"))
     );
 }
 

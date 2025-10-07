@@ -63,7 +63,7 @@ let request = enter!{
     capacity: Capacity::Agency,
     intermarket_sweep_eligibility: false,
     cross_type: CrossType::Opening,
-    order_token: OrderToken::new("OrderToken").unwrap()
+    order_token: OrderToken::new("To The Moon").unwrap()
 };
 
 client.send(request).unwrap();

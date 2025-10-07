@@ -1,18 +1,13 @@
 
 ## TODO for crate:
-- [x] Update `cargo.toml` with necessary info
 - [ ] Comments & documentation (Copy from protocol PDF)
-- [x] `README.md` with minimal examples
 
 ## Fix in library:
-- [ ] `OrderToken` needs to accept digits and spaces
+- [x] `OrderToken` needs to accept digits and spaces
+
 
 ## Testing:
 ### Unit testing
-`test` module within `src` 
-- Double-check logic for messages and types
-- Ensure types & bounds are enforced in edge cases
-- [ ] Macros and helper functions for quickly rewriting similar tests
 
 #### request
 - [ ] cancel
@@ -28,6 +23,12 @@
 - [ ] Test all options' encodings to applicable requests
 - [ ] Test handling of inappropriate options for requests
 
+
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
+
+
+## Future directions:
+- [ ] Some field and type names may be shortened while remaining descriptive
+- [ ] Defaults for request generators in alignment with protocol
 

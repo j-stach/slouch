@@ -22,7 +22,22 @@ impl OrderToken {
     pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
-        check_alpha_compliance(s, 14, "OrderToken")?;
+
+        if s.len() > 14  {
+            return Err(
+                BadElementError::WrongSize(
+                    "OrderToken".to_string(), 14, s.len())
+            );
+        }
+
+        // OrderToken is allowed to contain spaces and numbers
+        if !s.chars().all(|c| {
+            c.is_ascii_alphanumeric() || c == ' '
+        }) {
+            return Err(
+                BadElementError::NotAlpha("OrderToken".to_string())
+            );
+        }
 
         Ok(OrderToken(fixed_str_14(s)))
     }
