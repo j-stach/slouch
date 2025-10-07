@@ -250,7 +250,7 @@ macro_rules! cancel {
 /// let request1 = enter!{
 ///     user_ref_num: UserRefNum::new(),
 ///     side: Side::Buy,
-///     quantity: 0u32,
+///     quantity: 69u32,
 ///     symbol: StockSymbol::new("STONKS").unwrap(),
 ///     price: Price::new(3, 5001).unwrap(),
 ///     time_in_force: TimeInForce::Day,
@@ -258,7 +258,7 @@ macro_rules! cancel {
 ///     capacity: Capacity::Agency,
 ///     intermarket_sweep_eligibility: false,
 ///     cross_type: CrossType::Opening,
-///     order_token: OrderToken::new("OrderToken").unwrap()
+///     order_token: OrderToken::new("2 th3 M00N").unwrap()
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, EnterOrder };
@@ -267,7 +267,7 @@ macro_rules! cancel {
 ///     EnterOrder::new(
 ///         UserRefNum::new(), 
 ///         Side::Buy,
-///         0u32,
+///         69u32,
 ///         StockSymbol::new("STONKS").unwrap(),
 ///         Price::new(3, 5001).unwrap(),
 ///         TimeInForce::Day,
@@ -275,7 +275,7 @@ macro_rules! cancel {
 ///         Capacity::Agency,
 ///         false,
 ///         CrossType::Opening,
-///         OrderToken::new("OrderToken").unwrap()
+///         OrderToken::new("2 th3 M00N").unwrap()
 ///     ).unwrap()
 /// );
 ///
@@ -314,12 +314,12 @@ macro_rules! enter {
 ///
 /// let request1 = replace!{
 ///     user_ref_num: UserRefNum::new(),
-///     quantity: 0u32,
+///     quantity: 420u32,
 ///     price: Price::new(3, 5001).unwrap(),
 ///     time_in_force: TimeInForce::Day,
 ///     display: Display::Visible,
 ///     intermarket_sweep_eligibility: false,
-///     order_token: OrderToken::new("OrderToken").unwrap()
+///     order_token: OrderToken::new("To The Moon").unwrap()
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, ReplaceOrder };
@@ -327,12 +327,12 @@ macro_rules! enter {
 /// let request2 = OuchRequest::ReplaceOrder(
 ///     ReplaceOrder::new(
 ///         UserRefNum::new(), 
-///         0u32,
+///         420u32,
 ///         Price::new(3, 5001).unwrap(),
 ///         TimeInForce::Day,
 ///         Display::Visible,
 ///         false,
-///         OrderToken::new("OrderToken").unwrap()
+///         OrderToken::new("To The Moon").unwrap()
 ///     ).unwrap()
 /// );
 ///

@@ -99,7 +99,7 @@ impl ReplaceOrder {
         self.intermarket_sweep_eligibility
     }
 
-    pub fn order_token(&self) -> &OrderToken { &self.order_token }
+    pub fn order_token(&self) -> OrderToken { self.order_token }
     
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 

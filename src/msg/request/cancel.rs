@@ -140,10 +140,10 @@ impl MassCancel {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> &FirmId { &self.firm }
+    pub fn firm(&self) -> FirmId { self.firm }
     
     /// Gets the symbol for which the orders will be canceled.
-    pub fn symbol(&self) -> &StockSymbol { &self.symbol }
+    pub fn symbol(&self) -> StockSymbol { self.symbol }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 

@@ -1,29 +1,28 @@
 
 use crate::{ 
-    cancel, mass_cancel, 
+    enable_entry, disable_entry, 
     msg::{ TagValue, OuchRequest },
 };
 
 use crate::types::{ 
     UserRefNum, 
     FirmId, 
-    StockSymbol
 };
 
-#[test] fn new_cancel() {
 
-    // Macros are tested in the doc comments 
-    let mut request = cancel!{
+#[test] fn new_enable() {
+
+    let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        quantity: 0u32
+        firm: FirmId::new("FIRM").unwrap(),
     };
     
-    let co = match request {
-        OuchRequest::CancelOrder(ref co) => co,
+    let eoe = match request {
+        OuchRequest::EnableOrderEntry(ref eoe) => eoe,
         _ => panic!{"Damn son, where'd you find that"}
     };
-    assert_eq!(co.user_ref_num(), UserRefNum::new());
-    assert_eq!(co.quantity(), 0u32);
+    assert_eq!(eoe.user_ref_num(), UserRefNum::new());
+    assert_eq!(eoe.firm(), FirmId::new("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -31,21 +30,21 @@ use crate::types::{
     assert!(!request.options().is_empty());
 }
 
-#[test] fn encode_cancel() {
+#[test] fn encode_enable() {
 
-    let mut request = cancel!{
+    let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        quantity: 0u32
+        firm: FirmId::new("FIRM").unwrap(),
     };
-
+    
     let bytes = request.clone().to_bytes();
 
     // Include the request type tag
-    let mut should_be: Vec<u8> = vec![b'X'];
+    let mut should_be: Vec<u8> = vec![b'E'];
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
-    // u32 for quantity
-    should_be.extend(0u32.to_be_bytes());
+    // Include the firm
+    should_be.extend(b"FIRM");
     // Optional appendage
     should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
@@ -56,11 +55,11 @@ use crate::types::{
     let bytes = request.clone().to_bytes();
 
     // Include the request type tag
-    let mut should_be: Vec<u8> = vec![b'X'];
+    let mut should_be: Vec<u8> = vec![b'E'];
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
-    // u32 for quantity
-    should_be.extend(0u32.to_be_bytes());
+    // Include the firm
+    should_be.extend(b"FIRM");
     // Include the appendage length marker
     should_be.extend(3u16.to_be_bytes());
     // Include the tag value length marker
@@ -73,21 +72,19 @@ use crate::types::{
 }
 
 
-#[test] fn new_mass_cancel() {
+#[test] fn new_disable() {
 
-    let mut request = mass_cancel!{
+    let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
         firm: FirmId::new("FIRM").unwrap(),
-        symbol: StockSymbol::new("STONKS").unwrap(),
     };
     
-    let mc = match request {
-        OuchRequest::MassCancel(ref mc) => mc,
+    let doe = match request {
+        OuchRequest::DisableOrderEntry(ref doe) => doe,
         _ => panic!{"Damn son, where'd you find that"}
     };
-    assert_eq!(mc.user_ref_num(), UserRefNum::new());
-    assert_eq!(mc.firm(), FirmId::new("FIRM").unwrap());
-    assert_eq!(mc.symbol(), StockSymbol::new("STONKS").unwrap());
+    assert_eq!(doe.user_ref_num(), UserRefNum::new());
+    assert_eq!(doe.firm(), FirmId::new("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -95,24 +92,21 @@ use crate::types::{
     assert!(!request.options().is_empty());
 }
 
-#[test] fn encode_mass_cancel() {
+#[test] fn encode_disable() {
 
-    let mut request = mass_cancel!{
+    let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
         firm: FirmId::new("FIRM").unwrap(),
-        symbol: StockSymbol::new("STONKS").unwrap(),
     };
-
+    
     let bytes = request.clone().to_bytes();
 
     // Include the request type tag
-    let mut should_be: Vec<u8> = vec![b'C'];
+    let mut should_be: Vec<u8> = vec![b'D'];
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
     // Include the firm
     should_be.extend(b"FIRM");
-    // Include padded symbol
-    should_be.extend(b"STONKS  ");
     // Optional appendage
     should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
@@ -123,13 +117,11 @@ use crate::types::{
     let bytes = request.clone().to_bytes();
 
     // Include the request type tag
-    let mut should_be: Vec<u8> = vec![b'C'];
+    let mut should_be: Vec<u8> = vec![b'D'];
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
     // Include the firm
     should_be.extend(b"FIRM");
-    // Include padded symbol
-    should_be.extend(b"STONKS  ");
     // Include the appendage length marker
     should_be.extend(3u16.to_be_bytes());
     // Include the tag value length marker

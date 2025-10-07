@@ -2,20 +2,17 @@
 ## TODO for crate:
 - [ ] Comments & documentation (Copy from protocol PDF)
 
-## Fix in library:
-- [ ] `OuchRequest` field methods?
-
 
 ## Testing:
 
 ### Unit testing
 
 #### request
-- [x] cancel
-- [ ] modify
-- [ ] permission
-- [ ] enter
-- [ ] replace
+- [ ] `should_panic` for all macros with `assert_new`
+- [x] modify
+- [x] permission
+- [x] enter
+- [x] replace
 
 #### response
 - [ ] Test response parsing and field access

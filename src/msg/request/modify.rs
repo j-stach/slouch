@@ -67,7 +67,8 @@ impl ModifyOrder {
 
         let mut bytes: Vec<u8> = Vec::new();
 
-        bytes.push(b'X');
+        bytes.push(b'M');
+        bytes.extend(self.user_ref_num.encode());
         bytes.push(self.side.encode());
         bytes.extend(self.quantity.to_be_bytes());
         bytes.extend(self.optional_appendage.encode());

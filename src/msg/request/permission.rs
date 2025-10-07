@@ -38,7 +38,7 @@ impl DisableOrderEntry {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
     
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> &FirmId { &self.firm }
+    pub fn firm(&self) -> FirmId { self.firm }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -106,7 +106,7 @@ impl EnableOrderEntry {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
     
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> &FirmId { &self.firm }
+    pub fn firm(&self) -> FirmId { self.firm }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
