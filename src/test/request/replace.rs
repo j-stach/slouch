@@ -6,7 +6,7 @@ use crate::{
 
 use crate::types::*;
 
-#[test] fn new_enter() {
+#[test] fn new_replace() {
 
     // Macros are tested in the doc comments 
     let mut request = replace!{
@@ -35,6 +35,20 @@ use crate::types::*;
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
     assert!(!request.options().is_empty());
+}
+
+#[test]
+#[should_panic]
+fn bad_quantity() {
+    let _ = replace!{
+        user_ref_num: UserRefNum::new(),
+        quantity: 1_000_000u32,
+        price: Price::new(3, 5001).unwrap(),
+        time_in_force: TimeInForce::Day,
+        display: Display::Visible,
+        intermarket_sweep_eligibility: false,
+        order_token: OrderToken::new("To The Moon").unwrap()
+    };
 }
 
 #[test] fn encode_replace() {

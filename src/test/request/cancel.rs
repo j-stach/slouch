@@ -31,6 +31,15 @@ use crate::types::{
     assert!(!request.options().is_empty());
 }
 
+#[test]
+#[should_panic]
+fn bad_quantity() {
+    let _ = cancel!{
+        user_ref_num: UserRefNum::new(),
+        quantity: 1_000_000u32
+    };
+}
+
 #[test] fn encode_cancel() {
 
     let mut request = cancel!{

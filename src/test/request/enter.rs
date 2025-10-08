@@ -45,6 +45,24 @@ use crate::types::*;
     assert!(!request.options().is_empty());
 }
 
+#[test]
+#[should_panic]
+fn bad_quantity() {
+    let _ = enter!{
+        user_ref_num: UserRefNum::new(),
+        side: Side::Buy,
+        quantity: 1_000_000u32,
+        symbol: StockSymbol::new("STONKS").unwrap(),
+        price: Price::new(3, 5001).unwrap(),
+        time_in_force: TimeInForce::Day,
+        display: Display::Visible,
+        capacity: Capacity::Agency,
+        intermarket_sweep_eligibility: false,
+        cross_type: CrossType::Opening,
+        order_token: OrderToken::new("To The Moon").unwrap()
+    };
+}
+
 #[test] fn encode_enter() {
 
     let mut request = enter!{

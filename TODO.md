@@ -8,11 +8,8 @@
 ### Unit testing
 
 #### request
-- [ ] `should_panic` for all macros with `assert_new`
-- [x] modify
-- [x] permission
-- [x] enter
-- [x] replace
+- [x] `should_panic` for all macros with `assert_new`
+(modify, replace, enter, cancel)
 
 #### response
 - [ ] Test response parsing and field access
