@@ -70,7 +70,7 @@ pub(crate) fn fixed_str_14(s: &str) -> [u8; 14] {
 
 // Simplifies conversion.
 pub(crate) fn ascii_from_utf8(data: &[u8]) -> Result<String, BadElementError> {
-    Ok(std::str::from_utf8(data)?.to_string())
+    Ok(std::str::from_utf8(data)?.trim_end().to_string())
 }
 
 // Simplifies conversion.

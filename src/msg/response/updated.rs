@@ -89,8 +89,8 @@ impl OrderRestated {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 63 {
-            return Err(OuchError::Parse("OrderAccepted".to_string()))
+        if data.len() < 15 {
+            return Err(OuchError::Parse("OrderRestated".to_string()))
         }
 
         Ok(Self {

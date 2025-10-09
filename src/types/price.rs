@@ -46,6 +46,12 @@ impl Price {
             cents: 3647,
         }
     }
+
+    /// Whole dollars 
+    pub fn dollars(&self) -> u32 {  self.dollars }
+
+    /// Fractions of dollar in hundredths of a cent ($0.99 -> 9900 "cents")
+    pub fn cents(&self) -> u16 { self.cents }
 }
 
 impl Price {

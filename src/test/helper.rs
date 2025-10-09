@@ -120,7 +120,7 @@ use crate::helper::ascii_from_utf8;
         .expect("'1Aa ' is valid ASCII")
         .to_string();
 
-    assert_eq!(ascii, String::from("1Aa "));
+    assert_eq!(ascii, String::from("1Aa"));
 
     // TODO: Test error bahavior?
 }

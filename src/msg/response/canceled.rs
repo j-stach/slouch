@@ -66,7 +66,7 @@ impl OrderCanceled {
     
     /// Get read-only access to the message's optional fields.
     pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+       &self.optional_appendage.tag_values()
     }
 
 }

@@ -46,7 +46,7 @@ impl OrderModified {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             side: Side::parse(data[12])?, 
             quantity: u32_from_be_bytes(&data[13..=16])?, 
-            optional_appendage: OptionalAppendage::parse(&data[18..])?
+            optional_appendage: OptionalAppendage::parse(&data[17..])?
         })
     }
     

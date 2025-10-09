@@ -47,8 +47,8 @@ impl BrokenTrade {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             match_number: u64_from_be_bytes(&data[12..=19])?,
             reason: BrokenReason::parse(data[20])?,
-            order_token: OrderToken::parse(&data[21..=35])?,
-            optional_appendage: OptionalAppendage::parse(&data[36..])?
+            order_token: OrderToken::parse(&data[21..=34])?,
+            optional_appendage: OptionalAppendage::parse(&data[35..])?
         })
     }
     

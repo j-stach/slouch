@@ -287,7 +287,7 @@ use crate::types::RejectReason;
     // Test correct behavior:
     let reject = RejectReason::parse(&0x0026_u16.to_be_bytes())
         .expect("Should be valid RejectReason");
-    assert_eq!(reject, RejectReason::FatFinger);
+    assert_eq!(reject, RejectReason::RiskFatFinger);
     assert_eq!(reject.encode(), 0x0026_u16.to_be_bytes());
 
     // Test error behavior:
