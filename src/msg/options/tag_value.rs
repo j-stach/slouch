@@ -32,8 +32,6 @@ pub enum TagValue {
     /// An alternative order reference number used when publishing the order 
     /// on the NASDAQ market data feeds 
     /// (identifying, for example, the displayed portion of a reserve order).
-    // TODO: Send email to ask what type "Q" is, 
-    // and if it needs any special treatment.
     SecondaryOrdRefNum(u64),
 
     /// 
@@ -70,7 +68,6 @@ pub enum TagValue {
     RandomReserves(u32),
 
     ///
-    // TODO: Send email to ask if there are any restrictions to this.
     Route(RouteId),
 
     /// Seconds to live. 
