@@ -52,10 +52,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     (order, bytes)
 }
 
-
+// Tests `Firm` and adding multiple options to a request.
 #[test] fn firm_multiple() { 
 
-    let mut root = test_order();
+    let root = test_order();
 
     let mut enter = root.0;
     enter.add_option(
@@ -85,55 +85,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
-#[test] fn min_qty() { 
-
-    let mut root = test_order();
-
-    let mut enter = root.0;
-    enter.add_option(TagValue::MinQty(0u32)).unwrap();
-    let bytes = enter.to_bytes();
-
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(6u16.to_be_bytes());
-
-    // Include the tag value length marker
-    should_be.push(5u8);
-    // Include option tag
-    should_be.push(3u8);
-    // MinQty bytes
-    should_be.extend(0u32.to_be_bytes());
-
-    assert_eq!(bytes, should_be);
-}
-    
-#[test] fn customer_type() { 
-
-    let mut root = test_order();
-
-    let mut enter = root.0;
-    enter.add_option(
-        TagValue::CustomerType(CustomerType::Retail)
-    ).unwrap();
-    let bytes = enter.to_bytes();
-
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(3u16.to_be_bytes());
-
-    // Include the tag value length marker
-    should_be.push(2u8);
-    // Include option tag
-    should_be.push(4u8);
-    // CustomerType flag
-    should_be.push(b'R');
-
-    assert_eq!(bytes, should_be);
-}
-
+// Tests `MaxFloor` and replacing an option in the appendage.
 #[test] fn max_floor_replace() { 
 
-    let mut root = test_order();
+    let root = test_order();
 
     let mut enter = root.0;
     // (This gets overwritten to 1u32 below)
@@ -157,18 +112,46 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
+#[test] fn min_qty() { 
+
+    let min_qty = TagValue::MinQty(0u32);
+    let bytes = min_qty.encode();
+
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(5u8);
+    // Include option tag
+    should_be.push(3u8);
+    // MinQty bytes
+    should_be.extend(0u32.to_be_bytes());
+
+    assert_eq!(bytes, should_be);
+}
+    
+#[test] fn customer_type() { 
+
+    let ct = TagValue::CustomerType(CustomerType::Retail);
+    let bytes = ct.encode();
+
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(2u8);
+    // Include option tag
+    should_be.push(4u8);
+    // CustomerType flag
+    should_be.push(b'R');
+
+    assert_eq!(bytes, should_be);
+}
+
 #[test] fn price_type() { 
 
-    let mut root = test_order();
+    let pt = TagValue::PriceType(PriceType::Limit);
+    let bytes = pt.encode();
 
-    let mut enter = root.0;
-    // - PriceType
-    enter.add_option(TagValue::PriceType(PriceType::Limit)).unwrap();
-    let bytes = enter.to_bytes();
-
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(3u16.to_be_bytes());
+    let mut should_be = vec![];
 
     // Include the tag value length marker
     should_be.push(2u8);
@@ -182,17 +165,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn peg_offset() { 
 
-    let mut root = test_order();
+    let po = TagValue::PegOffset(SignedPrice::new(0, 0200, true).unwrap());
+    let bytes = po.encode();
 
-    let mut enter = root.0;
-    enter.add_option(
-        TagValue::PegOffset(SignedPrice::new(0, 0200, true).unwrap())
-    ).unwrap();
-    let bytes = enter.to_bytes();
-
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(6u16.to_be_bytes());
+    let mut should_be = vec![];
 
     // Include the tag value length marker
     should_be.push(5u8);
@@ -204,9 +180,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
+// Tests all discretion price related options together.
 #[test] fn discretion_price_etc() { 
 
-    let mut root = test_order();
+    let root = test_order();
 
     let mut enter = root.0;
     // - DiscretionPrice
@@ -259,17 +236,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn post_only() { 
 
-    let mut root = test_order();
+    let po = TagValue::PostOnly(false);
+    let bytes = po.encode();
 
-    let mut enter = root.0;
-    enter.add_option(TagValue::PostOnly(false)).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(3u16.to_be_bytes());
-
-    // - PostOnly
     // Include the tag value length marker
     should_be.push(2u8);
     // Include option tag
@@ -282,17 +253,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn random_reserves() { 
 
-    let mut root = test_order();
+    let rr = TagValue::RandomReserves(0u32);
+    let bytes = rr.encode();
 
-    let mut enter = root.0;
-    enter.add_option(TagValue::RandomReserves(0u32)).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(6u16.to_be_bytes());
-
-    // - RandomReserves
     // Include the tag value length marker
     should_be.push(5u8);
     // Include option tag
@@ -305,40 +270,28 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn expire_time() { 
 
-    let mut root = test_order();
+    let et = TagValue::ExpireTime(ElapsedTime::new(420u32).unwrap());
+    let bytes = et.encode();
 
-    let mut enter = root.0;
-    enter.add_option(
-        TagValue::ExpireTime(ElapsedTime::new(420u32).unwrap())
-    ).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(6u16.to_be_bytes());
-
-    // - ExpireTime
     // Include the tag value length marker
     should_be.push(5u8);
     // Include option tag
     should_be.push(15u8);
     // ExpireTime bytes
     should_be.extend(420u32.to_be_bytes());
+
+    assert_eq!(bytes, should_be);
 }
 
 #[test] fn trade_now() { 
 
-    let mut root = test_order();
+    let tn = TagValue::TradeNow(true);
+    let bytes = tn.encode();
 
-    let mut enter = root.0;
-    enter.add_option(TagValue::TradeNow(true)).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(3u16.to_be_bytes());
-
-    // - TradeNow
     // Include the tag value length marker
     should_be.push(2u8);
     // Include option tag
@@ -351,19 +304,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn handle_inst() { 
 
-    let mut root = test_order();
+    let hi = TagValue::HandleInst(HandleInst::ImbalanceOnly);
+    let bytes = hi.encode();
 
-    let mut enter = root.0;
-    enter.add_option(
-        TagValue::HandleInst(HandleInst::ImbalanceOnly)
-    ).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(3u16.to_be_bytes());
-
-    // - HandleInst
     // Include the tag value length marker
     should_be.push(2u8);
     // Include option tag
@@ -376,17 +321,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn group_id() { 
 
-    let mut root = test_order();
+    let gid = TagValue::GroupId(1u16);
+    let bytes = gid.encode();
 
-    let mut enter = root.0;
-    enter.add_option(TagValue::GroupId(1u16)).unwrap();
-    let bytes = enter.to_bytes();
+    let mut should_be = vec![];
 
-    let mut should_be = root.1;
-    // Include the appendage length marker
-    should_be.extend(4u16.to_be_bytes());
-
-    // - GroupId
     // Include the tag value length marker
     should_be.push(3u8);
     // Include option tag
@@ -397,9 +336,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
+// Tests locate options together
 #[test] fn locate_shares_broker() { 
 
-    let mut root = test_order();
+    let root = test_order();
 
     let mut enter = root.0;
     // - SharesLocated
@@ -433,10 +373,69 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
-// TODO: Figure out which messages to use for the options not covered
+#[test] fn secondary_ord_ref_num() { 
 
-// TODO: Create an OrderAccepted with all possible options to test parse
-// Ensure order does not matter
+    let sorn = TagValue::SecondaryOrdRefNum(1u64);
+    let bytes = sorn.encode();
 
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(9u8);
+    // Include option tag
+    should_be.push(1u8);
+    // OrdRefNum bytes
+    should_be.extend(1u64.to_be_bytes());
+
+    assert_eq!(bytes, should_be);
+}
+
+#[test] fn bbo_weight_indicator() { 
+
+    let bbo = TagValue::BboWeightIndicator(BboWeightIndicator::Large);
+    let bytes = bbo.encode();
+
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(2u8);
+    // Include option tag
+    should_be.push(18u8);
+    // Indicator flag
+    should_be.push(b'3');
+
+    assert_eq!(bytes, should_be);
+}
+
+#[test] fn display_quantity_price() { 
+
+    let q = TagValue::DisplayQuantity(1u32);
+    let bytes = q.encode();
+
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(5u8);
+    // Include option tag
+    should_be.push(22u8);
+    // OrdRefNum bytes
+    should_be.extend(1u32.to_be_bytes());
+
+    assert_eq!(bytes, should_be);
+
+    let p = TagValue::DisplayPrice(Price::new(0, 0001).unwrap());
+    let bytes = p.encode();
+
+    let mut should_be = vec![];
+
+    // Include the tag value length marker
+    should_be.push(9u8);
+    // Include option tag
+    should_be.push(23u8);
+    // OrdRefNum bytes
+    should_be.extend(1u64.to_be_bytes());
+
+    assert_eq!(bytes, should_be);
+}
 
 
