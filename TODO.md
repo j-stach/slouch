@@ -4,23 +4,26 @@
 
 
 ## Testing:
-### requests
+- [ ] Clean up tests (eg, dry)
 - [ ] Test handling of inappropriate options for requests
-### options
-- [ ] Test all options' encode & parse via applicable requests
-- [x] multiple options
-- [x] replacing option
-- [ ] option order should not matter
 - [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
+- [ ] Parse `OuchResponse` with multiple options
+
+### options
+- [x] `encode` can be tested without `to_bytes` 
+- [x] `parse` can be similarly-tested
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
+- [ ] All msg & type enum variants can be tested during integration
 
 
 ## Future directions:
 ### Ease of use:
 - [ ] Some field and type names may be shortened while remaining descriptive
 - [ ] Defaults for request generators in alignment with protocol
-- [ ] `Option` and `union`-based field access through request/response enums
+- [ ] `Option`-based field access through request/response enums?
 - [ ] `add_options` for adding multiple tagvalues in a vec
+- [ ] More set-like impl of `PartialEq` for `OptionalAppendage`
+- [ ] Alpha-like constructors renamed to `from`
 
