@@ -15,12 +15,26 @@ use crate::msg::options::{
 };
 
 
+/// Cancel and replace an existing order in a single message.
 ///
-/// If a `UserRefIndex` option is used on the original order, 
-/// it must also be added here.
+/// If the original order is no longer live or if the new UserRefNum is invalid,
+/// the replacement will be silently ignored. 
+///
+/// If the original order is live but the details of the replace are invalid, 
+/// the original order will be canceled but a new one will not be entered. 
+/// In this case, the new UserRefNum will not be consumed and may be reused.
+///
+/// If the original order is live but the cannot be canceled 
+/// (e.g., the existing Order is a cross order in the late period), 
+/// there will be an OrderReject reponse and the order will not be replaced. 
+/// The OrderReject consumes the new UserRefNum, so it may not be reused.
+///
+/// Replacing an order gives it a new timestamp/time priority on the book.
+/// See the OUCH 5.0 specification for more information, including restrictions.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReplaceOrder {
-    user_ref_num: UserRefNum,
+    old_user_ref_num: UserRefNum,
+    new_user_ref_num: UserRefNum,
     quantity: u32,
     price: Price,
     time_in_force: TimeInForce,
@@ -32,9 +46,16 @@ pub struct ReplaceOrder {
 
 impl ReplaceOrder {
     
+    /// Crate a new Replace order.
     ///
+    /// The first UserRefNum is that of the existing order to cancel; 
+    /// the second must be a valid new UserRefNum for the replacement order.
+    ///
+    /// If a `TagValue::UserRefIndex` option is used on the original order, 
+    /// it must also be added to this request. (See `add_option` below.)
     pub fn new(
-        user_ref_num: UserRefNum,
+        old_user_ref_num: UserRefNum,
+        new_user_ref_num: UserRefNum,
         quantity: u32,
         price: Price,
         time_in_force: TimeInForce,
@@ -48,7 +69,8 @@ impl ReplaceOrder {
         }
 
         Ok(Self {
-            user_ref_num,
+            old_user_ref_num,
+            new_user_ref_num,
             quantity,
             price,
             time_in_force,
@@ -62,7 +84,8 @@ impl ReplaceOrder {
     /// WARN: Panics!
     /// This constructor will panic if quantity >= 1,000,000.
     pub fn assert_new(
-        user_ref_num: UserRefNum,
+        old_user_ref_num: UserRefNum,
+        new_user_ref_num: UserRefNum,
         quantity: u32,
         price: Price,
         time_in_force: TimeInForce,
@@ -73,7 +96,8 @@ impl ReplaceOrder {
 
         assert!(quantity < 1_000_000);
         Self::new(
-            user_ref_num,
+            old_user_ref_num,
+            new_user_ref_num,
             quantity,
             price,
             time_in_force,
@@ -83,22 +107,32 @@ impl ReplaceOrder {
         ).expect("Quantity is acceptable value")
     }
 
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
+    /// User reference number of the order to be replaced.
+    pub fn old_user_ref_num(&self) -> UserRefNum { self.old_user_ref_num }
+
+    /// User reference number for the new order.
+    pub fn new_user_ref_num(&self) -> UserRefNum { self.new_user_ref_num }
 
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
+    /// Price at which the order will be placed.
     pub fn price(&self) -> Price { self.price }
 
+    /// Time block where the order is active (e.g., Day).
+    /// "Corresponds to TimeInForce (59) in Nasdaq FIX."
     pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
 
+    /// Visibility options set for this order.
     pub fn display(&self) -> Display { self.display }
 
+    /// Returns true if this order is an eligible Intermarket Sweep Order.
     pub fn intermarket_sweep_eligibility(&self) -> bool {
         self.intermarket_sweep_eligibility
     }
 
+    /// User-defined token (CIOrdId) that is set for this order. 
+    /// Can be used to differentiate strategies, etc.
     pub fn order_token(&self) -> OrderToken { self.order_token }
     
     /// Add an optional field to the optional appendage.
@@ -124,6 +158,8 @@ impl ReplaceOrder {
     /// - LocateBroker
     /// - UserRefIndex
     /// - Side
+    /// NOTE: If a `UserRefIndex` option is used on the original order, 
+    /// it MUST also be added here.
     pub fn add_option(
         &mut self, 
         option: TagValue
@@ -164,7 +200,8 @@ impl ReplaceOrder {
         let mut bytes: Vec<u8> = Vec::new();
 
         bytes.push(b'U');
-        bytes.extend(self.user_ref_num.encode());
+        bytes.extend(self.old_user_ref_num.encode());
+        bytes.extend(self.new_user_ref_num.encode());
         bytes.extend(self.quantity.to_be_bytes());
         bytes.extend(self.price.encode());
         bytes.push(self.time_in_force.encode());

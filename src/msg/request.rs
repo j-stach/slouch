@@ -22,6 +22,7 @@ pub use self::{
 use super::options::TagValue;
 
 
+/// Client requests allowed in OUCH 5.0
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OuchRequest {
     EnterOrder(EnterOrder),
@@ -36,7 +37,7 @@ pub enum OuchRequest {
 
 impl OuchRequest {
 
-    /// 
+    /// Get a vector of the options (`TagValue`) attached to this request.
     pub fn options(&self) -> &Vec<TagValue> {
 
         use OuchRequest::*;
@@ -52,7 +53,9 @@ impl OuchRequest {
         }
     }
 
-    /// 
+    /// Add a new optional value (`TagValue`) to the request's appendage.
+    /// If a TagValue of the same variant already exists in the appendage,
+    /// it will be overwritten in place by the new optional field.
     pub fn add_option(&mut self, option: TagValue) -> Result<(), OuchError> {
 
         use OuchRequest::*;
@@ -68,7 +71,7 @@ impl OuchRequest {
         })
     }
 
-    /// 
+    /// Encode the request to a protocol-compliant byte array.
     pub fn to_bytes(&self) -> Vec<u8> {
 
         use OuchRequest::*;
@@ -86,6 +89,7 @@ impl OuchRequest {
 }
 
 impl fmt::Display for OuchRequest {
+    /// Write the name of the request variant only (no data).
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 
         use OuchRequest::*;
@@ -313,7 +317,8 @@ macro_rules! enter {
 /// };
 ///
 /// let request1 = replace!{
-///     user_ref_num: UserRefNum::new(),
+///     old_user_ref_num: UserRefNum::new(),
+///     new_user_ref_num: UserRefNum::new(),
 ///     quantity: 420u32,
 ///     price: Price::new(3, 5001).unwrap(),
 ///     time_in_force: TimeInForce::Day,
@@ -326,6 +331,7 @@ macro_rules! enter {
 ///
 /// let request2 = OuchRequest::ReplaceOrder(
 ///     ReplaceOrder::new(
+///         UserRefNum::new(), 
 ///         UserRefNum::new(), 
 ///         420u32,
 ///         Price::new(3, 5001).unwrap(),
@@ -341,17 +347,18 @@ macro_rules! enter {
 #[macro_export]
 macro_rules! replace {
     (
-        user_ref_num: $f1:expr,
-        quantity: $f2:expr,
-        price: $f3:expr,
-        time_in_force: $f4:expr,
-        display: $f5:expr,
-        intermarket_sweep_eligibility: $f6:expr,
-        order_token: $f7:expr $(,)?
+        old_user_ref_num: $f1:expr,
+        new_user_ref_num: $f2:expr,
+        quantity: $f3:expr,
+        price: $f4:expr,
+        time_in_force: $f5:expr,
+        display: $f6:expr,
+        intermarket_sweep_eligibility: $f7:expr,
+        order_token: $f8:expr $(,)?
     ) => {
         $crate::msg::OuchRequest::ReplaceOrder(
             $crate::msg::ReplaceOrder::assert_new(
-                $f1, $f2, $f3, $f4, $f5, $f6, $f7
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8
             )
         )
     };

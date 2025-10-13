@@ -6,7 +6,7 @@ use crate::msg::options::{
     TagValue
 };
 
-///
+/// Can be used when recovering state to request the next available UserRefNum.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AccountQuery {
     /// This holds all optional fields included in the order.

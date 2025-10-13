@@ -40,7 +40,9 @@ pub struct EnterOrder {
 
 impl EnterOrder {
 
-    ///
+    /// Create a new Enter order.
+    /// For `quantity`, entering over 1,000,000 (maximum shares per order) 
+    /// results in an error.
     pub fn new(
         user_ref_num: UserRefNum,
         side: Side,
@@ -113,26 +115,36 @@ impl EnterOrder {
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
-    /// Gets the symbol for which the orders will be placed.
+    /// Symbol for which the orders will be placed.
     pub fn symbol(&self) -> StockSymbol { self.symbol }
 
     /// Market side (Buy, Sell, etc.)
     pub fn side(&self) -> Side { self.side }
 
+    /// Price at which the order will be placed.
     pub fn price(&self) -> Price { self.price }
 
+    /// Time block where the order is active (e.g., Day).
+    /// "Corresponds to TimeInForce (59) in Nasdaq FIX."
     pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
 
+    /// Visibility options set for this order.
     pub fn display(&self) -> Display { self.display }
 
+    /// Trading capacity with which this order will be placed.
+    /// (e.g. Agency, Principal)
     pub fn capacity(&self) -> Capacity { self.capacity }
 
+    /// Returns true if this order is an eligible Intermarket Sweep Order.
     pub fn intermarket_sweep_eligibility(&self) -> bool {
         self.intermarket_sweep_eligibility
     }
 
+    /// The market event for when this order is to be executed.
     pub fn cross_type(&self) -> CrossType { self.cross_type }
 
+    /// User-defined token (CIOrdId) that is set for this order. 
+    /// Can be used to differentiate strategies, etc.
     pub fn order_token(&self) -> OrderToken { self.order_token }
     
     /// Add a `TagValue` to the optional appendage.

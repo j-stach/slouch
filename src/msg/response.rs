@@ -42,7 +42,7 @@ use std::convert::TryFrom;
 use crate::error::OuchError;
 
 
-///
+/// Server responses to expect in OUCH 5.0
 #[derive(Debug, Clone)]
 pub enum OuchResponse {
     OrderAccepted(OrderAccepted),
@@ -65,8 +65,11 @@ pub enum OuchResponse {
 }
 
 impl TryFrom<&[u8]> for OuchResponse {
+
+    /// Catch-all error type for this crate, with a variant for parse errors.
     type Error = OuchError;
 
+    /// Parse bytes as an OuchResponse.
     fn try_from(data: &[u8]) -> Result<Self, Self::Error> {
 
         if data.is_empty() {

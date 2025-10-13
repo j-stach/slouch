@@ -10,7 +10,8 @@ use crate::types::*;
 
     // Macros are tested in the doc comments 
     let mut request = replace!{
-        user_ref_num: UserRefNum::new(),
+        old_user_ref_num: UserRefNum::new(),
+        new_user_ref_num: UserRefNum::new(),
         quantity: 0u32,
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
@@ -23,7 +24,8 @@ use crate::types::*;
         OuchRequest::ReplaceOrder(ref eo) => eo,
         _ => panic!{"Damn son, where'd you find that"}
     };
-    assert_eq!(eo.user_ref_num(), UserRefNum::new());
+    assert_eq!(eo.old_user_ref_num(), UserRefNum::new());
+    assert_eq!(eo.new_user_ref_num(), UserRefNum::new());
     assert_eq!(eo.quantity(), 0u32);
     assert_eq!(eo.price(), Price::new(3, 5001).unwrap());
     assert_eq!(eo.time_in_force(), TimeInForce::Day);
@@ -41,7 +43,8 @@ use crate::types::*;
 #[should_panic]
 fn bad_quantity() {
     let _ = replace!{
-        user_ref_num: UserRefNum::new(),
+        old_user_ref_num: UserRefNum::new(),
+        new_user_ref_num: UserRefNum::new(),
         quantity: 1_000_000u32,
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
@@ -54,7 +57,8 @@ fn bad_quantity() {
 #[test] fn encode_replace() {
 
     let mut request = replace!{
-        user_ref_num: UserRefNum::new(),
+        old_user_ref_num: UserRefNum::new(),
+        new_user_ref_num: UserRefNum::new(),
         quantity: 0u32,
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
@@ -67,6 +71,8 @@ fn bad_quantity() {
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'U'];
+    // u32 for UserRefNum
+    should_be.extend(1u32.to_be_bytes());
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
     // u32 for quantity
@@ -92,6 +98,8 @@ fn bad_quantity() {
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'U'];
+    // u32 for UserRefNum
+    should_be.extend(1u32.to_be_bytes());
     // u32 for UserRefNum
     should_be.extend(1u32.to_be_bytes());
     // u32 for quantity

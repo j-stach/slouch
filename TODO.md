@@ -1,4 +1,10 @@
 
+## Dev questions
+Some messages do not need to encode optional appendage:
+- if there are no options? can it be present with length 0?
+- are there any "mandatory" optional fields for enter and replace that would make the appendage always necessary?
+- is the length marker always present for responses?
+
 ## TODO for crate:
 - [ ] Comments & documentation (Copy from protocol PDF)
 
@@ -8,10 +14,6 @@
 - [ ] Test handling of inappropriate options for requests
 - [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
 - [ ] Parse `OuchResponse` with multiple options
-
-### options
-- [x] `encode` can be tested without `to_bytes` 
-- [x] `parse` can be similarly-tested
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
@@ -26,4 +28,5 @@
 - [ ] `add_options` for adding multiple tagvalues in a vec
 - [ ] More set-like impl of `PartialEq` for `OptionalAppendage`
 - [ ] Alpha-like constructors renamed to `from`
+- [ ] `try_from` and `to_bytes` for responses and requests, for consistency
 

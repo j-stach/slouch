@@ -13,15 +13,13 @@ use crate::msg::options::{
 };
 
 
-/// Cancel shares on an active order.
+/// Cancel or reduce shares on an existing order.
+///
+/// Canceling an order after its execution will be silently ignored.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CancelOrder {
     user_ref_num: UserRefNum,
-    // This is the new intended order size. 
     // TODO: TBD: Does going over orig quantity do nothing?
-    // This limits the maximum number of shares that can potentially 
-    // be executed in total after the cancel is applied. 
-    // Entering `0` will cancel any remaining open shares on this order.
     quantity: u32,
     optional_appendage: OptionalAppendage
 }
@@ -30,11 +28,13 @@ impl CancelOrder {
 
     /// Create a new Cancel order. 
     ///
-    /// `quantity` limits the maximum number of shares that can potentially 
-    /// be executed in total after the cancel is applied. 
+    /// `user_ref_num` refers to the order to be canceled.
+    ///
+    /// `quantity` limits the maximum number of shares that remain to be 
+    /// executed after the (partial) cancel is applied. 
     /// Entering over 1,000,000 (maximum shares per order) results in an error.
     // TBD: Entering a value greater than the original quantity does nothing.
-    /// Entering `0` will cancel all remaining open shares on this order.
+    /// Entering `0` will cancel all remaining open shares on the order.
     pub fn new(
         user_ref_num: UserRefNum,
         quantity: u32,

@@ -12,7 +12,7 @@ use crate::msg::options::{
 };
 
 
-///
+/// Prevent a firm from entering new orders on this account.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DisableOrderEntry {
     user_ref_num: UserRefNum,
@@ -22,6 +22,7 @@ pub struct DisableOrderEntry {
 
 impl DisableOrderEntry {
 
+    /// Create a new Disable Entry request.
     pub fn new(
         user_ref_num: UserRefNum,
         firm: FirmId,
@@ -80,7 +81,7 @@ impl DisableOrderEntry {
     }
 } 
 
-///
+/// Allow a firm to enter new orders on this account.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnableOrderEntry {
     user_ref_num: UserRefNum,
@@ -90,6 +91,7 @@ pub struct EnableOrderEntry {
 
 impl EnableOrderEntry {
 
+    /// Create a new Enable Entry request.
     pub fn new(
         user_ref_num: UserRefNum,
         firm: FirmId,

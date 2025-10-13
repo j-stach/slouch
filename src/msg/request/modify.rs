@@ -11,7 +11,7 @@ use crate::msg::options::{
     TagValue
 };
 
-///
+/// Modify values for an existing order, without affecting priority.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ModifyOrder {
     user_ref_num: UserRefNum,
@@ -22,7 +22,12 @@ pub struct ModifyOrder {
 
 impl ModifyOrder {
 
+    /// Create a new Modify request.
     ///
+    /// `user_ref_num` refers to the order to be modified.
+    ///
+    /// For `quantity`, entering over 1,000,000 (maximum shares per order) 
+    /// results in an error.
     pub fn new(
         user_ref_num: UserRefNum,
         side: Side,
