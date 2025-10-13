@@ -18,7 +18,11 @@ use crate::types::{
 use crate::msg::options::*;
 
 
+/// Informs you that an execution has been broken.
+/// The trade is no longer good and will not clear.
 ///
+/// You will only receive a BrokenTrade after first receiving an 
+/// OrderExecuted message for a given order.
 #[derive(Debug, Clone)]
 pub struct BrokenTrade {
     timestamp: NaiveTime,
@@ -52,17 +56,22 @@ impl BrokenTrade {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
+    /// Match Number being broken (as transmitted in the OrderExecuted response).
     pub fn match_number(&self) -> u64 { self.match_number }
 
-    /// Gets the user reference number.
+    /// Refers to the order whose execution has been broken.
     pub fn user_ref_num(&self) -> UserRefNum {
         self.user_ref_num
     }
 
+    /// Reason the trade execution was broken.
     pub fn reason(&self) -> BrokenReason { self.reason }
 
+    /// User-defined token (CIOrdId) that is set for this order. 
+    /// Can be used to differentiate strategies, etc.
     pub fn order_token(&self) -> &OrderToken { &self.order_token }
     
     /// Get read-only access to the message's optional fields.

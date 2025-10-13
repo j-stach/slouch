@@ -15,6 +15,7 @@ use crate::msg::options::{
 
 /// Cancel or reduce shares on an existing order.
 ///
+/// Duplicate cancel requests for the same UserRefNum will be ignored by OUCH.
 /// Canceling an order after its execution will be silently ignored.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CancelOrder {

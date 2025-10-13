@@ -23,7 +23,9 @@ use crate::types::{
 use crate::msg::options::*;
 
 
-///
+/// Informs you that an order has been reduced or canceled.
+/// OrderCanceled does not necessarily mean the entire order is dead; 
+/// some portion of the order may still be alive.
 #[derive(Debug, Clone)]
 pub struct OrderCanceled {
     timestamp: NaiveTime,
@@ -55,13 +57,17 @@ impl OrderCanceled {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> &NaiveTime { &self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the order that was cancelled.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
+    /// The number of shares being decremented from the order. 
+    /// This number is incremental, not cumulative.
     pub fn quantity(&self) -> u32 { self.quantity }
     
+    /// Reason why the order was canceled.
     pub fn reason(&self) -> CancelReason { self.reason }
     
     /// Get read-only access to the message's optional fields.
@@ -112,9 +118,10 @@ impl AiqCanceled {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the order that was cancelled.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Liquidity flag the order would have received.
@@ -144,7 +151,12 @@ impl AiqCanceled {
 }
 
 
+/// Sent in response to a CancelOrder request for a cross order during a 
+/// pre-cross late period signifying that it cannot be canceled at this time, 
+/// but any unexecuted portion of this order will automatically be canceled 
+/// immediately after the cross completes.
 ///
+/// This message will only be sent once for a given UserRefNum. 
 #[derive(Debug, Clone)]
 pub struct CancelPending {
     timestamp: NaiveTime,
@@ -172,9 +184,10 @@ impl CancelPending {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the order that is pending cancellation.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Get read-only access to the message's optional fields.
@@ -185,7 +198,15 @@ impl CancelPending {
 }
 
 
+/// Sent in response to a partial cancel request (with non-zero “quantity”) 
+/// for a cross order during a pre-cross late period signifying that it 
+/// cannot be partially canceled at this time. 
 ///
+/// No automatic cancel will be scheduled for this order. 
+/// Clients could repeat their request for any unexecuted portion of the order 
+/// after the cross completes.
+///
+/// This message will only be sent once for a given UserRefNum. 
 #[derive(Debug, Clone)]
 pub struct CancelRejected {
     timestamp: NaiveTime,
@@ -213,9 +234,10 @@ impl CancelRejected {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the order that could not be cancelled.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Get read-only access to the message's optional fields.
@@ -226,7 +248,8 @@ impl CancelRejected {
 }
 
 
-///
+/// Acknowledges the receipt of a valid MassCancel request. 
+/// The data fields from the request are echoed back in this message.
 #[derive(Debug, Clone)]
 pub struct MassCancelResponse {
     timestamp: NaiveTime,
@@ -258,9 +281,10 @@ impl MassCancelResponse {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the MassCancel request.
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Gets the ID for the firm for whom the orders will be canceled.

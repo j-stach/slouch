@@ -17,7 +17,8 @@ use crate::types::{
 use crate::msg::options::*;
 
 
-/// 
+/// Acknowledges the receipt of the DisableOrderEntry request. 
+/// The values from the request message are echoed back in this message.
 #[derive(Debug, Clone)]
 pub struct DisableOrderEntryResponse {
     timestamp: NaiveTime,
@@ -47,14 +48,15 @@ impl DisableOrderEntryResponse {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the original request.
     pub fn user_ref_num(&self) -> UserRefNum {
         self.user_ref_num
     }
 
-    /// Gets the ID for the firm for whom the orders will be canceled.
+    /// Gets the ID for the firm for whom orders will be disabled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     
     /// Get read-only access to the message's optional fields.
@@ -65,7 +67,8 @@ impl DisableOrderEntryResponse {
 }
 
 
-/// 
+/// Acknowledges the receipt of the EnableOrderEntry request. 
+/// The values from the request message are echoed back in this message.
 #[derive(Debug, Clone)]
 pub struct EnableOrderEntryResponse {
     timestamp: NaiveTime,
@@ -95,14 +98,15 @@ impl EnableOrderEntryResponse {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
 
-    /// Gets the user reference number.
+    /// Refers to the original request.
     pub fn user_ref_num(&self) -> UserRefNum {
         self.user_ref_num
     }
 
-    /// Gets the ID for the firm for whom the orders will be canceled.
+    /// Gets the ID for the firm for whom orders will be enabled.
     pub fn firm(&self) -> &FirmId { &self.firm }
     
     /// Get read-only access to the message's optional fields.

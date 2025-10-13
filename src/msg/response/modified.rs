@@ -18,7 +18,7 @@ use crate::types::{
 use crate::msg::options::*;
 
 
-/// 
+/// Sent in response to a ModifyOrder request.
 #[derive(Debug, Clone)]
 pub struct OrderModified {
     timestamp: NaiveTime,
@@ -50,9 +50,10 @@ impl OrderModified {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
-    /// Gets the user reference number.
+    /// Refers to the order that was modified.
     pub fn user_ref_num(&self) -> UserRefNum {
         self.user_ref_num
     }
@@ -60,7 +61,7 @@ impl OrderModified {
     /// Market side (Buy, Sell, etc.)
     pub fn side(&self) -> Side { self.side }
 
-    /// Quantity of shares to be ordered.
+    /// Quantity of shares outstanding.
     pub fn quantity(&self) -> u32 { self.quantity }
     
     /// Get read-only access to the message's optional fields.

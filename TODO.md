@@ -4,9 +4,16 @@ Some messages do not need to encode optional appendage:
 - if there are no options? can it be present with length 0?
 - are there any "mandatory" optional fields for enter and replace that would make the appendage always necessary?
 - is the length marker always present for responses?
+- [ ] `Option<OptionalAppendage>`
+- "You will receive one and only one of these two for each replacement." `OrderReplaced`
 
 ## TODO for crate:
-- [ ] Comments & documentation (Copy from protocol PDF)
+### Comments & documentation (Copy from protocol PDF)
+- [x] Request
+- [x] Response
+- [ ] Optional Fields
+- [ ] Types
+- [ ] Client
 
 
 ## Testing:

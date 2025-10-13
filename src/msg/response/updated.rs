@@ -19,7 +19,7 @@ use crate::types::{
 use crate::msg::options::*;
 
 
-/// 
+/// Sent whenever priority of the order has been changed by the system.
 #[derive(Debug, Clone)]
 pub struct OrderPriorityUpdate {
     timestamp: NaiveTime,
@@ -53,6 +53,7 @@ impl OrderPriorityUpdate {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
     /// Gets the user reference number.
@@ -60,10 +61,14 @@ impl OrderPriorityUpdate {
         self.user_ref_num
     }
 
+    /// The limit price of the order.
     pub fn price(&self) -> Price { self.price }
 
+    /// The new display for the order.
     pub fn display(&self) -> Display { self.display }
 
+    /// User-defined token (CIOrdId) that is set for this order. 
+    /// Can be used to differentiate strategies, etc.
     pub fn order_ref_num(&self) -> u64 { self.order_ref_num }
 
     /// Get read-only access to the message's optional fields.
@@ -74,7 +79,7 @@ impl OrderPriorityUpdate {
 }
 
 
-/// 
+/// Sent when the system has modified an order as part of its order management.
 #[derive(Debug, Clone)]
 pub struct OrderRestated {
     timestamp: NaiveTime,
@@ -104,6 +109,7 @@ impl OrderRestated {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
     /// Gets the user reference number.
@@ -111,6 +117,7 @@ impl OrderRestated {
         self.user_ref_num
     }
 
+    /// Reason for restating the order.
     pub fn reason(&self) -> RestateReason { self.reason }
 
     /// Get read-only access to the message's optional fields.

@@ -11,7 +11,7 @@ use crate::{
 };
 
 
-///
+/// Signal events that affect the entire NASDAQ system.
 #[derive(Debug, Clone)]
 pub struct SystemEvent {
     timestamp: NaiveTime,
@@ -37,8 +37,10 @@ impl SystemEvent {
         Ok(SystemEvent { timestamp, event_code })
     }
 
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
+    /// Event code for the system-wide signal.
     pub fn event_code(&self) -> EventCode { self.event_code }
 
 }

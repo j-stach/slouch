@@ -12,7 +12,7 @@ use crate::{
 
 use crate::msg::options::*;
 
-/// 
+/// Indicates the next available UserRefNum.
 #[derive(Debug, Clone)]
 pub struct AccountQueryResponse {
     timestamp: NaiveTime,
@@ -40,6 +40,7 @@ impl AccountQueryResponse {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
     /// Gets the next available user reference number.

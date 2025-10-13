@@ -19,7 +19,7 @@ use crate::types::{
 use crate::msg::options::*;
 
 
-///
+/// Informs you that part or all of an order has been executed.
 #[derive(Debug, Clone)]
 pub struct OrderExecuted {
     timestamp: NaiveTime,
@@ -55,6 +55,7 @@ impl OrderExecuted {
         })
     }
     
+    /// Time this message was generated.
     pub fn timestamp(&self) -> NaiveTime { self.timestamp }
     
     /// Gets the user reference number.
@@ -65,10 +66,15 @@ impl OrderExecuted {
     /// Quantity of shares to be ordered.
     pub fn quantity(&self) -> u32 { self.quantity }
     
+    /// Price at which the order was executed.
     pub fn price(&self) -> Price { self.price }
 
+    /// Assigned by the exchange to identify the trade. 
+    /// Both the buy and the sell executions participating in the trade 
+    /// will share the same match number.
     pub fn match_number(&self) -> u64 { self.match_number }
 
+    /// Liquidity flag the order would have received.
     pub fn liquidity_flag(&self) -> LiquidityFlag { self.liquidity_flag }
 
     /// Get read-only access to the message's optional fields.
