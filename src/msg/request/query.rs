@@ -54,7 +54,7 @@ impl AccountQuery {
         let mut bytes: Vec<u8> = Vec::new();
 
         bytes.push(b'Q');
-        bytes.extend(self.optional_appendage.encode());
+        bytes.extend(self.optional_appendage.encode_nothing_if_empty());
 
         bytes
     }

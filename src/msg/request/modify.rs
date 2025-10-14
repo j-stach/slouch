@@ -113,7 +113,7 @@ impl ModifyOrder {
         bytes.extend(self.user_ref_num.encode());
         bytes.push(self.side.encode());
         bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.optional_appendage.encode());
+        bytes.extend(self.optional_appendage.encode_nothing_if_empty());
 
         bytes
     }

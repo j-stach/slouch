@@ -3,9 +3,9 @@
 - [ ] Some field and type names may be shortened while remaining descriptive
 
 ### msg
-Optional `OptionalAppendage` presence in encode/parse:
-- [ ] modify
-- [ ] query
+Optional `OptionalAppendage` presence during encode/parse:
+- [x] modify
+- [x] query
 - [ ] order canceled
 - [ ] broken
 - [ ] rejected
@@ -15,10 +15,8 @@ Optional `OptionalAppendage` presence in encode/parse:
 - [ ] order modified
 - [ ] aiq canceled
 - [ ] query response
-
-### types
-~Default values for optional types:~
-Absence of tagvalue indicates intent to use default
+- Accomodate shorter messages for parse
+- Don't encode if unnecessary
 
 ## Dev questions
 Some messages do not need to encode optional appendage:

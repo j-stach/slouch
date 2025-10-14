@@ -64,6 +64,17 @@ impl OptionalAppendage {
         encoded_appendage
     }
 
+    // For `ModifyOrder` and `AccountQuery` requests, 
+    // the Optional Appendage (including length marker) is itself optional.
+    pub(crate) fn encode_nothing_if_empty(&self) -> Vec<u8> {
+
+        if self.tag_values.len() == 0 {
+            vec![]
+        } else {
+            self.encode()
+        }
+    }
+
     pub(crate) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
         let mut tag_values: Vec<TagValue> = Vec::new();

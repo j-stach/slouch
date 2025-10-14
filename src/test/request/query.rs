@@ -21,7 +21,6 @@ use crate::{ account_query, msg::TagValue };
     let bytes = request.clone().to_bytes();
 
     let mut should_be: Vec<u8> = vec![b'Q'];
-    should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
 
     request.add_option(TagValue::UserRefIndex(0u8))

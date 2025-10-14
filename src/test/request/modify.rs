@@ -9,7 +9,7 @@ use crate::types::{
     Side,
 };
 
-#[test] fn new_modify() {
+#[test] fn new() {
 
     // Macros are tested in the doc comments 
     let mut request = modify!{
@@ -42,7 +42,7 @@ fn bad_quantity() {
     };
 }
 
-#[test] fn encode_modify() {
+#[test] fn encode() {
 
     let mut request = modify!{
         user_ref_num: UserRefNum::new(),
@@ -60,8 +60,6 @@ fn bad_quantity() {
     should_be.push(b'B');
     // u32 for quantity
     should_be.extend(0u32.to_be_bytes());
-    // Optional appendage
-    should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
 
 
