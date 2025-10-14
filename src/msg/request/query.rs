@@ -15,20 +15,16 @@ pub struct AccountQuery {
 
 impl AccountQuery {
 
+    /// Create a new Account Query.
     pub fn new() -> Self {
         Self {
             optional_appendage: OptionalAppendage::new(),
         }
     }
     
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'Q');
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
     /// Add a `TagValue` to the optional appendage.
@@ -53,9 +49,17 @@ impl AccountQuery {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+    pub(super) fn encode(&self) -> Vec<u8> {
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'Q');
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
+
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 

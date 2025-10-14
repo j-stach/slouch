@@ -70,16 +70,9 @@ impl CancelOrder {
     /// Quantity of shares that will remain to be executed after canceling.
     pub fn quantity(&self) -> u32 { self.quantity }
     
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'X');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
     /// Add a `TagValue` to the optional appendage.
@@ -104,10 +97,20 @@ impl CancelOrder {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+    pub(super) fn encode(&self) -> Vec<u8> {
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'X');
+        bytes.extend(self.user_ref_num.encode());
+        bytes.extend(self.quantity.to_be_bytes());
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
+
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 
 
@@ -146,17 +149,9 @@ impl MassCancel {
     /// Gets the symbol for which the orders will be canceled.
     pub fn symbol(&self) -> StockSymbol { self.symbol }
     
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'C');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.firm.encode());
-        bytes.extend(self.symbol.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
     /// Add a `TagValue` to the optional appendage.
@@ -190,10 +185,21 @@ impl MassCancel {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+    pub(super) fn encode(&self) -> Vec<u8> {
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'C');
+        bytes.extend(self.user_ref_num.encode());
+        bytes.extend(self.firm.encode());
+        bytes.extend(self.symbol.encode());
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
+
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
     
 } 
 

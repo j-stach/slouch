@@ -41,16 +41,9 @@ impl DisableOrderEntry {
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> FirmId { self.firm }
     
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'D');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.firm.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
     /// Add a `TagValue` to the optional appendage.
@@ -75,10 +68,20 @@ impl DisableOrderEntry {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+    pub(super) fn encode(&self) -> Vec<u8> {
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'D');
+        bytes.extend(self.user_ref_num.encode());
+        bytes.extend(self.firm.encode());
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
+    
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 
 /// Allow a firm to enter new orders on this account.
@@ -110,16 +113,9 @@ impl EnableOrderEntry {
     /// Gets the ID for the firm for whom the orders will be canceled.
     pub fn firm(&self) -> FirmId { self.firm }
     
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'E');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.firm.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
     }
 
     /// Add a `TagValue` to the optional appendage.
@@ -144,9 +140,19 @@ impl EnableOrderEntry {
         Ok(self.optional_appendage.add(option))
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
+    pub(super) fn encode(&self) -> Vec<u8> {
+
+        let mut bytes: Vec<u8> = Vec::new();
+
+        bytes.push(b'E');
+        bytes.extend(self.user_ref_num.encode());
+        bytes.extend(self.firm.encode());
+        bytes.extend(self.optional_appendage.encode());
+
+        bytes
     }
+
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 

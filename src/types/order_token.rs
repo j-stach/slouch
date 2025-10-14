@@ -44,7 +44,6 @@ impl OrderToken {
 
     /// Get the OrderToken as a string, ignoring trailing spaces.
     pub fn to_string(&self) -> String { 
-        // TODO: 
         self.0.iter()
             .map(|b| *b as char)
             .collect::<String>()

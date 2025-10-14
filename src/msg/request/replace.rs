@@ -135,6 +135,11 @@ impl ReplaceOrder {
     /// Can be used to differentiate strategies, etc.
     pub fn order_token(&self) -> OrderToken { self.order_token }
     
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
+    }
+    
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 
     /// in this message, except for `Firm` and `GroupId`, which are inherited
@@ -215,10 +220,8 @@ impl ReplaceOrder {
 
         bytes
     }
-    
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
+
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 

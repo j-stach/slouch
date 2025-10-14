@@ -203,6 +203,11 @@ impl EnterOrder {
 
         Ok(self.optional_appendage.add(option))
     }
+
+    /// Get read-only access to the message's optional fields.
+    pub fn options(&self) -> &Vec<TagValue> {
+        &self.optional_appendage.tag_values()
+    }
     
     pub(super) fn encode(&self) -> Vec<u8> {
 
@@ -228,9 +233,7 @@ impl EnterOrder {
         bytes
     }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
+    /// Encode the request to a protocol-compliant byte array.
+    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
 } 
 
