@@ -37,7 +37,7 @@ impl OrderRejected {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 30 {
+        if data.len() < 28 {
             return Err(OuchError::Parse("OrderRejected".to_string()))
         }
 
@@ -49,7 +49,11 @@ impl OrderRejected {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             reason: RejectReason::parse(&data[12..=13])?,
             order_token: OrderToken::parse(&data[14..=27])?,
-            optional_appendage: OptionalAppendage::parse(&data[28..])?
+            optional_appendage: if data.len() >= 28 {
+                OptionalAppendage::parse(&data[28..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     

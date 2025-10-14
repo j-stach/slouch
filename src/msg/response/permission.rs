@@ -33,7 +33,7 @@ impl DisableOrderEntryResponse {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 18 {
+        if data.len() < 16 {
             return Err(OuchError::Parse("DisableOrderEntryResponse".to_string()))
         }
 
@@ -44,7 +44,11 @@ impl DisableOrderEntryResponse {
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             firm: FirmId::parse(&data[12..=15])?,
-            optional_appendage: OptionalAppendage::parse(&data[16..])?
+            optional_appendage: if data.len() >= 16 {
+                OptionalAppendage::parse(&data[16..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     
@@ -83,7 +87,7 @@ impl EnableOrderEntryResponse {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 18 {
+        if data.len() < 16 {
             return Err(OuchError::Parse("EnableOrderEntryResponse".to_string()))
         }
 
@@ -94,7 +98,11 @@ impl EnableOrderEntryResponse {
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             firm: FirmId::parse(&data[12..=15])?,
-            optional_appendage: OptionalAppendage::parse(&data[16..])?
+            optional_appendage: if data.len() >= 16 {
+                OptionalAppendage::parse(&data[16..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     

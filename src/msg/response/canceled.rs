@@ -41,7 +41,7 @@ impl OrderCanceled {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 19 {
+        if data.len() < 17 {
             return Err(OuchError::Parse("OrderCanceled".to_string()))
         }
 
@@ -53,7 +53,11 @@ impl OrderCanceled {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             quantity: u32_from_be_bytes(&data[12..=15])?, 
             reason: CancelReason::parse(data[16])?,
-            optional_appendage: OptionalAppendage::parse(&data[17..])?
+            optional_appendage: if data.len() >= 17 {
+                OptionalAppendage::parse(&data[17..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     
@@ -98,7 +102,7 @@ impl AiqCanceled {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 33 {
+        if data.len() < 31 {
             return Err(OuchError::Parse("AiqCanceled".to_string()))
         }
 
@@ -114,7 +118,11 @@ impl AiqCanceled {
             execution_price: Price::parse(&data[21..=28])?,
             liquidity_flag: LiquidityFlag::parse(data[29])?,
             aiq_strategy: AiqStrategy::parse(data[30])?,
-            optional_appendage: OptionalAppendage::parse(&data[31..])?
+            optional_appendage: if data.len() >= 31 {
+                OptionalAppendage::parse(&data[31..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     
@@ -170,7 +178,7 @@ impl CancelPending {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 14 {
+        if data.len() < 12 {
             return Err(OuchError::Parse("CancelPending".to_string()))
         }
 
@@ -180,7 +188,11 @@ impl CancelPending {
                 nanosec_from_midnight(ts)
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            optional_appendage: OptionalAppendage::parse(&data[12..])?
+            optional_appendage: if data.len() >= 12 {
+                OptionalAppendage::parse(&data[12..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     
@@ -220,7 +232,7 @@ impl CancelRejected {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 14 {
+        if data.len() < 12 {
             return Err(OuchError::Parse("CancelRejected".to_string()))
         }
 
@@ -230,7 +242,11 @@ impl CancelRejected {
                 nanosec_from_midnight(ts)
             },
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            optional_appendage: OptionalAppendage::parse(&data[12..])?
+            optional_appendage: if data.len() >= 12 {
+                OptionalAppendage::parse(&data[12..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     

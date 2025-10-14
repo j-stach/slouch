@@ -39,7 +39,7 @@ impl BrokenTrade {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 38 {
+        if data.len() < 35 {
             return Err(OuchError::Parse("BrokenTrade".to_string()))
         }
 
@@ -52,7 +52,11 @@ impl BrokenTrade {
             match_number: u64_from_be_bytes(&data[12..=19])?,
             reason: BrokenReason::parse(data[20])?,
             order_token: OrderToken::parse(&data[21..=34])?,
-            optional_appendage: OptionalAppendage::parse(&data[35..])?
+            optional_appendage: if data.len() >= 35 {
+                OptionalAppendage::parse(&data[35..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     

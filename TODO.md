@@ -4,19 +4,16 @@
 
 ### msg
 Optional `OptionalAppendage` presence during encode/parse:
-- [x] modify
-- [x] query
-- [ ] order canceled
-- [ ] broken
-- [ ] rejected
-- [ ] cancel pend
-- [ ] cancel reject
-- [ ] priority update
-- [ ] order modified
-- [ ] aiq canceled
-- [ ] query response
+- [x] order canceled
+- [x] broken
+- [x] rejected
+- [x] cancel pend
+- [x] cancel reject
+- [x] priority update
+- [x] order modified
+- [x] aiq canceled
+- [x] query response
 - Accomodate shorter messages for parse
-- Don't encode if unnecessary
 
 ## Dev questions
 Some messages do not need to encode optional appendage:

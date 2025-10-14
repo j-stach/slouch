@@ -34,7 +34,7 @@ impl OrderModified {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 20 {
+        if data.len() < 17 {
             return Err(OuchError::Parse("OrderModified".to_string()))
         }
 
@@ -46,7 +46,11 @@ impl OrderModified {
             user_ref_num: UserRefNum::parse(&data[8..=11])?,
             side: Side::parse(data[12])?, 
             quantity: u32_from_be_bytes(&data[13..=16])?, 
-            optional_appendage: OptionalAppendage::parse(&data[17..])?
+            optional_appendage: if data.len() >= 17 {
+                OptionalAppendage::parse(&data[17..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     

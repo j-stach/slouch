@@ -26,7 +26,7 @@ impl AccountQueryResponse {
     // so all offsets should be one less than those in the official spec.
     pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
 
-        if data.len() < 14 {
+        if data.len() < 12 {
             return Err(OuchError::Parse("AccountQueryResponse".to_string()))
         }
 
@@ -36,7 +36,11 @@ impl AccountQueryResponse {
                 nanosec_from_midnight(ts)
             },
             next_user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            optional_appendage: OptionalAppendage::parse(&data[12..])?
+            optional_appendage: if data.len() >= 12 {
+                OptionalAppendage::parse(&data[12..])?
+            } else {
+                OptionalAppendage::new()
+            }
         })
     }
     
