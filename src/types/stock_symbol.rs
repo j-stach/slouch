@@ -17,7 +17,7 @@ pub struct StockSymbol([u8; 8]);
 impl StockSymbol {
 
     /// Generate a new StockSymbol from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
+    pub fn from(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
         check_alpha_compliance(s, 8, "StockSymbol")?;
@@ -27,7 +27,7 @@ impl StockSymbol {
 
     /// When Symbol is optional, you can use this to leave it blank.
     pub fn blank() -> Self {
-        Self::new(String::new())
+        Self::from(String::new())
             .expect("Creates blank StockSymbol from empty string")
     }
 
@@ -48,7 +48,7 @@ impl StockSymbol {
 
     // Assumes the strings from NASDAQ are compliant.
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        Ok(Self::new(ascii_from_utf8(data)?)?)
+        Ok(Self::from(ascii_from_utf8(data)?)?)
     }
 }
 

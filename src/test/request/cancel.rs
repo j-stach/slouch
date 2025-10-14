@@ -86,8 +86,8 @@ fn bad_quantity() {
 
     let mut request = mass_cancel!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
     };
     
     let mc = match request {
@@ -95,8 +95,8 @@ fn bad_quantity() {
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(mc.user_ref_num(), UserRefNum::new());
-    assert_eq!(mc.firm(), FirmId::new("FIRM").unwrap());
-    assert_eq!(mc.symbol(), StockSymbol::new("STONKS").unwrap());
+    assert_eq!(mc.firm(), FirmId::from("FIRM").unwrap());
+    assert_eq!(mc.symbol(), StockSymbol::from("STONKS").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -108,8 +108,8 @@ fn bad_quantity() {
 
     let mut request = mass_cancel!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
     };
 
     let bytes = request.clone().to_bytes();

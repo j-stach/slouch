@@ -14,7 +14,7 @@ use crate::types::{
 
     let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
     };
     
     let eoe = match request {
@@ -22,7 +22,7 @@ use crate::types::{
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(eoe.user_ref_num(), UserRefNum::new());
-    assert_eq!(eoe.firm(), FirmId::new("FIRM").unwrap());
+    assert_eq!(eoe.firm(), FirmId::from("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -34,7 +34,7 @@ use crate::types::{
 
     let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
     };
     
     let bytes = request.clone().to_bytes();
@@ -76,7 +76,7 @@ use crate::types::{
 
     let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
     };
     
     let doe = match request {
@@ -84,7 +84,7 @@ use crate::types::{
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(doe.user_ref_num(), UserRefNum::new());
-    assert_eq!(doe.firm(), FirmId::new("FIRM").unwrap());
+    assert_eq!(doe.firm(), FirmId::from("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -96,7 +96,7 @@ use crate::types::{
 
     let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::new("FIRM").unwrap(),
+        firm: FirmId::from("FIRM").unwrap(),
     };
     
     let bytes = request.clone().to_bytes();

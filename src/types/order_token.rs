@@ -19,7 +19,7 @@ pub struct OrderToken([u8; 14]);
 impl OrderToken {
 
     /// Generate a new OrderToken from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
+    pub fn from(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
 
@@ -60,7 +60,7 @@ impl OrderToken {
     }
 
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        Ok(Self::new(ascii_from_utf8(data)?)?)
+        Ok(Self::from(ascii_from_utf8(data)?)?)
     }
 }
 

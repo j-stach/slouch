@@ -13,14 +13,14 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
         user_ref_num: UserRefNum::new(),
         side: Side::Buy,
         quantity: 69u32,
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
         intermarket_sweep_eligibility: false,
         cross_type: CrossType::Opening,
-        order_token: OrderToken::new("To The Moon").unwrap()
+        order_token: OrderToken::from("To The Moon").unwrap()
     };
 
     // Request message reconstruction byte-wise:
@@ -59,7 +59,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
     let mut enter = root.0;
     enter.add_option(
-        TagValue::Firm(FirmId::new("FIRM").unwrap()
+        TagValue::Firm(FirmId::from("FIRM").unwrap()
     )).unwrap();
     enter.add_option(TagValue::UserRefIndex(1u8)).unwrap();
     let bytes = enter.to_bytes();
@@ -346,7 +346,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     enter.add_option(TagValue::SharesLocated(true)).unwrap();
     // - LocateBroker
     enter.add_option(
-        TagValue::LocateBroker(BrokerId::new("XXXX").unwrap())
+        TagValue::LocateBroker(BrokerId::from("XXXX").unwrap())
     ).unwrap();
     let bytes = enter.to_bytes();
 

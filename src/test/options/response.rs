@@ -70,7 +70,7 @@ use crate::{
     match tv {
         TagValue::Firm(val) => assert_eq!(
             val, 
-            FirmId::new("XXXX").unwrap()
+            FirmId::from("XXXX").unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -263,7 +263,7 @@ use crate::{
     match tv {
         TagValue::LocateBroker(val) => assert_eq!(
             val, 
-            BrokerId::new("XXXX").unwrap()
+            BrokerId::from("XXXX").unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }

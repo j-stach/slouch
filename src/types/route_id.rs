@@ -17,7 +17,7 @@ pub struct RouteId([u8; 4]);
 impl RouteId {
 
     /// Generate a new RouteId from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
+    pub fn from(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
         check_alpha_compliance(s, 4, "RouteId")?;
@@ -43,7 +43,7 @@ impl RouteId {
 
     // Assumes the strings from NASDAQ are compliant.
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        Ok(Self::new(ascii_from_utf8(data)?)?)
+        Ok(Self::from(ascii_from_utf8(data)?)?)
     }
 }
 

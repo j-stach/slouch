@@ -13,14 +13,14 @@ use crate::types::*;
         user_ref_num: UserRefNum::new(),
         side: Side::Buy,
         quantity: 0u32,
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
         intermarket_sweep_eligibility: false,
         cross_type: CrossType::Opening,
-        order_token: OrderToken::new("OrderToken").unwrap()
+        order_token: OrderToken::from("OrderToken").unwrap()
     };
     
     let eo = match request {
@@ -30,14 +30,14 @@ use crate::types::*;
     assert_eq!(eo.user_ref_num(), UserRefNum::new());
     assert_eq!(eo.side(), Side::Buy);
     assert_eq!(eo.quantity(), 0u32);
-    assert_eq!(eo.symbol(), StockSymbol::new("STONKS").unwrap());
+    assert_eq!(eo.symbol(), StockSymbol::from("STONKS").unwrap());
     assert_eq!(eo.price(), Price::new(3, 5001).unwrap());
     assert_eq!(eo.time_in_force(), TimeInForce::Day);
     assert_eq!(eo.display(), Display::Visible);
     assert_eq!(eo.capacity(), Capacity::Agency);
     assert_eq!(eo.intermarket_sweep_eligibility(), false);
     assert_eq!(eo.cross_type(), CrossType::Opening);
-    assert_eq!(eo.order_token(), OrderToken::new("OrderToken").unwrap());
+    assert_eq!(eo.order_token(), OrderToken::from("OrderToken").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -52,14 +52,14 @@ fn bad_quantity() {
         user_ref_num: UserRefNum::new(),
         side: Side::Buy,
         quantity: 1_000_000u32,
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
         intermarket_sweep_eligibility: false,
         cross_type: CrossType::Opening,
-        order_token: OrderToken::new("To The Moon").unwrap()
+        order_token: OrderToken::from("To The Moon").unwrap()
     };
 }
 
@@ -69,14 +69,14 @@ fn bad_quantity() {
         user_ref_num: UserRefNum::new(),
         side: Side::Buy,
         quantity: 0u32,
-        symbol: StockSymbol::new("STONKS").unwrap(),
+        symbol: StockSymbol::from("STONKS").unwrap(),
         price: Price::new(3, 5001).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
         intermarket_sweep_eligibility: false,
         cross_type: CrossType::Opening,
-        order_token: OrderToken::new("To The Moon").unwrap()
+        order_token: OrderToken::from("To The Moon").unwrap()
     };
     
     let bytes = request.clone().to_bytes();

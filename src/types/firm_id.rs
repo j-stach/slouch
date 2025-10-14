@@ -17,7 +17,7 @@ pub struct FirmId([u8; 4]);
 impl FirmId {
 
     /// Generate a new FirmId from a protocol-compliant string.
-    pub fn new(s: impl AsRef<str>) -> Result<Self, BadElementError> {
+    pub fn from(s: impl AsRef<str>) -> Result<Self, BadElementError> {
 
         let s = s.as_ref();
 
@@ -50,7 +50,7 @@ impl FirmId {
 
     // Assumes the strings from NASDAQ are compliant.
     pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        Ok(Self::new(ascii_from_utf8(data)?)?)
+        Ok(Self::from(ascii_from_utf8(data)?)?)
     }
 }
 

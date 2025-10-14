@@ -17,7 +17,7 @@ use crate::types::*;
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         intermarket_sweep_eligibility: false,
-        order_token: OrderToken::new("OrderToken").unwrap()
+        order_token: OrderToken::from("OrderToken").unwrap()
     };
     
     let eo = match request {
@@ -31,7 +31,7 @@ use crate::types::*;
     assert_eq!(eo.time_in_force(), TimeInForce::Day);
     assert_eq!(eo.display(), Display::Visible);
     assert_eq!(eo.intermarket_sweep_eligibility(), false);
-    assert_eq!(eo.order_token(), OrderToken::new("OrderToken").unwrap());
+    assert_eq!(eo.order_token(), OrderToken::from("OrderToken").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -50,7 +50,7 @@ fn bad_quantity() {
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         intermarket_sweep_eligibility: false,
-        order_token: OrderToken::new("To The Moon").unwrap()
+        order_token: OrderToken::from("To The Moon").unwrap()
     };
 }
 
@@ -64,7 +64,7 @@ fn bad_quantity() {
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         intermarket_sweep_eligibility: false,
-        order_token: OrderToken::new("To The Moon").unwrap()
+        order_token: OrderToken::from("To The Moon").unwrap()
     };
     
     let bytes = request.clone().to_bytes();

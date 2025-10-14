@@ -325,23 +325,23 @@ use crate::types::{
 #[test] fn route_broker_new() {
 
     // Test correct BrokerId behavior:
-    let bid = BrokerId::new("Good")
+    let bid = BrokerId::from("Good")
         .expect("Should be valid BrokerId");
     assert_eq!(bid.to_string(), String::from("Good"));
 
-    let bid = BrokerId::new("Ok")
+    let bid = BrokerId::from("Ok")
         .expect("Should be valid BrokerId");
     assert_eq!(bid.to_string(), String::from("Ok"));
 
     // Test BrokerId error behavior:
-    let bid_error = BrokerId::new("TooLong").err()
+    let bid_error = BrokerId::from("TooLong").err()
         .expect("Should be invalid BrokerId");
     assert_eq!(
         bid_error,
         BadElementError::WrongSize(String::from("BrokerId"), 4, 7)
     );
 
-    let bid_error = BrokerId::new("B4d").err()
+    let bid_error = BrokerId::from("B4d").err()
         .expect("Should be invalid BrokerId");
     assert_eq!(
         bid_error,
@@ -349,23 +349,23 @@ use crate::types::{
     );
 
     // Test correct RouteId behavior:
-    let rid = RouteId::new("Good")
+    let rid = RouteId::from("Good")
         .expect("Should be valid RouteId");
     assert_eq!(rid.to_string(), String::from("Good"));
 
-    let rid = RouteId::new("Ok")
+    let rid = RouteId::from("Ok")
         .expect("Should be valid RouteId");
     assert_eq!(rid.to_string(), String::from("Ok"));
 
     // Test RouteId error behavior:
-    let rid_error = RouteId::new("TooLong").err()
+    let rid_error = RouteId::from("TooLong").err()
         .expect("Should be invalid RouteId");
     assert_eq!(
         rid_error,
         BadElementError::WrongSize(String::from("RouteId"), 4, 7)
     );
 
-    let rid_error = RouteId::new("B4d").err()
+    let rid_error = RouteId::from("B4d").err()
         .expect("Should be invalid RouteId");
     assert_eq!(
         rid_error,
@@ -401,7 +401,7 @@ use crate::types::{
 #[test] fn firm_new_parse_encode() {
     
     // Test correct behavior:
-    let fid = FirmId::new("FIRM")
+    let fid = FirmId::from("FIRM")
         .expect("Should be valid FormId");
     assert_eq!(fid.to_string(), String::from("FIRM"));
 
@@ -411,7 +411,7 @@ use crate::types::{
     assert_eq!(fid.encode(), *fid_bytes);
 
     // Test new error behavior:
-    let error = FirmId::new("TOOLONG").err()
+    let error = FirmId::from("TOOLONG").err()
         .expect("Should be invalid FormId");
     assert_eq!(
         error,
@@ -419,7 +419,7 @@ use crate::types::{
     );
 
 
-    let error = FirmId::new("BAD").err()
+    let error = FirmId::from("BAD").err()
         .expect("Should be invalid FormId");
     assert_eq!(
         error,
@@ -427,14 +427,14 @@ use crate::types::{
     );
 
 
-    let error = FirmId::new("Firm").err()
+    let error = FirmId::from("Firm").err()
         .expect("Should be invalid FormId");
     assert_eq!(
         error,
         BadElementError::NotUppercaseAlpha(String::from("FirmId"))
     );
 
-    let error = FirmId::new("F1RM").err()
+    let error = FirmId::from("F1RM").err()
         .expect("Should be invalid FormId");
     assert_eq!(
         error,
@@ -454,7 +454,7 @@ use crate::types::{
 #[test] fn order_token_new_parse_encode() {
 
     // Test correct behavior:
-    let ot = OrderToken::new("Test")
+    let ot = OrderToken::from("Test")
         .expect("Should be valid OrderToken");
     assert_eq!(ot.to_string(), String::from("Test"));
 
@@ -463,7 +463,7 @@ use crate::types::{
         .expect("Should be valid OrderToken");
     assert_eq!(ot.encode(), *b"Test          ");
 
-    let ot = OrderToken::new("Test 2")
+    let ot = OrderToken::from("Test 2")
         .expect("Should be valid OrderToken");
     assert_eq!(ot.to_string(), String::from("Test 2"));
 
@@ -473,7 +473,7 @@ use crate::types::{
     assert_eq!(ot.encode(), *b"Test 2        ");
 
     // Test new error behavior:
-    let error = OrderToken::new("abcdefghijklmno").err()
+    let error = OrderToken::from("abcdefghijklmno").err()
         .expect("Should be invalid OrderToken");
     assert_eq!(
         error,
@@ -484,7 +484,7 @@ use crate::types::{
 #[test] fn symbol_new_parse_encode() {
 
     // Test correct behavior:
-    let sym = StockSymbol::new("Test")
+    let sym = StockSymbol::from("Test")
         .expect("Should be valid StockSymbol");
     assert_eq!(sym.to_string(), String::from("Test"));
 
@@ -494,14 +494,14 @@ use crate::types::{
     assert_eq!(sym.encode(), *b"Test    ");
 
     // Test new error behavior:
-    let error = StockSymbol::new("waytoolong").err()
+    let error = StockSymbol::from("waytoolong").err()
         .expect("Should be invalid StockSymbol");
     assert_eq!(
         error,
         BadElementError::WrongSize(String::from("StockSymbol"), 8, 10)
     );
 
-    let error = StockSymbol::new("T3st").err()
+    let error = StockSymbol::from("T3st").err()
         .expect("Should be invalid StockSymbol");
     assert_eq!(
         error,

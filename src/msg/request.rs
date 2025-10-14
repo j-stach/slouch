@@ -135,13 +135,13 @@ macro_rules! account_query {
 ///
 /// let request1 = disable_entry!{
 ///     user_ref_num: UserRefNum::new(),
-///     firm: FirmId::new("FIRM").unwrap(),
+///     firm: FirmId::from("FIRM").unwrap(),
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, DisableOrderEntry };
 ///
 /// let request2 = OuchRequest::DisableOrderEntry(
-///     DisableOrderEntry::new(UserRefNum::new(), FirmId::new("FIRM").unwrap())
+///     DisableOrderEntry::new(UserRefNum::new(), FirmId::from("FIRM").unwrap())
 /// );
 ///
 /// assert_eq!(request1, request2);
@@ -164,13 +164,13 @@ macro_rules! disable_entry {
 ///
 /// let request1 = enable_entry!{
 ///     user_ref_num: UserRefNum::new(),
-///     firm: FirmId::new("FIRM").unwrap(),
+///     firm: FirmId::from("FIRM").unwrap(),
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, EnableOrderEntry };
 ///
 /// let request2 = OuchRequest::EnableOrderEntry(
-///     EnableOrderEntry::new(UserRefNum::new(), FirmId::new("FIRM").unwrap())
+///     EnableOrderEntry::new(UserRefNum::new(), FirmId::from("FIRM").unwrap())
 /// );
 ///
 /// assert_eq!(request1, request2);
@@ -193,16 +193,16 @@ macro_rules! enable_entry {
 ///
 /// let request1 = mass_cancel!{
 ///     user_ref_num: UserRefNum::new(),
-///     firm: FirmId::new("FIRM").unwrap(),
-///     symbol: StockSymbol::new("STONKS").unwrap(),
+///     firm: FirmId::from("FIRM").unwrap(),
+///     symbol: StockSymbol::from("STONKS").unwrap(),
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, MassCancel };
 ///
 /// let request2 = OuchRequest::MassCancel(MassCancel::new(
 ///     UserRefNum::new(), 
-///     FirmId::new("FIRM").unwrap(), 
-///     StockSymbol::new("STONKS").unwrap()
+///     FirmId::from("FIRM").unwrap(), 
+///     StockSymbol::from("STONKS").unwrap()
 /// ));
 ///
 /// assert_eq!(request1, request2);
@@ -255,14 +255,14 @@ macro_rules! cancel {
 ///     user_ref_num: UserRefNum::new(),
 ///     side: Side::Buy,
 ///     quantity: 69u32,
-///     symbol: StockSymbol::new("STONKS").unwrap(),
+///     symbol: StockSymbol::from("STONKS").unwrap(),
 ///     price: Price::new(3, 5001).unwrap(),
 ///     time_in_force: TimeInForce::Day,
 ///     display: Display::Visible,
 ///     capacity: Capacity::Agency,
 ///     intermarket_sweep_eligibility: false,
 ///     cross_type: CrossType::Opening,
-///     order_token: OrderToken::new("2 th3 M00N").unwrap()
+///     order_token: OrderToken::from("2 th3 M00N").unwrap()
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, EnterOrder };
@@ -272,14 +272,14 @@ macro_rules! cancel {
 ///         UserRefNum::new(), 
 ///         Side::Buy,
 ///         69u32,
-///         StockSymbol::new("STONKS").unwrap(),
+///         StockSymbol::from("STONKS").unwrap(),
 ///         Price::new(3, 5001).unwrap(),
 ///         TimeInForce::Day,
 ///         Display::Visible,
 ///         Capacity::Agency,
 ///         false,
 ///         CrossType::Opening,
-///         OrderToken::new("2 th3 M00N").unwrap()
+///         OrderToken::from("2 th3 M00N").unwrap()
 ///     ).unwrap()
 /// );
 ///
@@ -324,7 +324,7 @@ macro_rules! enter {
 ///     time_in_force: TimeInForce::Day,
 ///     display: Display::Visible,
 ///     intermarket_sweep_eligibility: false,
-///     order_token: OrderToken::new("To The Moon").unwrap()
+///     order_token: OrderToken::from("To The Moon").unwrap()
 /// };
 ///
 /// use slouch::msg::{ OuchRequest, ReplaceOrder };
@@ -338,7 +338,7 @@ macro_rules! enter {
 ///         TimeInForce::Day,
 ///         Display::Visible,
 ///         false,
-///         OrderToken::new("To The Moon").unwrap()
+///         OrderToken::from("To The Moon").unwrap()
 ///     ).unwrap()
 /// );
 ///
