@@ -11,6 +11,7 @@ use crate::{
 
 
 /// Strong type for `ClOrdId` that ensures protocol compliance.
+/// Can be used to differentiate strategies, etc.
 /// Will not be checked for day-uniqueness for each OUCH account.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct OrderToken([u8; 14]);

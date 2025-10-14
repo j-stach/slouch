@@ -1,12 +1,23 @@
 
 use crate::error::BadElementError;
 
-/// 
+/// Market side (i.e., buyer/seller)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Side {
+
+    /// Purchase shares
     Buy,
+
+    /// Sell shares you own
     Sell,
+
+    /// Sell shares you do not own, borrowing them to sell with the 
+    /// intent to buy back later at a lower price. 
+    /// Requires a locate be confirmed for borrowable shares.
     SellShort,
+
+    /// Short sale order exempt from certain Regulation SHO restrictions, 
+    /// such as the uptick rule or locate requirement.
     SellShortExempt,
 }
 

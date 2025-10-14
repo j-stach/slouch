@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// Reason why an order was restated.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RestateReason {
 

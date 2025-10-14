@@ -5,7 +5,8 @@ use crate::{
 };
 
 
-///
+/// Self-descriptive reason why an order was rejected.
+/// See the OUCH 5.0 specifications (Appendix C).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RejectReason {
 

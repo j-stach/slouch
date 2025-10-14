@@ -1,32 +1,42 @@
 
 use crate::error::BadElementError;
 
-/// 
+/// Designates the specific market session, auction, 
+/// or execution mechanism the order should participate in, 
+/// influencing when and how it executes.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CrossType {
 
-    ///
+    /// Standard limit order for ongoing matching in the regular trading book.
+    /// (NASDAQ Only)
     ContinuousMarket,
 
-    /// NASDAQ Only
+    /// Participates in auction to determine the official opening price.
+    /// (NASDAQ Only)
     Opening,
 
-    /// NASDAQ Only
+    /// Joins the closing auction for the official close.
+    /// (NASDAQ Only)
     Closing,
 
-    /// "Halt/IPO", NASDAQ Only
+    /// "Halt/IPO"; for reopenings after halts or initial public offerings.
+    /// (NASDAQ Only)
     Halt,
 
-    /// NASDAQ Only
+    /// Provides additional liquidity during crosses.
+    /// (NASDAQ Only)
     Supplemental,
 
-    /// BX Only
+    /// Specific to BX exchange for retail-designated orders.
+    /// (BX Only)
     Retail,
 
-    /// NASDAQ Only
+    /// For orders with longer persistence.
+    /// (NASDAQ Only)
     ExtendedLife,
 
-    /// NASDAQ Only
+    /// For after-hours closing mechanisms.
+    /// (NASDAQ Only)
     AfterHoursClose,
 }
 

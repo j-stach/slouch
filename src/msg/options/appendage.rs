@@ -19,8 +19,8 @@ impl OptionalAppendage {
         }
     }
 
-    /// Read the options in the optional appendage.
-    pub fn tag_values(&self) -> &Vec<TagValue> {
+    // Read the options in the optional appendage.
+    pub(crate) fn tag_values(&self) -> &Vec<TagValue> {
         &self.tag_values
     }
 

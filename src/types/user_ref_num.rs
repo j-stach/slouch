@@ -6,7 +6,7 @@ use crate::{
 
 
 /// Unsigned number used to differentiate requests.
-/// These are day-unique and must be strictly increasing.
+/// These are day-unique and must be strictly increasing for each new identifier.
 /// The `OuchClient` from this crate will automatically increment 
 /// the `UserRefNum` for each request that requires a unique number.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

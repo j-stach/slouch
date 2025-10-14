@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// Type of customer for whom an order will be placed.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CustomerType {
 

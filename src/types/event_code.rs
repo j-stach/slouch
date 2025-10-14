@@ -1,15 +1,15 @@
 
 use crate::error::BadElementError;
 
-///
+/// Identifier for a system-wide signal.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EventCode {
 
     /// Indicates that exchange is open and is ready to accept orders.
     StartOfDay,
 
-    /// Indicates that the exchange is closed and will no longer accept new orders. 
-    /// Note that it is still possible to receive breaks and cancels after this event.
+    /// Exchange is closed and will no longer accept new orders. 
+    /// NOTE: Still possible to receive breaks and cancels after this event.
     EndOfDay
 }
 

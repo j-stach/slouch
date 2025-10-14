@@ -35,22 +35,22 @@ impl OuchClient {
     /// The TCP stream is configured to time out after this duration.
     pub fn timeout(&self) -> &Duration { &self.timeout }
 
-    /// Use this function to get the next valid UserRefNum.
-    /// Automatically increments, so only call this when you intend 
-    /// to use the value in a message.
-    /// To peek at the value of the next UserRefNum without incrementing, 
-    /// use the similarly-named `next_user_ref_num`.
+    /// Use this method to GET the next valid UserRefNum.
+    /// This method automatically increments the number to ensure uniqueness, 
+    /// so only call this when you intend to use the value in a message.
+    /// To PEEK at the value of the next UserRefNum without incrementing, 
+    /// use the similarly-named method `next_user_ref_num`.
     pub fn new_user_ref_num(&mut self) -> UserRefNum {
         let new_num = self.next_user_ref_num.clone();
         self.next_user_ref_num.increment();
         new_num
     }
 
-    /// Use this method to "peek" at the next UserRefNum.
-    /// Does not increment, so do not use this method to get a UserRefNum
-    /// to use in a message.
+    /// Use this method to PEEK at the next UserRefNum.
+    /// This method does NOT automatically increment to ensure uniqueness, 
+    /// so do not use it to get a new UserRefNum to use in a message.
     /// To get the value of the next UserRefNum and increment it, 
-    /// use the similarly-named `new_user_ref_num`.
+    /// use the similarly-named method `new_user_ref_num`.
     pub fn next_user_ref_num(&self) -> &UserRefNum {
         &self.next_user_ref_num
     }

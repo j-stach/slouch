@@ -1,19 +1,33 @@
 
 use crate::error::BadElementError;
 
-/// During which time span will the order be active?
+/// During which time span will the order be active on the book?
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TimeInForce {
-    /// Market hours
+
+    /// Active during regular market hours on the day it is submitted.
     Day,
-    /// IOC 
-    IOC,
-    /// Extended hours
-    GTX,
-    /// Specify ExpireTime in OptionalAppendage
-    GTT,
-    /// After hours
-    E
+
+    /// "IOC" 
+    /// Must execute immediately, either fully or partially, 
+    /// with any unfilled portion canceled. 
+    /// It does not rest in the order book, prioritizing speed over persistence.
+    ImmediateOrCancel,
+
+    /// "GTX"
+    /// Active during extended hours, including pre-market, regular market hours,
+    /// and after-hours. 
+    /// If unexecuted by the end of extended hours, it is canceled.
+    GoodTilExtended,
+
+    /// "GTT"
+    /// Order that remains active until a user-defined expiration time, 
+    /// to be provided via the `TagValue::ExpireTime` option.
+    /// NOTE: ExpireTime is required on orders with this TiF.
+    GoodTilTime,
+
+    /// Only active after hours.
+    AfterHours
 }
 
 impl TimeInForce {
@@ -23,10 +37,10 @@ impl TimeInForce {
         use TimeInForce::*;
         match self {
             Day => b'0', 
-            IOC => b'3', 
-            GTX => b'5', 
-            GTT => b'6', 
-            E   => b'E', 
+            ImmediateOrCancel => b'3', 
+            GoodTilExtended => b'5', 
+            GoodTilTime => b'6', 
+            AfterHours   => b'E', 
         }
     }
 
@@ -35,10 +49,10 @@ impl TimeInForce {
         use TimeInForce::*;
         match data {
             b'0' => Ok(Day),
-            b'3' => Ok(IOC),
-            b'5' => Ok(GTX),
-            b'6' => Ok(GTT),
-            b'E' => Ok(E),
+            b'3' => Ok(ImmediateOrCancel),
+            b'5' => Ok(GoodTilExtended),
+            b'6' => Ok(GoodTilTime),
+            b'E' => Ok(AfterHours),
 
             _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 

@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// Indicates the weighting of the order in the Best Bid and Offer (BBO). 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BboWeightIndicator {
 

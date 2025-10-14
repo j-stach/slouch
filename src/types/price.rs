@@ -4,13 +4,13 @@ use crate::{
     error::BadElementError,
 };
 
-///
+/// Struct for Price that enforces protocol compliance.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Price {
-    /// Maximum accepted value is $199,999.9900
+    // Maximum accepted value is $199,999.9900
     dollars: u32,
-    /// Integer to represent the decimal portion of price
-    /// 9,900 = $0.99
+    // Integer to represent the decimal portion of price
+    // 9,900 = $0.99
     cents: u16
 }
 
@@ -31,7 +31,7 @@ impl Price {
         Ok(Price { dollars, cents })
     }
 
-    /// Use the special price of $200,000.0000 to flag an order as a market order.
+    /// Use $200,000.0000 to flag an order as a market order.
     pub fn market() -> Self {
         Price { 
             dollars: 200_000,
@@ -39,7 +39,7 @@ impl Price {
         }
     }
 
-    /// Use the special price of $214,748.3647 to flag an order as a market order for a cross.
+    /// Use $214,748.3647 to flag an order as a market order for a cross.
     pub fn market_cross() -> Self {
         Price {
             dollars: 214_748,

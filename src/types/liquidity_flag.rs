@@ -1,87 +1,117 @@
 
 use crate::error::BadElementError;
 
-///
+/// Specifies whether the order contributed liquidity as a maker
+/// (i.e., added to the order book) 
+/// or removed liquidity as a taker
+/// (i.e., matched against an existing order in the book).
+/// Adding liquidity often earns a rebate, and removing it often incurs a fee.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LiquidityFlag {
 
-    /// Added (All markets)
+    /// Order added liquidity to the order book. (All markets)
     Added,
 
-    /// Removed (All markets)
+    /// Order removed liquidity from the order book. (All markets)
     Removed,
 
-    /// Supplemental order execution (NASDAQ only)
+    /// Order added liquidity as part of a supplemental liquidity event, 
+    /// typically outside standard continuous trading. (NASDAQ only)
     Supplemental,
 
-    /// Opening cross (NASDAQ only)
+    /// Order executed during the Opening Cross.
+    /// Typically incurs specific auction fees. (NASDAQ only)
     OpeningCross,
 
-    /// Closing cross (NASDAQ only)
+    /// Order executed during the Closing Cross.
+    /// Typically incurs specific auction fees. (NASDAQ only)
     ClosingCross,
 
-    /// Opening Cross (imbalance-only) (NASDAQ only)
+    /// Order participated in the Opening Cross specifically to address an 
+    /// order imbalance (e.g., excess buy or sell orders).
+    /// May receive favorable fees/rebates for correcting imbalances.
+    /// (NASDAQ only)
     ImbalanceOpeningCross,
 
-    /// Closing Cross (imbalance-only) (NASDAQ only)
+    /// Order participated in the Closing Cross specifically to address an 
+    /// order imbalance (e.g., excess buy or sell orders).
+    /// May receive favorable fees/rebates for correcting imbalances.
+    /// (NASDAQ only)
     ImbalanceClosingCross,
 
-    /// After hours closing cross (NASDAQ only)
+    /// Order executed during the After-hours Closing Cross.
+    /// Fees may differ due to lower volume and unique timing.
+    /// (NASDAQ only)
     AfterHoursClosingCross,
 
-    /// Halt cross (NASDAQ only)
+    /// Order executed during a Halt Cross, 
+    /// used to reopen trading after a regulatory or volatility halt.
+    /// Fees may be unique due to the special nature of halts.
+    /// (NASDAQ only)
     HaltCross,
 
-    /// Halt/IPO cross (NASDAQ only)
+    /// Order executed during an IPO Cross or Halt Cross, 
+    /// (used for reopenings after significant halts).
+    /// Often has distinct fee structures due to high visibility and volume.
+    /// (NASDAQ only)
     HaltIpoCross,
 
-    /// Added liquidity via a midpoint order (All markets)
+    /// Midpoint order added liquidity by resting at the midpoint of the 
+    /// National Best Bid and Offer (NBBO) across all markets.
     MidpointOrderAdded,
 
-    /// Removed liquidity at a midpoint (NASDAQ/BX only)
+    /// Order that removed liquidity at the midpoint of the NBBO.
+    /// (NASDAQ/BX only)
     MidpointOrderRemoved,
 
-    /// Passive midpoint execution (NASDAQ/BX only)
+    /// Marks a passive midpoint execution, where a non-aggressive order 
+    /// (e.g., a resting midpoint order) executes. (NASDAQ/BX only)
     PassiveMidpoint,
 
-    /// Midpoint Extended Life Order execution (NASDAQ only)
+    /// Order executed was a Midpoint Extended Life Order (M-ELO).
+    /// (NASDAQ only)
     MidpointExtendedLife,
 
-    /// Non-displayed adding liquidity (All markets)
+    /// Order added liquidity without being visible. (All markets)
     NonDisplayedAdded,
 
-    /// Added non-displayed liquidity via a Reserve order (All markets)
+    /// Reserve order ("iceberg") added non-displayed liquidity, 
+    /// where only a portion is shown, and the rest is hidden.
+    /// (All markets)
     ReserveNonDisplayedAdded,
 
-    /// Retail designated execution that added displayed liquidity
+    /// Retail-designated execution that added displayed liquidity.
     /// (NASDAQ/BX only)
     RetailAdded,
 
-    /// RPI (Retail Price Improving) order provides liquidity (BX only)
+    /// Retail Price Improving (RPI) order provided liquidity at a price 
+    /// better than the NBBO, often earning a rebate. (BX only)
     RetailPriceImproving,
 
-    /// Removed price improving non-displayed liquidity (BX only)
+    /// Order removed non-displayed liquidity at a price better than the NBBO.
+    /// (BX only)
     RemovedPriceImprovingNonDisplayed,
 
-    /// RMO Retail Order removes non-RPI midpoint liquidity (BX only)
+    /// Retail Market Order (RMO) removed non-RPI midpoint liquidity. 
+    /// (BX only)
     RmoRemovesNonRpiMidpoint,
 
     /// Retail Order removes RPI liquidity (BX only)
     RetailOrderRemovesRpi,
 
     /// Retail Order removes price improving non-displayed liquidity
-    /// other than RPI liquidity (BX only)
+    /// other than RPI liquidity. (BX only)
     RetailOrderRemovesNonDisplayedNonRpi,
 
-    /// Displayed, liquidity-adding order improves the NBBO 
+    /// Displayed, liquidity-adding order improves the NBBO. 
     /// (NASDAQ/BX only)
     NbboImprovedAdded,
 
-    /// Displayed, liquidity-adding order sets the QBBO while joining
+    /// Displayed, liquidity-adding order sets the QBBO while joining.
     /// (NASDAQ/BX only the NBBO)
     QbboSetWhileJoining,
 
-    /// RPI order provides liquidity, No RPII (BX only)
+    /// RPI order provides liquidity, No RPII. (BX only)
     RpiNonRpii,
 
 }

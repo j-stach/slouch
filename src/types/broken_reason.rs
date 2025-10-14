@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// Reason a trade execution was broken (`BrokenTrade` message).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BrokenReason {
 

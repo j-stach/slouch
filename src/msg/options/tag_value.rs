@@ -23,7 +23,8 @@ use crate::types::{
 };
 
 
-/// 
+/// An optional attribute on an order is communicated via a TagValue element.
+///
 /// These names are kept as similar as possible to the corresponding options
 /// as documented in the OUCH 5.0 specifications.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -34,25 +35,26 @@ pub enum TagValue {
     /// (identifying, for example, the displayed portion of a reserve order).
     SecondaryOrdRefNum(u64),
 
-    /// 
+    /// Identifier for the firm placing the order.
     Firm(FirmId),
 
     /// Must be a round lot.
     MinQty(u32),
 
-    ///
+    /// Specifies the type of customer for the order 
+    /// (e.g., retail, institutional).
     CustomerType(CustomerType),
 
     /// Represents the portion of your order that you wish to have displayed.
     MaxFloor(u32),
 
-    ///
+    /// Specifies the type of pricing for the order (e.g., limit, market).
     PriceType(PriceType),
 
     /// Offset amount for the pegged value.
     PegOffset(SignedPrice),
 
-    ///
+    /// Price for discretionary order execution.
     DiscretionPrice(Price),
 
     /// Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
@@ -61,26 +63,27 @@ pub enum TagValue {
     /// Offset amount for the pegged value of the Discretionary Price.
     DiscretionPegOffset(SignedPrice),
 
-    ///
+    /// Indicates if the order is post-only (will not execute immediately).
     PostOnly(bool),
 
     /// Shares to do random reserve with.
     RandomReserves(u32),
 
-    ///
+    /// Specifies the routing destination for the order.
     Route(RouteId),
 
     /// Seconds to live. 
     /// Must be less than 86400 (number of seconds in a day).
     ExpireTime(ElapsedTime),
 
-    ///
+    /// Indicates if the order should be executed immediately.
     TradeNow(bool),
 
-    /// 
+    /// Specifies handling instructions for the order 
+    /// (e.g., automated execution). 
     HandleInst(HandleInst),
 
-    /// 
+    /// Indicates the weighting of the order in the Best Bid and Offer (BBO). 
     BboWeightIndicator(BboWeightIndicator),
 
     /// Used in the Order Restated Message only.
@@ -102,7 +105,7 @@ pub enum TagValue {
     /// for short sale orders.
     LocateBroker(BrokerId),
 
-    /// 
+    /// Specifies the side of the order (e.g., buy or sell). 
     Side(Side),
 
     /// User Reference Index - identifies the channel within the given port.

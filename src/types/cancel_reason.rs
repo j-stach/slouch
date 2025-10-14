@@ -1,7 +1,7 @@
 
 use crate::error::BadElementError;
 
-///
+/// Reason an order was cancelled (`CancelOrder` message).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CancelReason {
 

@@ -1,28 +1,40 @@
 
 use crate::error::BadElementError;
 
-///
+/// Defines how the order's Price will be interpreted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PriceType {
 
-    ///
+    /// Standard limit order with a fixed price set by the trader. 
+    /// The order executes only at or better than the specified price.
     Limit,
 
-    ///
+    /// Specifies a pegged order that tracks the best bid (for sell orders) or 
+    /// best offer (for buy orders) of the National Best Bid and Offer (NBBO), 
+    /// typically with an optional offset.
     MarketPeg,
 
-    ///
+    /// Specifies a pegged order that tracks the midpoint of the NBBO. 
+    /// The order is typically non-displayed and executes at the midpoint, 
+    /// offering price improvement.
     MidpointPeg,
 
-    ///
+    /// Specifies a pegged order that tracks the primary market’s quote, 
+    /// often with an offset. 
+    /// Unlike MarketPeg, it focuses on the primary exchange’s quote 
+    /// rather than the consolidated NBBO.
     PrimaryPeg,
 
-    ///
-    /// Not used by `OptionValue::DiscretionPriceType`
+    /// Specifies a pegged order designed for market makers, 
+    /// typically tracking a reference price (e.g., NBBO or primary quote) 
+    /// with constraints to meet market maker obligations 
+    /// (e.g., maintaining two-sided quotes).
+    /// Not usable with `OptionValue::DiscretionPriceType`.
     MarketMakerPeg,
 
-    ///
-    /// Not used by `OptionValue::DiscretionPriceType`
+    /// Specifies a static (not pegged) midpoint order that executes 
+    /// at the NBBO midpoint price at the time of order entry.
+    /// Not usable with `OptionValue::DiscretionPriceType`.
     // TODO: Clarify this with devs 
     Midpoint
 }

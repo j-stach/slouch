@@ -1,7 +1,8 @@
 
 use crate::error::BadElementError;
 
-///
+/// Handling instructions for routing and execution behavior
+/// (e.g., liquidity sourcing and interaction with other markets).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HandleInst {
 
