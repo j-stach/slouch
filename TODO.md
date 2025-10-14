@@ -4,11 +4,9 @@
 ### msg
 - [ ] `Option<OptionalAppendage>`
 - [ ] `add_options` for adding multiple tagvalues in a vec
-- [x] `try_from` and `to_bytes` for responses and requests, for consistency
 ### options
-- [ ] More set-like impl of `PartialEq` for `OptionalAppendage`
+- [x] More set-like impl of `PartialEq` for `OptionalAppendage`
 ### types
-- [x] Public constructors for all types
 - [ ] Default values for types eg `CustomerType`
 
 ## Dev questions

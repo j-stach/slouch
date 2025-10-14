@@ -6,7 +6,7 @@ use super::TagValue;
 /// Contains optional fields that may be included in a Request/Response.
 /// Only one instance of each variant of `TagValue` is allowed --
 /// if another is added, the old one will be overwritten.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Eq)]
 pub struct OptionalAppendage {
     tag_values: Vec<TagValue>
 }
@@ -99,3 +99,24 @@ impl OptionalAppendage {
     }
 }
 
+/// Uses a more set-like approach than can be derived for Vec.
+impl PartialEq for OptionalAppendage {
+    fn eq(&self, other: &OptionalAppendage) -> bool {
+
+        let s_tvs = self.tag_values();
+        let o_tvs = other.tag_values();
+
+        // There should be no more and no fewer elements in the other.
+        if s_tvs.len() != o_tvs.len() { return false }
+
+        // For every element in self, 
+        // there should be an identical element somewhere in other.
+        for stv in s_tvs.iter() {
+            if let None = o_tvs.iter().find(|otv| *otv == stv) {
+                return false
+            }
+        }
+
+        true
+    }
+}
