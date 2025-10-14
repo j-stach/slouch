@@ -28,6 +28,11 @@ impl ModifyOrder {
     ///
     /// For `quantity`, entering over 1,000,000 (maximum shares per order) 
     /// results in an error.
+    ///
+    /// The following `side` modifications are allowed:
+    /// Sell <-> SellShortExempt
+    /// Sell <-> SellShort
+    /// SellShortExempt <-> SellShort
     pub fn new(
         user_ref_num: UserRefNum,
         side: Side,

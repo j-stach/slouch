@@ -25,8 +25,11 @@ use crate::types::{
 
 /// An optional attribute on an order is communicated via a TagValue element.
 ///
-/// These names are kept as similar as possible to the corresponding options
+/// These names are kept as similar as practical to the corresponding options
 /// as documented in the OUCH 5.0 specifications.
+///
+/// If an optional field is not provided on a message, 
+/// OUCH will use the default value (see Appendix A in the spec).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TagValue {
 

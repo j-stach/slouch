@@ -1,13 +1,24 @@
 
 ## TODO for crate:
 - [ ] Some field and type names may be shortened while remaining descriptive
+
 ### msg
-- [ ] `Option<OptionalAppendage>`
-- [ ] `add_options` for adding multiple tagvalues in a vec
-### options
-- [x] More set-like impl of `PartialEq` for `OptionalAppendage`
+Optional `OptionalAppendage` presence in encode/parse:
+- [ ] modify
+- [ ] query
+- [ ] order canceled
+- [ ] broken
+- [ ] rejected
+- [ ] cancel pend
+- [ ] cancel reject
+- [ ] priority update
+- [ ] order modified
+- [ ] aiq canceled
+- [ ] query response
+
 ### types
-- [ ] Default values for types eg `CustomerType`
+~Default values for optional types:~
+Absence of tagvalue indicates intent to use default
 
 ## Dev questions
 Some messages do not need to encode optional appendage:
@@ -30,4 +41,7 @@ Some messages do not need to encode optional appendage:
 ### Ease of use:
 - [ ] Defaults for request generators in alignment with protocol
 - [ ] `Option`-based field access through request/response enums?
+- [ ] `add_options` for adding multiple tagvalues in a vec
 
+### Performance:
+TBD. Plenty to be done.

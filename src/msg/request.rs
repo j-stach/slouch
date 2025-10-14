@@ -23,6 +23,15 @@ use super::options::TagValue;
 
 
 /// Client requests allowed in OUCH 5.0
+///
+/// All requests may be repeated benignly. 
+/// This gives the client the ability to re-send any request if it is uncertain
+/// whether NASDAQ received it in the case of a connection loss or an 
+/// application error.
+///
+/// All inbound messages on an OUCH port are processed sequentially. 
+/// This guarantees that if two orders are entered consecutively on the same 
+/// connection, the first order entered will always be accepted first.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum OuchRequest {
     EnterOrder(EnterOrder),
