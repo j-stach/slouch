@@ -1,8 +1,7 @@
 
 ## TODO for crate:
-- [x] Change `OuchClient` to wrap TCP connection, login/heartbeat separately
-- [ ] `UnknownResponse` for non-order-related response messages
-- [ ] Update readme for limited scope
+- [x] `UnknownResponse` for non-order-related response messages
+- [x] Update readme for limited scope
 
 ## Testing:
 - [ ] Clean up tests? (eg, dry)

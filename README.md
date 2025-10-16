@@ -1,7 +1,7 @@
 
 # slouch
-Simple [OUCH 5.0](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf) client for communication with NASDAQ.<br>
-Contains strong types for messages and a simple client to send and receive them.
+Simple [OUCH 5.0](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf) client for communication of orders to NASDAQ.<br>
+Contains strong types for order-related messages and a simple client to send and receive them.
 
 ### WARNING: Work-in-progress
 `slouch` should be presumed experimental and non-functional until integration testing has been completed.
@@ -10,7 +10,7 @@ If you are willing and able to assist with integration testing, please leave a r
 
 ## Use
 1. Add `slouch` to your Rust project (`v2024` or more recent):
-```
+```bash
 cargo add slouch
 ```
 2. Create an `OuchClient` to handle order entry by wrapping a TCP stream that is

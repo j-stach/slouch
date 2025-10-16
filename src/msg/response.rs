@@ -62,6 +62,8 @@ pub enum OuchResponse {
     BrokenTrade(BrokenTrade),
     SystemEvent(SystemEvent),
     AccountQueryResponse(AccountQueryResponse),
+    /// May be a session management message or corrupted data.
+    Unknown(char, Vec<u8>),
 }
 
 impl TryFrom<&[u8]> for OuchResponse {
@@ -77,6 +79,11 @@ impl TryFrom<&[u8]> for OuchResponse {
         }
 
         let msg_type = data[0];
+
+        if data.len() < 2 {
+            return Ok(Self::Unknown(data[0] as char, vec![]))
+        }
+
         let payload = &data[1..];
 
         match msg_type {
@@ -114,9 +121,7 @@ impl TryFrom<&[u8]> for OuchResponse {
 
             b'S' => Ok(Self::SystemEvent(SystemEvent::parse(payload)?)),
 
-            typ => Err(
-                OuchError::UnknownResponse(typ as char, payload.to_vec())
-            ),
+            typ => Ok(Self::Unknown(typ as char, payload.to_vec())),
         }
     }
 }
