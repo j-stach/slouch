@@ -56,14 +56,14 @@ let request = enter!{
     user_ref_num: client.new_user_ref_num(),
     side: Side::Buy,
     quantity: 69u32,
-    symbol: StockSymbol::new("STONKS").unwrap(),
+    symbol: StockSymbol::from("STONKS").unwrap(),
     price: Price::new(3, 5000).unwrap(),
     time_in_force: TimeInForce::Day,
     display: Display::Visible,
     capacity: Capacity::Agency,
     intermarket_sweep_eligibility: false,
     cross_type: CrossType::Opening,
-    order_token: OrderToken::new("To The Moon").unwrap()
+    order_token: OrderToken::from("To The Moon").unwrap()
 };
 
 client.send(request).unwrap();
@@ -101,4 +101,4 @@ Developer resources:
 - [OUCH 5.0 Specification](https://www.nasdaqtrader.com/content/technicalsupport/specifications/TradingProducts/OUCH5.0.pdf)
 - [AIQ Strategy Values](https://www.nasdaqtrader.com/TraderNews.aspx?id=ETU2023-8)
 
-Contributions are welcome. Submit issues and pull requests to this repository.
+Contributions are welcome! Submit issues and pull requests to this repository.

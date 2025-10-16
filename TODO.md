@@ -1,28 +1,18 @@
 
 ## TODO for crate:
-- [ ] Some field and type names may be shortened while remaining descriptive
-
-### msg
-Optional `OptionalAppendage` presence during encode/parse:
-- [x] order canceled
-- [x] broken
-- [x] rejected
-- [x] cancel pend
-- [x] cancel reject
-- [x] priority update
-- [x] order modified
-- [x] aiq canceled
-- [x] query response
-- Accomodate shorter messages for parse
-
+- [x] Double-check examples & readme
+- [ ] Change `OuchClient` to wrap TCP connection, login/heartbeat separately
 ## Dev questions
-Some messages do not need to encode optional appendage:
-- if there are no options? can it be present with length 0?
-- are there any "mandatory" optional fields for enter and replace that would make the appendage always necessary?
-- "You will receive one and only one of these two for each replacement." `OrderReplaced`
+- [x] Email prominent questions to dev team
+
+## Login/session management for Client
+- [ ] Login Request
+- [ ] Heartbeat message
+- [ ] Logout Request
+- [ ] Login Accepted/Rejected
 
 ## Testing:
-- [ ] Clean up tests (eg, dry)
+- [ ] Clean up tests? (eg, dry)
 - [ ] Test handling of inappropriate options for requests
 - [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
 - [ ] Parse `OuchResponse` with multiple options
@@ -34,9 +24,11 @@ Some messages do not need to encode optional appendage:
 
 ## Future directions:
 ### Ease of use:
+- [ ] Some field and type names may be shortened while remaining descriptive
 - [ ] Defaults for request generators in alignment with protocol
 - [ ] `Option`-based field access through request/response enums?
 - [ ] `add_options` for adding multiple tagvalues in a vec
 
 ### Performance:
 TBD. Plenty to be done.
+

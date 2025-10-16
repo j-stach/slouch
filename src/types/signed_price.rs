@@ -5,8 +5,6 @@ use crate::{
 };
 
 /// Struct for signed price (in peg offsets) that enforces protocol compliance.
-// TODO: Send email to ask if there are any limits to Peg Offsets
-// that I should hardcode into the SignedPrice type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SignedPrice {
     negative: bool,
@@ -19,16 +17,20 @@ impl SignedPrice {
 
     /// Helps ensure message encoding is done correctly.
     /// `cents` is actually hundredths of a cent ($0.99 -> 9900 "cents").
-    // TODO: Send email to ask if there are any limits to Peg Offsets
-    // that I should hardcode into the SignedPrice type.
+    ///
+    /// NOTE: Enforces the same maximum as Price, since any offset greater 
+    /// than that is guaranteed to create an invalid price.
+    /// Orders can still be rejected if a Peg Offset creates a Price that is 
+    /// greater than the maximum allowed.
     pub fn new(
         dollars: u32, 
         cents: u16,
         negative: bool
     ) -> Result<Self, BadElementError> {
 
-        // TODO: Ensure SignedPrice is within limits?
-        if cents > 9999 { 
+        // Ensures price is within limits.
+        if dollars > 199_999 || cents > 9999 || 
+            (dollars == 199_999 && cents >= 9900) {
             return Err(BadElementError::InvalidValue("SignedPrice".to_string()))
         }
 
@@ -38,7 +40,7 @@ impl SignedPrice {
     /// Whole dollars 
     pub fn dollars(&self) -> u32 {  self.dollars }
 
-    /// Fractions of dollar in hundredths of a cent ($0.99 -> 9900 "cents")
+    /// Remainder in hundredths of a cent ($0.99 -> 9900 "cents")
     pub fn cents(&self) -> u16 { self.cents }
 
     /// Returns true if the signed price is a negative offset.
