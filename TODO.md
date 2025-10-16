@@ -1,8 +1,4 @@
 
-## TODO for crate:
-- [x] `UnknownResponse` for non-order-related response messages
-- [x] Update readme for limited scope
-
 ## Testing:
 - [ ] Clean up tests? (eg, dry)
 - [ ] Test handling of inappropriate options for requests

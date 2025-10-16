@@ -15,7 +15,7 @@ cargo add slouch
 ```
 2. Create an `OuchClient` to handle order entry by wrapping a TCP stream that is
 already logged in to an OUCH account.
-When the client is created, it will attempt to query the OUCH account. 
+When the client is created, it will attempt to query the account. 
 Setup will fail if an `AccountQueryResponse` is not received from the server.
 ```rust
 use std::net::{ SocketAddr, TcpStream };
@@ -34,13 +34,13 @@ let mut client = OuchClient::new(stream).unwrap();
 `OuchResponse` is an enum that can be matched to extract message values.
 ```rust
 use slouch::account_query;
+use slouch::msg::OuchResponse::*;
 
 let request = account_query!();
 client.send(request).unwrap();
 
 let response = client.recv().unwrap();
 
-use slouch::msg::OuchResponse::*;
 match response {
     AccountQueryResponse(aqr) => {
         let _time: chrono::NaiveTime = aqr.timestamp();
@@ -93,9 +93,9 @@ let mut stream = net::TcpStream::connect(addr).unwrap();
 let bytes = account_query!().to_bytes();
 stream.write_all(&bytes).unwrap();
 
-let mut buffer = vec![];
-let n = stream.read(&mut buffer).unwrap();
-let response = OuchResponse::try_from(&self.buffer[..n]).unwrap();
+let mut buf = vec![];
+let n = stream.read(&mut buf).unwrap();
+let response = OuchResponse::try_from(&self.buf[..n]).unwrap();
 ```
     
 
