@@ -1,15 +1,8 @@
 
 ## TODO for crate:
-- [x] Double-check examples & readme
-- [ ] Change `OuchClient` to wrap TCP connection, login/heartbeat separately
-## Dev questions
-- [x] Email prominent questions to dev team
-
-## Login/session management for Client
-- [ ] Login Request
-- [ ] Heartbeat message
-- [ ] Logout Request
-- [ ] Login Accepted/Rejected
+- [x] Change `OuchClient` to wrap TCP connection, login/heartbeat separately
+- [ ] `UnknownResponse` for non-order-related response messages
+- [ ] Update readme for limited scope
 
 ## Testing:
 - [ ] Clean up tests? (eg, dry)
@@ -19,7 +12,7 @@
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
-- [ ] All msg & type enum variants can be tested during integration
+- [ ] All msg & type enum variants should be tested during integration
 
 
 ## Future directions:

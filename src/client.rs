@@ -1,7 +1,4 @@
 
-use std::time::Duration;
-use std::net::SocketAddr;
-
 use crate::{
     msg::{ OuchResponse, OuchRequest },
     error::OuchError,
@@ -21,19 +18,19 @@ use tokio::{
     io::{ AsyncReadExt, AsyncWriteExt },
 };
 
+#[cfg(feature = "async")]
+use std::time::Duration;
 
-/// Convenience struct for coordinating communication with OUCH server.
+
+/// Convenience struct for coordinating order entry to an OUCH server.
 pub struct OuchClient {
     stream: TcpStream,
+    #[cfg(feature = "async")] timeout: Duration,
     buffer: Vec<u8>,
-    timeout: Duration,
     next_user_ref_num: UserRefNum,
 }
 
 impl OuchClient {
-
-    /// The TCP stream is configured to time out after this duration.
-    pub fn timeout(&self) -> &Duration { &self.timeout }
 
     /// Use this method to GET the next valid UserRefNum.
     /// This method automatically increments the number to ensure uniqueness, 
@@ -54,39 +51,30 @@ impl OuchClient {
     pub fn next_user_ref_num(&self) -> &UserRefNum {
         &self.next_user_ref_num
     }
+
+    /// Get mutable access to the TCP stream 
+    /// (e.g., to configure it or to send a session management message).
+    /// Treat this carefully so as to not disrupt communication.
+    pub fn stream(&mut self) -> &mut TcpStream {
+        &mut self.stream
+    }
+
 }
 
 #[cfg(not(feature = "async"))]
 impl OuchClient {
 
-    /// Create a synchronous Client connected to the provided TCP address.
-    pub fn connect(
-        addr: SocketAddr, 
-        timeout: Duration, 
-    ) -> Result<Self, OuchError> {
+    /// Create an order entry Client by wrapping `std::net::TcpStream`.
+    /// Assumes that the login request was accepted and the server is ready 
+    /// to receive orders.
+    pub fn wrap(stream: TcpStream) -> Result<Self, OuchError> {
 
         #[cfg(feature = "logs")] {
             log::info!("Creating new OuchClient instance...");
-            log::debug!("Connecting to {}", &addr);
         }
-
-        let stream = TcpStream::connect(addr)?;
-
-        #[cfg(feature = "logs")] {
-            log::debug!("Setting stream R/W timeout...");
-        }
-
-        stream.set_read_timeout(Some(timeout))?;
-        stream.set_write_timeout(Some(timeout))?;
-
-        #[cfg(feature = "logs")] {
-            log::debug!("Stream timeout set.");
-        }
-
         let mut client = OuchClient {
             stream,
             buffer: vec![0u8; 128],
-            timeout,
             next_user_ref_num: UserRefNum::new(),
         };
 
@@ -102,7 +90,7 @@ impl OuchClient {
         match response {
 
             AccountQueryResponse(aqr) => {
-                client.next_user_ref_num = aqr.next_user_ref_num().clone();
+                client.next_user_ref_num = aqr.next_user_ref_num();
 
                 #[cfg(feature = "logs")] {
                     log::info!("Sync successful, new OuchClient connected.");
@@ -111,8 +99,6 @@ impl OuchClient {
                 Ok(client)
             },
             
-            // TBD: What if you have no account, or connection is rejected?
-            // Will it simply timeout?
             _ => {
 
                 let error = OuchError::UnexpectedResponse;
@@ -127,24 +113,7 @@ impl OuchClient {
 
     }
 
-    /// Configure the TCP stream to time out after this duration.
-    pub fn set_timeout(&mut self, duration: Duration) -> Result<(), OuchError> {
-
-        #[cfg(feature = "logs")] {
-            log::debug!("Setting stream R/W timeout...");
-        }
-
-        self.stream.set_read_timeout(Some(duration))?;
-        self.stream.set_write_timeout(Some(duration))?;
-
-        #[cfg(feature = "logs")] {
-            log::debug!("Stream timeout set.");
-        }
-
-        Ok(self.timeout = duration)
-    }
-
-    /// Send OUCH message to the server.
+    /// Send an OUCH order request to the server.
     pub fn send(&mut self, msg: OuchRequest) -> Result<(), OuchError> {
 
         #[cfg(feature = "logs")] {
@@ -181,18 +150,17 @@ impl OuchClient {
 #[cfg(feature = "async")]
 impl OuchClient {
 
-    /// Create an async Client connected to the provided TCP address.
-    pub async fn connect(
-        addr: SocketAddr, 
+    /// Create an async order entry Client by wrapping `tokio::net::TcpStream`.
+    /// Assumes that the login request was accepted and the server is ready 
+    /// to receive orders.
+    pub async fn wrap(
+        stream: TcpStream,
         timeout: Duration, 
     ) -> Result<Self, OuchError> {
 
         #[cfg(feature = "logs")] {
             log::info!("Creating new OuchClient instance...");
-            log::debug!("Connecting to {}", &addr);
         }
-
-        let stream = to(timeout, TcpStream::connect(addr)).await??;
 
         let mut client = OuchClient {
             stream,
@@ -213,7 +181,7 @@ impl OuchClient {
         match response {
 
             AccountQueryResponse(aqr) => {
-                client.next_user_ref_num = aqr.next_user_ref_num().clone();
+                client.next_user_ref_num = aqr.next_user_ref_num();
 
                 #[cfg(feature = "logs")] {
                     log::info!("Sync successful, new OuchClient connected.");
@@ -240,6 +208,9 @@ impl OuchClient {
     pub fn set_timeout(&mut self, duration: Duration) {
         self.timeout = duration
     }
+
+    /// The TCP stream is configured to time out after this duration.
+    pub fn timeout(&self) -> &Duration { &self.timeout }
 
     /// Send OUCH message to the server.
     pub async fn send(&mut self, msg: OuchRequest) -> Result<(), OuchError> {

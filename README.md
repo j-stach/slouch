@@ -13,21 +13,24 @@ If you are willing and able to assist with integration testing, please leave a r
 ```
 cargo add slouch
 ```
-2. Create an `OuchClient` to handle messages.
-When the client is created, it will attempt to query the pre-existing OUCH account registered for the host IP address. 
-Client setup will fail if an `AccountQueryResponse` is not received from the server.
+2. Create an `OuchClient` to handle order entry by wrapping a TCP stream that is
+already logged in to an OUCH account.
+When the client is created, it will attempt to query the OUCH account. 
+Setup will fail if an `AccountQueryResponse` is not received from the server.
 ```rust
+use std::net::{ SocketAddr, TcpStream };
 use slouch::OuchClient;
 
-use std::net::SocketAddr;
-use std::time::Duration;
+let mut stream = TcpStream::connect(SocketAddr::new(
+    /* IP address */, 
+    /* Port number */
+));
 
-let mut client = OuchClient::new(
-    SocketAddr::new(/* IP address */, /* Port number */), // OUCH Server port
-    Duration::from_secs(5) // Timeout duration
-).unwrap();
+// TODO: Login to your account as described during OUCH onboarding.
+
+let mut client = OuchClient::new(stream).unwrap();
 ```
-3. Send a message and receive a response. <br>
+3. Send a request and receive a response. <br>
 `OuchResponse` is an enum that can be matched to extract message values.
 ```rust
 use slouch::account_query;
@@ -69,7 +72,7 @@ let request = enter!{
 client.send(request).unwrap();
 ```
 5. Client logging is provided by the [`log`](https://docs.rs/log/latest/log/) crate and can be enabled through the `logs` feature. 
-An asynchronous version of the client is supported by the [`tokio`](https://docs.rs/tokio/latest/tokio/) crate and can be enabled through the `async` feature.
+An asynchronous version of the client uses [`tokio`](https://docs.rs/tokio/latest/tokio/) and can be enabled through the `async` feature.
 By default, `OuchClient` is synchronous and its events are not logged.
 ```toml
 # Cargo.toml
@@ -84,6 +87,8 @@ use slouch::{ account_query, msg::OuchResponse };
 // OUCH Server port
 let addr = net::SocketAddr::new(/* IP address */, /* Port number */); 
 let mut stream = net::TcpStream::connect(addr).unwrap();
+
+// TODO: Login to your account as described during OUCH onboarding.
 
 let bytes = account_query!().to_bytes();
 stream.write_all(&bytes).unwrap();
