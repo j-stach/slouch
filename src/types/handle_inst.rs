@@ -6,7 +6,7 @@ use crate::error::BadElementError;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HandleInst {
 
-    /// Imbalance only (CrossType::OpeningCross & CrossType::ClosingCross)
+    /// Imbalance only (CrossType::Opening & CrossType::Closing)
     ImbalanceOnly,
 
     /// Retail order type 1 (CrossType::Retail)
@@ -65,3 +65,8 @@ impl HandleInst {
 
 }
 
+impl Default for HandleInst {
+    fn default() -> Self {
+        HandleInst::NoInstructions
+    }
+}

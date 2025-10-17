@@ -1,51 +1,49 @@
 
 use crate::error::BadElementError;
 
-/// Type of customer for whom an order will be placed.
+/// Should.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum CustomerType {
+pub enum TradeNow {
 
-    /// Retail Designated Order 
-    Retail,
+    Yes,
 
-    /// Not Retail Designated
-    NotRetail,
+    No,
 
     /// Use Port default
     PortDefault
 }
 
-impl CustomerType {
+impl TradeNow {
 
     pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
 
-        use CustomerType::*;
+        use TradeNow::*;
         match data {
-            b'R' => Ok(Retail),
-            b'N' => Ok(NotRetail),
+            b'Y' => Ok(Yes),
+            b'N' => Ok(No),
             b' ' => Ok(PortDefault),
 
             _ => Err(BadElementError::InvalidEnum(
                 (data as char).to_string(), 
-                "CustomerType".to_string()
+                "TradeNow".to_string()
             ))
         }
     }
 
     pub(crate) fn encode(&self) -> u8 {
         
-        use CustomerType::*;
+        use TradeNow::*;
         match self {
-            Retail => b'R',
-            NotRetail  => b'N',
+            Yes => b'Y',
+            No  => b'N',
             PortDefault => b' ',
         }
     }
 
 }
 
-impl Default for CustomerType {
+impl Default for TradeNow {
     fn default() -> Self {
-        CustomerType::PortDefault
+        TradeNow::PortDefault
     }
 }

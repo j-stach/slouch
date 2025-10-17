@@ -19,7 +19,8 @@ use crate::types::{
     RouteId,
     BrokerId,
     ElapsedTime,
-    Side
+    Side,
+    TradeNow
 };
 
 
@@ -80,7 +81,7 @@ pub enum TagValue {
     ExpireTime(ElapsedTime),
 
     /// Indicates if the order should be executed immediately.
-    TradeNow(bool),
+    TradeNow(TradeNow),
 
     /// Specifies handling instructions for the order 
     /// (e.g., automated execution). 
@@ -143,12 +144,7 @@ impl TagValue {
             RandomReserves(val)         => (13, val.to_be_bytes().to_vec()),
             Route(val)                  => (14, val.encode().to_vec()),
             ExpireTime(val)             => (15, val.encode().to_vec()), 
-            TradeNow(val)               => (16, {
-                vec![ match val {
-                    true => b'Y',
-                    false => b'N',
-                }]
-            }), 
+            TradeNow(val)               => (16, vec![val.encode()]),
             HandleInst(val)             => (17, vec![val.encode()]),
             BboWeightIndicator(val)     => (18, vec![val.encode()]),
             DisplayQuantity(val)        => (22, val.to_be_bytes().to_vec()),
@@ -229,19 +225,7 @@ impl TagValue {
             13 => Ok(Self::RandomReserves(u32_from_be_bytes(payload)?)),
             14 => Ok(Self::Route(RouteId::parse(payload)?)),
             15 => Ok(Self::ExpireTime(ElapsedTime::parse(payload)?)),
-            16 => {
-                let val = payload[0];
-                match val {
-                    b'Y' => Ok(Self::TradeNow(true)),
-                    b'N' => Ok(Self::TradeNow(false)),
-
-                    _ => Err(BadElementError::InvalidEnum(
-                            (val as char).to_string(), 
-                            "TradeNow".to_string()
-                        ).into())
-                }
-            },
-
+            16 => Ok(Self::TradeNow(TradeNow::parse(payload[0])?)),
             17 => Ok(Self::HandleInst(HandleInst::parse(payload[0])?)),
             18 => Ok(Self::BboWeightIndicator(
                     BboWeightIndicator::parse(payload[0])?

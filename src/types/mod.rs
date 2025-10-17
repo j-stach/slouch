@@ -27,6 +27,7 @@ mod broker_id;
 mod route_id;
 mod elapsed_time;
 mod liquidity_flag;
+mod trade_now;
 
 pub use self::{
     firm_id::FirmId,
@@ -57,5 +58,6 @@ pub use self::{
     route_id::RouteId,
     elapsed_time::ElapsedTime,
     liquidity_flag::LiquidityFlag,
+    trade_now::TradeNow
 };
 

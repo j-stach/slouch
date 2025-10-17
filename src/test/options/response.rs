@@ -213,7 +213,7 @@ use crate::{
 
     let tv = TagValue::parse(&bytes).unwrap();
     match tv {
-        TagValue::TradeNow(val) => assert_eq!(val, true),
+        TagValue::TradeNow(val) => assert_eq!(val, TradeNow::Yes),
         _ => panic!("Where'd you find this?"),
     }
 

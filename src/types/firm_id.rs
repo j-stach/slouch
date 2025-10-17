@@ -60,3 +60,9 @@ impl fmt::Display for FirmId {
     }
 }
 
+impl Default for FirmId {
+    fn default() -> Self {
+        FirmId(*b"    ")
+    }
+}
+

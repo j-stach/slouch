@@ -35,7 +35,6 @@ pub enum PriceType {
     /// Specifies a static (not pegged) midpoint order that executes 
     /// at the NBBO midpoint price at the time of order entry.
     /// Not usable with `OptionValue::DiscretionPriceType`.
-    // TODO: Clarify this with devs 
     Midpoint
 }
 
@@ -74,3 +73,8 @@ impl PriceType {
 
 }
 
+impl Default for PriceType {
+    fn default() -> Self {
+        PriceType::Limit
+    }
+}

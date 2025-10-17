@@ -287,7 +287,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn trade_now() { 
 
-    let tn = TagValue::TradeNow(true);
+    let tn = TagValue::TradeNow(TradeNow::Yes);
     let bytes = tn.encode();
 
     let mut should_be = vec![];
