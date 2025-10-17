@@ -1,18 +1,5 @@
 
-## TODO for crate:
-#### Defaults for options are not automatically stored/applied:
-
-Add variants for types that need it
-- [x] `CustomerType`: space = port default
-- [x] `TagValue::TradeNow` needs enum instead of bool: space = port default
-- [x] `HandleInst`: space = no instructions
-
-Implement `Default` for types where it applies
-- [x] `FirmId` - blank
-- [x] `PriceType::Limit`
-
 ## Testing:
-- [ ] Test `OuchClient` locally
 - [ ] Test handling of inappropriate options for requests
 - [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
 - [ ] Parse `OuchResponse` with multiple options
