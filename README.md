@@ -4,7 +4,7 @@ Simple [OUCH 5.0](https://www.nasdaqtrader.com/content/technicalsupport/specific
 Contains strong types for order-related messages and a simple client to send and receive them.
 
 ### WARNING: Work-in-progress
-`slouch` should be presumed experimental and non-functional until integration testing has been completed.
+This crate should be presumed experimental and non-functional until integration testing has been completed.
 If you are willing and able to assist with integration testing, please leave a response under 
 [this issue](https://github.com/j-stach/slouch/issues/1).
 
