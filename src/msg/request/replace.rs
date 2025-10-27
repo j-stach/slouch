@@ -1,17 +1,18 @@
 
-use crate::error::BadElementError;
+use nsdq_util::Price;
 
-use crate::types::{
-    OrderToken,
-    UserRefNum,
-    Price,
-    TimeInForce,
-    Display
-};
-
-use crate::msg::options::{
-    OptionalAppendage,
-    TagValue
+use crate::{
+    error::BadElementError,
+    types::{
+        OrderToken,
+        UserRefNum,
+        TimeInForce,
+        Display
+    },
+    msg::options::{
+        OptionalAppendage,
+        TagValue
+    },
 };
 
 
@@ -36,7 +37,7 @@ pub struct ReplaceOrder {
     old_user_ref_num: UserRefNum,
     new_user_ref_num: UserRefNum,
     quantity: u32,
-    price: Price,
+    price: Price<u64, 4>,
     time_in_force: TimeInForce,
     display: Display,
     intermarket_sweep_eligibility: bool,
@@ -57,7 +58,7 @@ impl ReplaceOrder {
         old_user_ref_num: UserRefNum,
         new_user_ref_num: UserRefNum,
         quantity: u32,
-        price: Price,
+        price: Price<u64, 4>,
         time_in_force: TimeInForce,
         display: Display,
         intermarket_sweep_eligibility: bool,
@@ -87,7 +88,7 @@ impl ReplaceOrder {
         old_user_ref_num: UserRefNum,
         new_user_ref_num: UserRefNum,
         quantity: u32,
-        price: Price,
+        price: Price<u64, 4>,
         time_in_force: TimeInForce,
         display: Display,
         intermarket_sweep_eligibility: bool,
@@ -117,7 +118,7 @@ impl ReplaceOrder {
     pub fn quantity(&self) -> u32 { self.quantity }
     
     /// Price at which the order will be placed.
-    pub fn price(&self) -> Price { self.price }
+    pub fn price(&self) -> Price<u64, 4> { self.price }
 
     /// Time block where the order is active (e.g., Day).
     /// "Corresponds to TimeInForce (59) in Nasdaq FIX."

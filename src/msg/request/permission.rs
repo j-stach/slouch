@@ -1,14 +1,13 @@
 
-use crate::error::BadElementError;
+use nsdq_util::Mpid;
 
-use crate::types::{
-    UserRefNum,
-    FirmId
-};
-
-use crate::msg::options::{
-    OptionalAppendage,
-    TagValue
+use crate::{ 
+    types::UserRefNum,
+    error::BadElementError,
+    msg::options::{
+        OptionalAppendage,
+        TagValue
+    }
 };
 
 
@@ -16,7 +15,7 @@ use crate::msg::options::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DisableOrderEntry {
     user_ref_num: UserRefNum,
-    firm: FirmId,
+    firm: Mpid,
     optional_appendage: OptionalAppendage
 }
 
@@ -25,7 +24,7 @@ impl DisableOrderEntry {
     /// Create a new Disable Entry request.
     pub fn new(
         user_ref_num: UserRefNum,
-        firm: FirmId,
+        firm: Mpid,
     ) -> Self {
         
         Self {
@@ -39,7 +38,7 @@ impl DisableOrderEntry {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
     
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> FirmId { self.firm }
+    pub fn firm(&self) -> Mpid { self.firm }
     
     /// Get read-only access to the message's optional fields.
     pub fn options(&self) -> &Vec<TagValue> {
@@ -88,7 +87,7 @@ impl DisableOrderEntry {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EnableOrderEntry {
     user_ref_num: UserRefNum,
-    firm: FirmId,
+    firm: Mpid,
     optional_appendage: OptionalAppendage
 }
 
@@ -97,7 +96,7 @@ impl EnableOrderEntry {
     /// Create a new Enable Entry request.
     pub fn new(
         user_ref_num: UserRefNum,
-        firm: FirmId,
+        firm: Mpid,
     ) -> Self {
         
         Self {
@@ -111,7 +110,7 @@ impl EnableOrderEntry {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
     
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> FirmId { self.firm }
+    pub fn firm(&self) -> Mpid { self.firm }
     
     /// Get read-only access to the message's optional fields.
     pub fn options(&self) -> &Vec<TagValue> {

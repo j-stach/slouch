@@ -1,261 +1,221 @@
 
-use crate::{
-    error::{ OuchError, BadElementError },
-    helper::{
-        u16_from_be_bytes,
-        u32_from_be_bytes,
-        u64_from_be_bytes,
-    }
+use nom::number::streaming::{ be_u8, be_u16, be_u32, be_u64 };
+
+use nsdq_util::{
+    Mpid,
+    Price,
+    parse_bool,
+    parse_ternary,
 };
 
 use crate::types::{
-    FirmId,
-    CustomerType,
     PriceType,
-    Price,
-    SignedPrice,
     HandleInst,
-    BboWeightIndicator,
+    BboWeight,
     RouteId,
-    BrokerId,
     ElapsedTime,
     Side,
-    TradeNow
 };
 
+macro_rules! tag_values {
+    (
+        $(
+            [$tag:expr] $name:ident: $typ:ident 
+                $($doc:expr)?;
+            { 
+                $parser:expr,
+                $encoder:expr
+            }
+        ),* $(,)?
+    ) =>{
 
-/// An optional attribute on an order is communicated via a TagValue element.
-///
-/// These names are kept as similar as practical to the corresponding options
-/// as documented in the OUCH 5.0 specifications.
-///
-/// If an optional field is not provided on a message, 
-/// OUCH will use the default value (see Appendix A in the spec).
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub enum TagValue {
-
-    /// An alternative order reference number used when publishing the order 
-    /// on the NASDAQ market data feeds 
-    /// (identifying, for example, the displayed portion of a reserve order).
-    SecondaryOrdRefNum(u64),
-
-    /// Identifier for the firm placing the order.
-    Firm(FirmId),
-
-    /// Must be a round lot.
-    MinQty(u32),
-
-    /// Specifies the type of customer for the order 
-    /// (e.g., retail, institutional).
-    CustomerType(CustomerType),
-
-    /// Represents the portion of your order that you wish to have displayed.
-    MaxFloor(u32),
-
-    /// Specifies the type of pricing for the order (e.g., limit, market).
-    PriceType(PriceType),
-
-    /// Offset amount for the pegged value.
-    PegOffset(SignedPrice),
-
-    /// Price for discretionary order execution.
-    DiscretionPrice(Price),
-
-    /// Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
-    DiscretionPriceType(PriceType),
-
-    /// Offset amount for the pegged value of the Discretionary Price.
-    DiscretionPegOffset(SignedPrice),
-
-    /// Indicates if the order is post-only (will not execute immediately).
-    PostOnly(bool),
-
-    /// Shares to do random reserve with.
-    RandomReserves(u32),
-
-    /// Specifies the routing destination for the order.
-    Route(RouteId),
-
-    /// Seconds to live. 
-    /// Must be less than 86400 (number of seconds in a day).
-    ExpireTime(ElapsedTime),
-
-    /// Indicates if the order should be executed immediately.
-    TradeNow(TradeNow),
-
-    /// Specifies handling instructions for the order 
-    /// (e.g., automated execution). 
-    HandleInst(HandleInst),
-
-    /// Indicates the weighting of the order in the Best Bid and Offer (BBO). 
-    BboWeightIndicator(BboWeightIndicator),
-
-    /// Used in the Order Restated Message only.
-    /// Represents an update of an order’s displayed quantity 
-    /// (i.e. an order with reserves).
-    DisplayQuantity(u32),
-
-    /// Used in the Order Restated Message only.
-    /// Represents an update of an order’s displayed price.
-    DisplayPrice(Price),
-
-    /// Customer Group ID – identifies specific entity.
-    GroupId(u16),
-
-    /// Shares located for short sale order.
-    SharesLocated(bool),
-
-    /// Broker code from which the locate has been acquired 
-    /// for short sale orders.
-    LocateBroker(BrokerId),
-
-    /// Specifies the side of the order (e.g., buy or sell). 
-    Side(Side),
-
-    /// User Reference Index - identifies the channel within the given port.
-    UserRefIndex(u8),
-
-}
-
-impl TagValue {
-
-    pub(crate) fn encode(&self) -> Vec<u8> {
-
-        use TagValue::*;
-        // Take note of missing tags => 8, 19-21
-        let (option_tag, encoded_value) = match self {
-            
-            SecondaryOrdRefNum(val)     => (1,  val.to_be_bytes().to_vec()),
-            Firm(val)                   => (2,  val.encode().to_vec()),
-            MinQty(val)                 => (3,  val.to_be_bytes().to_vec()),
-            CustomerType(val)           => (4,  vec![val.encode()]),
-            MaxFloor(val)               => (5,  val.to_be_bytes().to_vec()),
-            PriceType(val)              => (6,  vec![val.encode()]),
-            PegOffset(val)              => (7,  val.encode().to_vec()),
-            DiscretionPrice(val)        => (9,  val.encode().to_vec()),
-            DiscretionPriceType(val)    => (10, vec![val.encode()]),
-            DiscretionPegOffset(val)    => (11, val.encode().to_vec()),
-            PostOnly(val)               => (12, {
-                vec![ match val {
-                    true => b'P',
-                    false => b'N',
-                }]
-            }), 
-            RandomReserves(val)         => (13, val.to_be_bytes().to_vec()),
-            Route(val)                  => (14, val.encode().to_vec()),
-            ExpireTime(val)             => (15, val.encode().to_vec()), 
-            TradeNow(val)               => (16, vec![val.encode()]),
-            HandleInst(val)             => (17, vec![val.encode()]),
-            BboWeightIndicator(val)     => (18, vec![val.encode()]),
-            DisplayQuantity(val)        => (22, val.to_be_bytes().to_vec()),
-            DisplayPrice(val)           => (23, val.encode().to_vec()),
-            GroupId(val)                => (24, val.to_be_bytes().to_vec()),
-            SharesLocated(val)          => (25, {
-                vec![ match val {
-                    true => b'Y',
-                    false => b'N',
-                }]
-            }), 
-            LocateBroker(val)           => (26, val.encode().to_vec()),
-            Side(val)                   => (27, vec![val.encode()]),
-            UserRefIndex(val)           => (28, val.to_be_bytes().to_vec()),
-        };
-
-        // Start encoded array with length (calculated, not tracked);
-        // this is the start of the protocol's `TagValue` type.
-        // Safely assume that length will be less than u8::MAX,
-        // because each enum variant's inner type encodes to less.
-        let length: u8 = encoded_value.len() as u8 + 1;
-
-        let mut data = vec![length, option_tag as u8];
-        data.extend(encoded_value);
-
-        // This is formatted as the protocol's TagValue, 
-        // including length marker:
-        data
-    }
-
-    pub(crate) fn parse(data: &[u8]) -> Result<Self, OuchError> {
-
-        // Length-marking byte of tag is not added to `data` when 
-        // `OptionalAppendage::parse` calls this method.
-        let option_tag = data[0];
-        let payload = &data[1..];
-
-        match option_tag {
-
-            1 => Ok(Self::SecondaryOrdRefNum(u64_from_be_bytes(payload)?)), 
-            2 => Ok(Self::Firm(FirmId::parse(payload)?)),
-            3 => Ok(Self::MinQty(u32_from_be_bytes(payload)?)),
-            4 => Ok(Self::CustomerType(CustomerType::parse(payload[0])?)),
-            5 => Ok(Self::MaxFloor(u32_from_be_bytes(payload)?)),
-            6 => Ok(Self::PriceType(PriceType::parse(payload[0])?)),
-            7 => Ok(Self::PegOffset(SignedPrice::parse(payload)?)),
-            9 => Ok(Self::DiscretionPrice(Price::parse(payload)?)),
-            10 => {
-                let price_type = PriceType::parse(payload[0])?;
-                use PriceType::*;
-                match price_type {
-                    // Valid PriceType for DiscretionPriceType 
-                    // excludes "Q" and "m".
-                    MarketMakerPeg | Midpoint => Err(
-                        BadElementError::InvalidEnum(
-                            (price_type.encode() as char).to_string(), 
-                            "DiscretionPriceType".to_string()
-                        ).into()
-                    ),
-                    _ => Ok(Self::DiscretionPriceType(price_type))
-                }
-            },
-
-            11 => Ok(Self::DiscretionPegOffset(SignedPrice::parse(payload)?)),
-            12 => {
-                let val = payload[0];
-                match val {
-                    b'P' => Ok(Self::PostOnly(true)),
-                    b'N' => Ok(Self::PostOnly(false)),
-
-                    _ => Err(BadElementError::InvalidEnum(
-                            (val as char).to_string(), 
-                            "PostOnly".to_string()
-                        ).into())
-                }
-            },
-
-            13 => Ok(Self::RandomReserves(u32_from_be_bytes(payload)?)),
-            14 => Ok(Self::Route(RouteId::parse(payload)?)),
-            15 => Ok(Self::ExpireTime(ElapsedTime::parse(payload)?)),
-            16 => Ok(Self::TradeNow(TradeNow::parse(payload[0])?)),
-            17 => Ok(Self::HandleInst(HandleInst::parse(payload[0])?)),
-            18 => Ok(Self::BboWeightIndicator(
-                    BboWeightIndicator::parse(payload[0])?
-            )),
-
-            22 => Ok(Self::DisplayQuantity(u32_from_be_bytes(payload)?)),
-            23 => Ok(Self::DisplayPrice(Price::parse(payload)?)),
-            24 => Ok(Self::GroupId(u16_from_be_bytes(payload)?)),
-            25 => {
-                let val = payload[0];
-                match val {
-                    b'Y' => Ok(Self::SharesLocated(true)),
-                    b'N' => Ok(Self::SharesLocated(false)),
-
-                    _ => Err(BadElementError::InvalidEnum(
-                            (val as char).to_string(), 
-                            "SharesLocated".to_string()
-                        ).into())
-                }
-            },
-
-            26 => Ok(Self::LocateBroker(BrokerId::parse(payload)?)),
-            27 => Ok(Self::Side(Side::parse(payload[0])?)),
-            28 => Ok(Self::UserRefIndex(payload[0])),
-
-            _ => Err(BadElementError::InvalidEnum(
-                (option_tag as char).to_string(), 
-                "TagValue".to_string()
-            ).into()),
+        /// An optional field on a message is communicated via TagValue.
+        #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+        pub enum TagValue {
+            $(
+                $(#[doc = $doc])?
+                $name($typ),
+            )*
         }
+
+        impl TagValue {
+
+            pub(crate) fn encode(&self) -> Vec<u8> {
+
+                use TagValue::*;
+                let (option_tag, encoded_value) = match self {
+                    $(
+                        $name(val) => ($tag, $encoder(val).to_vec()),
+                    )*
+                };
+
+                // Start encoded array with length (calculated, not tracked);
+                // this is the start of the protocol's `TagValue` type.
+                // Safely assume that length will be less than u8::MAX,
+                // because each enum variant's inner type encodes to less.
+                let length: u8 = encoded_value.len() as u8 + 1;
+
+                let mut data = vec![length, option_tag as u8];
+                data.extend(encoded_value);
+
+                // This is formatted as the protocol's TagValue, 
+                // including length marker:
+                data
+            }
+
+            // Length-marking byte of tag is not added to `data` when 
+            // `OptionalAppendage::parse` calls this method.
+            pub(crate) fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
+
+                let (input, opt) = nom::bytes::complete::take(1usize)(input)?;
+                let result = match opt[0] {
+                    $( 
+                        $tag => {
+                            let (input, var) = $parser(input)?;
+                            (input, Self::$name(var))
+                        },
+                    )* 
+                    _ => { 
+
+                        // TODO: Parse error
+                        todo![] 
+                    }
+                };
+
+                Ok(result)
+            }
+
+        }
+
     }
+}
+
+type Price64 = Price<u64, 4>;
+type SignedPrice = Price<i32, 4>;
+
+tag_values!{
+
+    [1u8] SecondaryOrdRefNum: u64
+    "An alternative order reference number used when publishing the order \
+    on the NASDAQ market data feeds \
+    (identifying, for example, the displayed portion of a reserve order).";
+        { be_u64, |i: &u64| u64::to_be_bytes(*i) },
+
+    [2u8] Firm: Mpid "Identifier for the firm placing the order.";
+        { Mpid::parse, Mpid::encode },
+
+    [3u8] MinQty: u32 "Must be a round lot.";
+        { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+
+    // Specifies the type of customer for the order 
+    // (e.g., retail, institutional).
+    // TODO: encode_ternary/encode_bool
+    //[4u8] Retail: Option<bool> "Customer Type (Retail/Institutional)";
+    //    { parse_ternary, /*TODO*/ }
+
+    [5u8] MaxFloor: u32 
+    "Represents the portion of your order that you wish to have displayed.";
+        { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+
+    // Specifies the type of pricing for the order (e.g., limit, market).
+    //[6u8] PriceType: PriceType;
+    //    { PriceType::parse, PriceType::encode },
+
+    [7u8] PegOffset: SignedPrice "Offset amount for the pegged value.";
+        { Price::<i32, 4>::parse, Price::<i32, 4>::encode },
+
+    [9u8] DiscretionaryPrice: Price64 
+    "Price for discretionary order execution.";
+        { Price::<u64, 4>::parse, Price::<u64, 4>::encode },
+
+    // Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
+    //[10u8] DiscretionPriceType: PriceType;
+    //    { PriceType::parse, PriceType::encode },
+
+    /*
+        10 => {
+            let price_type = PriceType::parse(payload[0])?;
+            use PriceType::*;
+            match price_type {
+                // Valid PriceType for DiscretionPriceType 
+                // excludes "Q" and "m".
+                MarketMakerPeg | Midpoint => Err(
+                    BadElementError::InvalidEnum(
+                        (price_type.encode() as char).to_string(), 
+                        "DiscretionPriceType".to_string()
+                    ).into()
+                ),
+                _ => Ok(Self::DiscretionPriceType(price_type))
+            }
+        },
+
+    */
+
+    [11u8] DiscretionPegOffset: SignedPrice 
+    "Offset amount for the pegged Discretionary Price.";
+        { Price::<i32, 4>::parse, Price::<i32, 4>::encode },
+
+    // Indicates if the order is post-only (will not execute immediately).
+    //[12u8] PostOnly: bool;
+    //    { |i: &[u8]| parse_bool_with_chars('P', 'N', i), /*TODO*/ }
+
+    [13u8] RandomReserves: u32 "Shares to do random reserve with.";
+        { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+
+    // Specifies the routing destination for the order.
+    //[14u8] Route: RouteId;
+    //    { RouteId::parse, RouteId::encode },
+
+    // Seconds to live. 
+    // Must be less than 86400 (number of seconds in a day).
+    //[15u8] ExpireTime: ...NaiveTime?;
+    //    { RouteId::parse, RouteId::encode },
+
+    // Indicates if the order should be executed immediately.
+    //[16u8] TradeNow: bool;
+    //    { parse_ternary, /*TODO*/ },
+
+    //[17u8] HandleInst: HandleInst "Handling instructions for the order.";
+    //    { HandleInst::parse, HandleInst::encode }
+
+    //[18u8] BboWeight: BboWeight 
+    //"Indicates the weighting of the order in the Best Bid and Offer (BBO).";
+    //    { BboWeight::parse, BboWeight::encode }
+
+    [22u8] DisplayQuantity: u32 
+    "Used in the Order Restated Message only. \n \
+    Represents an update of an order’s displayed quantity \
+    (i.e. an order with reserves).";
+        { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+
+    [23u8] DisplayPrice: Price64 
+    "Used in the Order Restated Message only. \n \
+    Represents an update of an order’s displayed price.";
+        { Price::<u64, 4>::parse, Price::<u64, 4>::encode },
+
+    [24u8] GroupId: u16 
+    "Used in the Order Restated Message only. \n \
+    Represents an update of an order’s displayed quantity \
+    (i.e. an order with reserves).";
+        { be_u16, |i: &u16| u16::to_be_bytes(*i) },
+
+    // Indicates if the order is post-only (will not execute immediately).
+    //[25u8] SharesLocated: bool;
+    //    { parse_bool, /*TODO*/ }
+
+    [26u8] LocateBroker: Mpid 
+    "Broker code from which the locate has been acquired \
+    for short sale orders";
+        { Mpid::parse, Mpid::encode },
+
+    //[27u8] Side: Side "Specifies the side of the order (e.g., buy or sell).";
+    //    { Side::parse, Side::encode },
+
+    [28u8] UserRefIndex: u8 
+    "Used in the Order Restated Message only. \n \
+    Represents an update of an order’s displayed quantity \
+    (i.e. an order with reserves).";
+        { be_u8, |i: &u8| u8::to_be_bytes(*i) },
 
 }
+

@@ -1,29 +1,29 @@
 
-use chrono::NaiveTime;
+use nom::number::streaming::{ be_u32, be_u64 };
+
+use nsdq_util::{
+    NaiveTime,
+    parse_ouch_time_bold,
+    parse_bool,
+    Price,
+    StockSymbol,
+};
 
 use crate::{
     error::{ OuchError, BadElementError },
-    helper::{ 
-        u32_from_be_bytes, 
-        u64_from_be_bytes,
-        nanosec_from_midnight
-    }
+    msg::options::*,
+    types::{ 
+        UserRefNum,
+        Side,
+        TimeInForce,
+        Display,
+        Capacity,
+        CrossType,
+        OrderState,
+        OrderToken
+    },
 };
 
-use crate::types::{ 
-    UserRefNum,
-    Side,
-    StockSymbol, 
-    Price,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderState,
-    OrderToken
-};
-
-use crate::msg::options::*;
 
 /// Acknowledges the receipt and acceptance of a valid EnterOrder request. 
 /// The data fields from the Enter request are echoed back in this message. 
@@ -40,12 +40,12 @@ pub struct OrderAccepted {
     side: Side,
     quantity: u32,
     symbol: StockSymbol,
-    price: Price,
+    price: Price<u64, 4>,
     time_in_force: TimeInForce,
     display: Display,
     order_ref_num: u64,
     capacity: Capacity,
-    intermarket_sweep_eligibility: bool,
+    intermarket_sweep: bool,
     cross_type: CrossType,
     order_state: OrderState,
     order_token: OrderToken,
@@ -56,40 +56,42 @@ impl OrderAccepted {
 
     // Data contains package without type tag, 
     // so all offsets should be one less than those in the official spec.
-    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
+    pub(super) fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
 
-        if data.len() < 63 {
-            return Err(OuchError::Parse("OrderAccepted".to_string()))
-        }
+        let (input, timestamp) = parse_ouch_time_bold(input)?;
+        let (input, user_ref_num) = UserRefNum::parse()?;
+        let (input, side) = Side::parse(input)?;
+        let (input, quantity) = be_u32(input)?;
+        let (input, symbol) = StockSymbol::parse(input)?;
+        let (input, price) = Price<u64, 4>::parse(input)?;
+        let (input, time_in_force) = TimeInForce::parse(input)?;
+        let (input, display) = Display::parse(input)?;
+        let (input, order_ref_num) = be_u64(input)?;
+        let (input, capacity) = Capacity::parse(input)?;
+        let (input, intermarket_sweep) = parse_bool(input)?;
+        let (input, cross_type) = CrossType::parse(input)?;
+        let (input, order_state) = OrderState::parse(input)?;
+        let (input, order_token) = OrderToken::parse(input)?;
+        let (input, optional_appendage) = OptionalAppendage::parse(input)?;
 
-        Ok(Self {
-            timestamp: {
-                let ts = u64_from_be_bytes(&data[0..=7])?;
-                nanosec_from_midnight(ts)
-            },
-            user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            side: Side::parse(data[12])?, 
-            quantity: u32_from_be_bytes(&data[13..=16])?, 
-            symbol: StockSymbol::parse(&data[17..=24])?,
-            price: Price::parse(&data[25..=32])?,
-            time_in_force: TimeInForce::parse(data[33])?,
-            display: Display::parse(data[34])?,
-            order_ref_num: u64_from_be_bytes(&data[35..=42])?,
-            capacity: Capacity::parse(data[43])?,
-            intermarket_sweep_eligibility: match data[44] {
-                b'Y' => true,
-                b'N' => false,
 
-                _ => return Err(BadElementError::InvalidEnum(
-                    (data[44] as char).to_string(), 
-                    "IntermarketSweepEligibility".to_string()
-                ).into())
-            },
-            cross_type: CrossType::parse(data[45])?,
-            order_state: OrderState::parse(data[46])?,
-            order_token: OrderToken::parse(&data[47..=60])?,
-            optional_appendage: OptionalAppendage::parse(&data[61..])?
-        })
+        Ok((input, Self {
+            timestamp, 
+            user_ref_num, 
+            side, 
+            quantity, 
+            symbol,
+            price, 
+            time_in_force, 
+            display, 
+            order_ref_num,
+            capacity, 
+            intermarket_sweep, 
+            cross_type,
+            order_state, 
+            order_token, 
+            optional_appendage 
+        }))
     }
 
     /// Time this message was generated.
@@ -102,7 +104,7 @@ impl OrderAccepted {
     pub fn quantity(&self) -> u32 { self.quantity }
     
     /// Gets the symbol for which the orders will be placed.
-    pub fn symbol(&self) -> &StockSymbol { &self.symbol }
+    pub fn symbol(&self) -> StockSymbol { self.symbol }
 
     /// Market side (Buy, Sell, etc.)
     pub fn side(&self) -> Side { self.side }
@@ -111,7 +113,7 @@ impl OrderAccepted {
     /// NOTE: The accepted price could potentially be different 
     /// than the entered price if the order was re-priced by NASDAQ on entry. 
     /// The accepted price will always be better than or equal to the entered.
-    pub fn price(&self) -> Price { self.price }
+    pub fn price(&self) -> Price<u64, 4> { self.price }
 
     /// The accepted Time in Force of the order. 
     /// NOTE: The accepted Time in Force may potentially be different 
@@ -134,8 +136,8 @@ impl OrderAccepted {
     pub fn capacity(&self) -> Capacity { self.capacity }
 
     /// Returns true if this order is an eligible Intermarket Sweep Order.
-    pub fn intermarket_sweep_eligibility(&self) -> bool {
-        self.intermarket_sweep_eligibility
+    pub fn intermarket_sweep(&self) -> bool {
+        self.intermarket_sweep
     }
 
     /// The market event for when this order is to be executed.
@@ -143,7 +145,7 @@ impl OrderAccepted {
 
     /// User-defined token (CIOrdId) that is set for this order. 
     /// Can be used to differentiate strategies, etc.
-    pub fn order_token(&self) -> &OrderToken { &self.order_token }
+    pub fn order_token(&self) -> OrderToken { self.order_token }
     
     /// Get read-only access to the message's optional fields.
     pub fn options(&self) -> &Vec<TagValue> {

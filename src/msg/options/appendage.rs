@@ -75,7 +75,7 @@ impl OptionalAppendage {
         }
     }
 
-    pub(crate) fn parse(data: &[u8]) -> Result<Self, OuchError> {
+    pub(crate) fn parse(mut input: &[u8]) -> nom::IResult<&[u8], Self> {
 
         let mut tag_values: Vec<TagValue> = Vec::new();
 
@@ -83,30 +83,40 @@ impl OptionalAppendage {
         let mut tag_start = 2u8;
 
         // Repeat this until the array is parsed:
-        while tag_start < data.len() as u8 {
+        while tag_start < input.len() as u8 {
             // The first byte in the tag describes the length.
-            if let Some(tag_len) = data.get(tag_start as usize) {
+            if let Some(tag_len) = input.get(tag_start as usize) {
+
                 // Use it to get the next X bytes (this one not included).
                 // Assumes the length of a tag is always a u8.
                 let tag_end = tag_start + *tag_len;
-                if tag_end < data.len() as u8 {
-                    let raw_tag_value = &data[
+                if tag_end < input.len() as u8 {
+
+                    let raw_tag_value = &input[
                         ((tag_start as usize) + 1)..=(tag_end as usize)
                     ];
-                    let tag_value = TagValue::parse(raw_tag_value)?;
+
+                    let (ipt, tag_value) = TagValue::parse(raw_tag_value)?;
+                    input = ipt;
                     tag_values.push(tag_value);
+
                     // The byte after (i.e., X + 1) will contain the length 
                     // of the next tag value (if there is one).
                     tag_start = tag_end as u8 + 1;
+
                 } else {
-                    return Err(
-                        OuchError::Parse("OptionalAppendage".to_string())
-                    )
+
+                    todo![]
+
+                    // TODO
+                    //return Err(
+                    //    OuchError::Parse("OptionalAppendage".to_string())
+                    //)
                 }
             }
         }
 
-        Ok(Self{ tag_values })
+        Ok((input, Self{ tag_values }))
     }
 }
 

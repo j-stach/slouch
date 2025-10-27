@@ -1,5 +1,4 @@
 
-use chrono::NaiveTime;
 use crate::error::BadElementError;
 
 
@@ -72,57 +71,4 @@ pub(crate) fn fixed_str_14(s: &str) -> [u8; 14] {
 pub(crate) fn ascii_from_utf8(data: &[u8]) -> Result<String, BadElementError> {
     Ok(std::str::from_utf8(data)?.trim_end().to_string())
 }
-
-// Simplifies conversion.
-pub(crate) fn u64_from_be_bytes(data: &[u8]) -> Result<u64, BadElementError> {
-
-    if let Ok(bytes) = data.try_into() {
-        Ok(u64::from_be_bytes(bytes))
-    } else {
-        Err(BadElementError::WrongSize("u64".to_string(), 8, data.len()))
-    }
-}
-
-// Simplifies conversion.
-pub(crate) fn u32_from_be_bytes(data: &[u8]) -> Result<u32, BadElementError> {
-
-    if let Ok(bytes) = data.try_into() {
-        Ok(u32::from_be_bytes(bytes))
-    } else {
-        Err(BadElementError::WrongSize("u32".to_string(), 4, data.len()))
-    }
-}
-
-// Simplifies conversion.
-pub(crate) fn u16_from_be_bytes(data: &[u8]) -> Result<u16, BadElementError> {
-
-    if let Ok(bytes) = data.try_into() {
-        Ok(u16::from_be_bytes(bytes))
-    } else {
-        Err(BadElementError::WrongSize("u16".to_string(), 2, data.len()))
-    }
-}
-
-// Simplifies conversion.
-pub(crate) fn i32_from_be_bytes(data: &[u8]) -> Result<i32, BadElementError> {
-
-    if let Ok(bytes) = data.try_into() {
-        Ok(i32::from_be_bytes(bytes))
-    } else {
-        Err(BadElementError::WrongSize("i32".to_string(), 4, data.len()))
-    }
-}
-
-// Convert from encoded timestamp to Rust-friendly type.
-pub(crate) fn nanosec_from_midnight(time: u64) -> NaiveTime {
-
-    let d = 10u64.pow(9);
-    let secs = (time / d) as u32;
-    let nano = (time % d) as u32;
-
-    // TODO: TBD: Is this safe to expect?
-    // It is the same convention used by OUCH, so it should not be invalid.
-    NaiveTime::from_num_seconds_from_midnight_opt(secs, nano)
-        .expect("Timestamp is a valid time")
-} 
 

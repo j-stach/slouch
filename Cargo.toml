@@ -2,7 +2,7 @@
 [package]
 name = "slouch"
 authors = ["j-stach"]
-version = "0.0.0"
+version = "0.0.1"
 edition = "2024"
 license = "MIT"
 readme = "README.md"
@@ -14,7 +14,8 @@ categories = ["network-programming", "finance"]
 exclude = [".git/**", "docs/**", "test/**", "src/test/**", "TODO.md"]
 
 [dependencies]
-chrono = { version = "0.4.41", default-features = false, features = ["std"] }
+nsdq-util = "0.1.1"
+nom = "8.0.0"
 thiserror = "2.0.12"
 
 # Feature-specific dependencies:

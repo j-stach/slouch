@@ -1,4 +1,23 @@
 
+# TODO for crate
+
+### use `nsdq-util` to replace 
+- [ ] helpers, 
+- [x] enums and 
+- [ ] string types, 
+- [ ] ternary etc.
+
+### messages
+- [ ] Convert parsers to use `nom` (zero allocation)
+- [x] `parse`, `encode` convention
+- [ ] macro for defining request/response enums to avoid repetition
+
+### options
+- [x] `TagValue` parse more logically with `nom`
+- [ ] Finish `TagValue` vars, `nsdq-util` needs `encode` for bool and ternary
+
+
+
 ## Testing:
 - [ ] Test handling of inappropriate options for requests
 - [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
@@ -18,5 +37,4 @@
 
 ### Performance:
 TBD. Plenty to be done.
-- [ ] Convert parsers to use `nom` (zero allocation)?
 

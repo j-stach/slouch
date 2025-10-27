@@ -1,6 +1,5 @@
 
 use crate::error::BadElementError;
-use crate::helper::u32_from_be_bytes;
 
 /// Used to set `TagValue::ExpireTime`.
 /// Seconds to live. Must be less than 86400 (number of seconds in a day).
@@ -22,11 +21,15 @@ impl ElapsedTime {
         Ok(Self(secs))
     }
 
-    pub fn secs(&self) -> u32 { self.0 }
+    pub fn to_secs(&self) -> u32 { self.0 }
 
-    pub(crate) fn parse(data: &[u8]) -> Result<Self, BadElementError> {
-        let secs = u32_from_be_bytes(data)?;
-        Self::new(secs)
+    pub(crate) fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
+
+        let (input, secs) = nom::number::streaming::be_u32(input)?;
+        let time = Self::new(secs)
+            .expect("Should only need to check user-created values.");
+
+        Ok((input, time))
     }
 
     // Limits should have been checked when ElapsedTime was created.

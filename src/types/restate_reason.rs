@@ -1,41 +1,11 @@
 
-use crate::error::BadElementError;
+use nsdq_util::define_enum;
 
-/// Reason why an order was restated.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum RestateReason {
+define_enum!{
 
-    /// Refresh of display (on an order with reserves)
-    Refresh,
+    RestateReason: "Reason why an order was restated.";
 
-    /// Update of displayed price
-    Update
+    ['R'] Refresh "Refresh of display (on an order with reserves)",
+    ['P'] Update "Update of displayed price",
 }
 
-impl RestateReason {
-
-    pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
-
-        use RestateReason::*;
-        match data {
-            b'R' => Ok(Refresh),
-            b'P' => Ok(Update),
-
-            _ => Err(BadElementError::InvalidEnum(
-                (data as char).to_string(), 
-                "RestateReason".to_string()
-            ))
-        }
-    }
-
-    #[allow(dead_code)] // Future use
-    pub(crate) fn encode(&self) -> u8 {
-        
-        use RestateReason::*;
-        match self {
-            Refresh => b'R',
-            Update  => b'P',
-        }
-    }
-
-}

@@ -1,11 +1,14 @@
 
+use nsdq_util::{
+    StockSymbol, 
+    Price,
+};
+
 use crate::error::BadElementError;
 
 use crate::types::{ 
     UserRefNum,
     Side,
-    StockSymbol, 
-    Price,
     TimeInForce,
     Display,
     Capacity,
@@ -28,7 +31,7 @@ pub struct EnterOrder {
     side: Side,
     quantity: u32,
     symbol: StockSymbol,
-    price: Price,
+    price: Price<u64, 4>,
     time_in_force: TimeInForce,
     display: Display,
     capacity: Capacity,
@@ -48,7 +51,7 @@ impl EnterOrder {
         side: Side,
         quantity: u32,
         symbol: StockSymbol,
-        price: Price,
+        price: Price<u64, 4>,
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
@@ -84,7 +87,7 @@ impl EnterOrder {
         side: Side,
         quantity: u32,
         symbol: StockSymbol,
-        price: Price,
+        price: Price<u64, 4>,
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
@@ -122,7 +125,7 @@ impl EnterOrder {
     pub fn side(&self) -> Side { self.side }
 
     /// Price at which the order will be placed.
-    pub fn price(&self) -> Price { self.price }
+    pub fn price(&self) -> Price<u64, 4> { self.price }
 
     /// Time block where the order is active (e.g., Day).
     /// "Corresponds to TimeInForce (59) in Nasdaq FIX."
@@ -192,7 +195,8 @@ impl EnterOrder {
             GroupId(..) |
             SharesLocated(..) |
             LocateBroker(..) |
-            UserRefIndex(..) => { /* Continue */ },
+            UserRefIndex(..) 
+                => { /* Continue */ },
 
             _ => {
                 return Err(BadElementError::InvalidOption(

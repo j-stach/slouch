@@ -1,52 +1,13 @@
 
-use crate::error::BadElementError;
+use nsdq_util::define_enum;
 
-/// Reason a trade execution was broken (`BrokenTrade` message).
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum BrokenReason {
+define_enum!{
 
-    /// Trade deemed "clearly erroneous."
-    Erroneous,
+    BrokenReason: "Reason a trade execution was broken.";
 
-    /// Both parties agreed to break the trade.
-    Consent,
-
-    /// Manually broken by NASDAQ supervisory terminal.
-    Supervisory,
-
-    /// Broken by external third party.
-    External
-
+    ['E'] Erroneous "Trade deemed 'clearly erroneous.'",
+    ['C'] Consent "Both parties agreed to break the trade.",
+    ['S'] Supervisory "Manually broken by NASDAQ supervisory terminal.",
+    ['X'] External "Broken by external third party.",
 }
 
-impl BrokenReason {
-
-    pub(crate) fn parse(data: u8) -> Result<Self, BadElementError> {
-
-        use BrokenReason::*;
-        match data {
-            b'E' => Ok(Erroneous),
-            b'C' => Ok(Consent),
-            b'S' => Ok(Supervisory),
-            b'X' => Ok(External),
-
-            _ => Err(BadElementError::InvalidEnum(
-                (data as char).to_string(), 
-                "BrokenReason".to_string()
-            ))
-        }
-    }
-
-    #[allow(dead_code)] // Future use
-    pub(crate) fn encode(&self) -> u8 {
-        
-        use BrokenReason::*;
-        match self {
-            Erroneous   => b'E',
-            Consent     => b'C',
-            Supervisory => b'S',
-            External    => b'X',
-        }
-    }
-
-}

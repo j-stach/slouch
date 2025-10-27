@@ -1,4 +1,70 @@
 
+use nsdq_util::define_enum;
+
+// TODO define enum variant pattern in macro
+define_enum!{
+
+    RejectReason [2usize] "";
+
+    /*
+    [0x0001_u16] QuoteUnavailable "0x0001",
+    [0x0002_u16.to_be_bytes()] DestinationClosed,
+    [0x0003_u16.to_be_bytes()] InvalidDisplay,
+    [0x0004_u16.to_be_bytes()] InvalidMaxFloor,
+    [0x0005_u16.to_be_bytes()] InvalidPegType,
+    [0x0006_u16.to_be_bytes()] FatFinger,
+    [0x0007_u16.to_be_bytes()] Halted,
+    [0x0008_u16.to_be_bytes()] IsoNotAllowed,
+    [0x0009_u16.to_be_bytes()] InvalidSide,
+    [0x000A_u16.to_be_bytes()] ProcessingError,
+    [0x000B_u16.to_be_bytes()] CancelPending,
+    [0x000C_u16.to_be_bytes()] FirmNotAuthorized,
+    [0x000D_u16.to_be_bytes()] InvalidMinQuantity,
+    [0x000E_u16.to_be_bytes()] NoClosingReferencePrice,
+    [0x000F_u16.to_be_bytes()] Other,
+
+    [&0x0010_u16.to_be_bytes()] CancelNotAllowed,
+    [&0x0011_u16.to_be_bytes()] PeggingNotAllowed,
+    [&0x0012_u16.to_be_bytes()] CrossedMarket,
+    [&0x0013_u16.to_be_bytes()] InvalidQuantity,
+    [&0x0014_u16.to_be_bytes()] InvalidCrossOrder,
+    [&0x0015_u16.to_be_bytes()] ReplaceNotAllowed,
+    [&0x0016_u16.to_be_bytes()] RoutingNotAllowed,
+    [&0x0017_u16.to_be_bytes()] InvalidSymbol,
+    [&0x0018_u16.to_be_bytes()] Test,
+    [&0x0019_u16.to_be_bytes()] LateLocTooAggressive,
+    [&0x001A_u16.to_be_bytes()] RetailNotAllowed,
+    [&0x001B_u16.to_be_bytes()] InvalidMidpoint,
+    [&0x001C_u16.to_be_bytes()] InvalidDestination,
+    [&0x001D_u16.to_be_bytes()] InvalidPrice,
+    [&0x001E_u16.to_be_bytes()] SharesExceedThreshold,
+    [&0x001F_u16.to_be_bytes()] MaximumNotionalValue,
+
+    [&0x0020_u16.to_be_bytes()] RiskAggregateExposureExceeded,
+    [&0x0021_u16.to_be_bytes()] RiskMarketImpact,
+    [&0x0022_u16.to_be_bytes()] RiskRestrictedStock,
+    [&0x0023_u16.to_be_bytes()] RiskShortSellRestricted,
+    [&0x0024_u16.to_be_bytes()] RiskIsoNotAllowed,
+    [&0x0025_u16.to_be_bytes()] RiskExceedsAdvLimit,
+    [&0x0026_u16.to_be_bytes()] RiskFatFinger,
+    [&0x0027_u16.to_be_bytes()] RiskLocateRequired,
+    [&0x0028_u16.to_be_bytes()] RiskSymbolMessageRate,
+    [&0x0029_u16.to_be_bytes()] RiskPortMessageRate,
+    [&0x002A_u16.as_be_bytes()] RiskDuplicateMessageRate,
+    [&0x002B_u16.to_be_bytes()] RiskShortSellNotAllowed,
+    [&0x002C_u16.to_be_bytes()] RiskMarketOrderNotAllowed,
+    [&0x002D_u16.to_be_bytes()] RiskPreMarketNotAllowed,
+    [&0x002E_u16.to_be_bytes()] RiskPostMarketNotAllowed,
+    [&0x002F_u16.to_be_bytes()] RiskShortSellExemptNotAllowed,
+
+    [&0x0030_u16.to_be_bytes()] RiskSingleOrderNotionalExceeded,
+    [&0x0031_u16.to_be_bytes()] RiskMaxQuantityExceeded,
+    [&0x0032_u16.to_be_bytes()] ShoStateNotAvailable,
+    [&0x0033_u16.to_be_bytes()] RiskIpoMarketBuyNotAllowed,
+    */
+}
+
+/*
 use crate::{
     error::BadElementError,
     helper::u16_from_be_bytes
@@ -75,61 +141,6 @@ impl RejectReason {
         use RejectReason::*;
         match data {
 
-            0x0001 => Ok(QuoteUnavailable),
-            0x0002 => Ok(DestinationClosed),
-            0x0003 => Ok(InvalidDisplay),
-            0x0004 => Ok(InvalidMaxFloor),
-            0x0005 => Ok(InvalidPegType),
-            0x0006 => Ok(FatFinger),
-            0x0007 => Ok(Halted),
-            0x0008 => Ok(IsoNotAllowed),
-            0x0009 => Ok(InvalidSide),
-            0x000A => Ok(ProcessingError),
-            0x000B => Ok(CancelPending),
-            0x000C => Ok(FirmNotAuthorized),
-            0x000D => Ok(InvalidMinQuantity),
-            0x000E => Ok(NoClosingReferencePrice),
-            0x000F => Ok(Other),
-
-            0x0010 => Ok(CancelNotAllowed),
-            0x0011 => Ok(PeggingNotAllowed),
-            0x0012 => Ok(CrossedMarket),
-            0x0013 => Ok(InvalidQuantity),
-            0x0014 => Ok(InvalidCrossOrder),
-            0x0015 => Ok(ReplaceNotAllowed),
-            0x0016 => Ok(RoutingNotAllowed),
-            0x0017 => Ok(InvalidSymbol),
-            0x0018 => Ok(Test),
-            0x0019 => Ok(LateLocTooAggressive),
-            0x001A => Ok(RetailNotAllowed),
-            0x001B => Ok(InvalidMidpoint),
-            0x001C => Ok(InvalidDestination),
-            0x001D => Ok(InvalidPrice),
-            0x001E => Ok(SharesExceedThreshold),
-            0x001F => Ok(MaximumNotionalValue),
-
-            0x0020 => Ok(RiskAggregateExposureExceeded),
-            0x0021 => Ok(RiskMarketImpact),
-            0x0022 => Ok(RiskRestrictedStock),
-            0x0023 => Ok(RiskShortSellRestricted),
-            0x0024 => Ok(RiskIsoNotAllowed),
-            0x0025 => Ok(RiskExceedsAdvLimit),
-            0x0026 => Ok(RiskFatFinger),
-            0x0027 => Ok(RiskLocateRequired),
-            0x0028 => Ok(RiskSymbolMessageRate),
-            0x0029 => Ok(RiskPortMessageRate),
-            0x002A => Ok(RiskDuplicateMessageRate),
-            0x002B => Ok(RiskShortSellNotAllowed),
-            0x002C => Ok(RiskMarketOrderNotAllowed),
-            0x002D => Ok(RiskPreMarketNotAllowed),
-            0x002E => Ok(RiskPostMarketNotAllowed),
-            0x002F => Ok(RiskShortSellExemptNotAllowed),
-
-            0x0030 => Ok(RiskSingleOrderNotionalExceeded),
-            0x0031 => Ok(RiskMaxQuantityExceeded),
-            0x0032 => Ok(ShoStateNotAvailable),
-            0x0033 => Ok(RiskIpoMarketBuyNotAllowed),
-
             _ => Err(BadElementError::InvalidEnum(
                 format!("{:#x}", data),
                 "RejectReason".to_string()
@@ -203,3 +214,4 @@ impl RejectReason {
     }
 
 }
+*/

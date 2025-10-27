@@ -1,11 +1,12 @@
 
 use crate::error::BadElementError;
 
-use crate::types::{
-    UserRefNum,
-    FirmId,
+use nsdq_util::{
+    Mpid,
     StockSymbol,
 };
+
+use crate::types::UserRefNum;
 
 use crate::msg::options::{
     OptionalAppendage,
@@ -20,7 +21,6 @@ use crate::msg::options::{
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CancelOrder {
     user_ref_num: UserRefNum,
-    // TODO: TBD: Does going over orig quantity do nothing?
     quantity: u32,
     optional_appendage: OptionalAppendage
 }
@@ -34,7 +34,7 @@ impl CancelOrder {
     /// `quantity` limits the maximum number of shares that remain to be 
     /// executed after the (partial) cancel is applied. 
     /// Entering over 1,000,000 (maximum shares per order) results in an error.
-    // TBD: Entering a value greater than the original quantity does nothing.
+    /// Entering a value greater than the original quantity does nothing.
     /// Entering `0` will cancel all remaining open shares on the order.
     pub fn new(
         user_ref_num: UserRefNum,
@@ -118,7 +118,7 @@ impl CancelOrder {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MassCancel {
     user_ref_num: UserRefNum,
-    firm: FirmId,
+    firm: Mpid,
     symbol: StockSymbol,
     optional_appendage: OptionalAppendage
 }
@@ -128,7 +128,7 @@ impl MassCancel {
     /// Create a new Mass Cancel order. 
     pub fn new(
         user_ref_num: UserRefNum,
-        firm: FirmId,
+        firm: Mpid,
         symbol: StockSymbol,
     ) -> Self {
 
@@ -144,7 +144,7 @@ impl MassCancel {
     pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
 
     /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> FirmId { self.firm }
+    pub fn firm(&self) -> Mpid { self.firm }
     
     /// Gets the symbol for which the orders will be canceled.
     pub fn symbol(&self) -> StockSymbol { self.symbol }
@@ -173,7 +173,8 @@ impl MassCancel {
         match option {
             GroupId(..) |
             Side(..) |
-            UserRefIndex(..) => { /* Continue */ },
+            UserRefIndex(..) 
+                => { /* Continue */ },
 
             _ => {
                 return Err(BadElementError::InvalidOption(
