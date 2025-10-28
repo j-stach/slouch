@@ -47,3 +47,6 @@ pub use self::{
     liquidity_flag::LiquidityFlag,
 };
 
+pub(crate) type Price64 = nsdq_util::Price<u64, 4>;
+pub(crate) type SignedPrice = nsdq_util::Price<i32, 4>;
+

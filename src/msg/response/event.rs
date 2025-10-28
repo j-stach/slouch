@@ -1,47 +1,12 @@
 
-use chrono::NaiveTime;
+use nsdq_util::NaiveTime;
+use crate::types::EventCode;
 
-use crate::{
-    error::{ OuchError, BadElementError },
-    types::EventCode,
-    helper::{
-        nanosec_from_midnight,
-        u64_from_be_bytes,
-    },
-};
-
-
-/// Signal events that affect the entire NASDAQ system.
-#[derive(Debug, Clone)]
-pub struct SystemEvent {
-    timestamp: NaiveTime,
-    event_code: EventCode,
-}
-
-impl SystemEvent {
-
-    pub(super) fn parse(data: &[u8]) -> Result<SystemEvent, OuchError> {
-
-        if data.len() != 9 {
-            return Err(BadElementError::WrongSize(
-                "SystemEvent".to_string(), 9, data.len()
-            ).into())
-        }
-
-        let ts = u64_from_be_bytes(&data[0..=7])?;
-        let timestamp = nanosec_from_midnight(ts);
-
-        let ec = data[8];
-        let event_code = EventCode::parse(ec)?;
-
-        Ok(SystemEvent { timestamp, event_code })
-    }
-
-    /// Time this message was generated.
-    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
-    
-    /// Event code for the system-wide signal.
-    pub fn event_code(&self) -> EventCode { self.event_code }
-
+crate::msg::define_msg!{
+    SystemEvent: "";
+        //timestamp: NaiveTime,
+        //{parse, encode}
+        event_code: EventCode
+        { EventCode::parse, EventCode::encode }
 }
 

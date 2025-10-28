@@ -1,60 +1,12 @@
 
-use chrono::NaiveTime;
+use nsdq_util::NaiveTime;
+use crate::types::UserRefNum;
 
-use crate::{
-    error::OuchError,
-    helper::{
-        u64_from_be_bytes,
-        nanosec_from_midnight
-    },
-    types::UserRefNum,
-};
+crate::msg::define_msg!{
 
-use crate::msg::options::*;
-
-/// Indicates the next available UserRefNum.
-#[derive(Debug, Clone)]
-pub struct AccountQueryResponse {
-    timestamp: NaiveTime,
-    next_user_ref_num: UserRefNum,
-    optional_appendage: OptionalAppendage
+    AccountQueryResponse: "Indicates the next available UserRefNum.";
+        // TODO timestamp: NaiveTime
+        next_user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode }
 }
 
-impl AccountQueryResponse {
-
-    // Data contains package without type tag, 
-    // so all offsets should be one less than those in the official spec.
-    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
-
-        if data.len() < 12 {
-            return Err(OuchError::Parse("AccountQueryResponse".to_string()))
-        }
-
-        Ok(Self {
-            timestamp: {
-                let ts = u64_from_be_bytes(&data[0..=7])?;
-                nanosec_from_midnight(ts)
-            },
-            next_user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            optional_appendage: if data.len() >= 12 {
-                OptionalAppendage::parse(&data[12..])?
-            } else {
-                OptionalAppendage::new()
-            }
-        })
-    }
-    
-    /// Time this message was generated.
-    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
-    
-    /// Gets the next available user reference number.
-    pub fn next_user_ref_num(&self) -> UserRefNum {
-        self.next_user_ref_num
-    }
-
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-
-}

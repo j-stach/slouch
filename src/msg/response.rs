@@ -1,18 +1,28 @@
 
-mod accepted;
-mod executed;
-mod canceled;
-mod rejected;
-mod modified;
-mod updated;
-mod replaced;
-mod permission;
-mod broken;
 mod event;
 mod query;
+mod updated;
+mod broken;
+mod permission;
+mod executed;
+mod canceled;
+mod replaced;
+mod rejected;
+mod accepted;
+mod modified;
 
 pub use self::{
-    accepted::OrderAccepted,
+    event::SystemEvent,
+    query::AccountQueryResponse,
+    updated::{ 
+        OrderPriorityUpdate, 
+        OrderRestated 
+    },
+    broken::BrokenTrade,
+    permission::{ 
+        DisableOrderEntryResponse,
+        EnableOrderEntryResponse,
+    },
     executed::OrderExecuted,
     canceled::{ 
         OrderCanceled, 
@@ -21,108 +31,71 @@ pub use self::{
         CancelRejected,
         MassCancelResponse,
     },
-    permission::{ 
-        DisableOrderEntryResponse,
-        EnableOrderEntryResponse,
-    },
-    modified::OrderModified,
-    updated::{ 
-        OrderPriorityUpdate, 
-        OrderRestated 
-    },
     rejected::OrderRejected,
     replaced::OrderReplaced,
-    broken::BrokenTrade,
-    event::SystemEvent,
-    query::AccountQueryResponse
+    accepted::OrderAccepted,
+    modified::OrderModified,
 };
 
-use std::convert::TryFrom;
 
-use crate::error::OuchError;
+macro_rules! ouch_responses {
+    ($([$tag:expr] $msg_name:ident),*$(,)?) => {
 
-
-/// Server responses to expect in OUCH 5.0
-#[derive(Debug, Clone)]
-pub enum OuchResponse {
-    OrderAccepted(OrderAccepted),
-    OrderExecuted(OrderExecuted),
-    OrderCanceled(OrderCanceled),
-    OrderRejected(OrderRejected),
-    OrderModified(OrderModified),
-    OrderReplaced(OrderReplaced),
-    AiqCanceled(AiqCanceled),
-    CancelPending(CancelPending),
-    CancelRejected(CancelRejected),
-    MassCancelResponse(MassCancelResponse),
-    DisableOrderEntryResponse(DisableOrderEntryResponse),
-    EnableOrderEntryResponse(EnableOrderEntryResponse),
-    OrderPriorityUpdate(OrderPriorityUpdate),
-    OrderRestated(OrderRestated),
-    BrokenTrade(BrokenTrade),
-    SystemEvent(SystemEvent),
-    AccountQueryResponse(AccountQueryResponse),
-    /// May be a session management message or corrupted data.
-    Unknown(char, Vec<u8>),
-}
-
-impl TryFrom<&[u8]> for OuchResponse {
-
-    /// Catch-all error type for this crate, with a variant for parse errors.
-    type Error = OuchError;
-
-    /// Parse bytes as an OuchResponse.
-    fn try_from(data: &[u8]) -> Result<Self, Self::Error> {
-
-        if data.is_empty() {
-            return Err(OuchError::Parse("Empty message".to_string()))
+        /// Server responses to expect in OUCH 5.0
+        #[derive(Debug, Clone)]
+        pub enum OuchResponse {
+            $(
+                $msg_name($msg_name),
+            )*
+            /// May be a session management message or corrupted data.
+            Unknown(char, Vec<u8>),
         }
 
-        let msg_type = data[0];
+        impl OuchResponse {
 
-        if data.len() < 2 {
-            return Ok(Self::Unknown(data[0] as char, vec![]))
+            /// 
+            pub fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
+                
+                let (input, msg_tag) = 
+                    nom::bytes::complete::take(1usize)(input)?;
+
+                match msg_tag[0] {
+                    $(
+                        $tag => {
+                            let (input, msg) = $msg_name::parse(input)?;
+                            Ok((input, Self::$msg_name(msg)))
+                        },
+                    )*
+
+                    typ => Ok((
+                        input, 
+                        Self::Unknown(typ as char, input.to_vec())
+                    )),
+                }
+            }
         }
 
-        let payload = &data[1..];
-
-        match msg_type {
-
-            b'A' => Ok(Self::OrderAccepted(OrderAccepted::parse(payload)?)),
-            b'E' => Ok(Self::OrderExecuted(OrderExecuted::parse(payload)?)),
-            b'C' => Ok(Self::OrderCanceled(OrderCanceled::parse(payload)?)),
-            b'M' => Ok(Self::OrderModified(OrderModified::parse(payload)?)),
-            b'J' => Ok(Self::OrderRejected(OrderRejected::parse(payload)?)),
-            b'U' => Ok(Self::OrderReplaced(OrderReplaced::parse(payload)?)),
-            b'D' => Ok(Self::AiqCanceled(AiqCanceled::parse(payload)?)),
-            b'P' => Ok(Self::CancelPending(CancelPending::parse(payload)?)),
-            b'I' => Ok(Self::CancelRejected(CancelRejected::parse(payload)?)),
-            b'T' => Ok(Self::OrderPriorityUpdate(
-                OrderPriorityUpdate::parse(payload)?
-            )),
-
-            b'R' => Ok(Self::OrderRestated(OrderRestated::parse(payload)?)),
-            b'X' => Ok(Self::MassCancelResponse(
-                MassCancelResponse::parse(payload)?
-            )),
-
-            b'G' => Ok(Self::DisableOrderEntryResponse(
-                DisableOrderEntryResponse::parse(payload)?
-            )),
-
-            b'K' => Ok(Self::EnableOrderEntryResponse(
-                EnableOrderEntryResponse::parse(payload)?
-            )),
-
-            b'B' => Ok(Self::BrokenTrade(BrokenTrade::parse(payload)?)),
-            b'Q' => Ok(Self::AccountQueryResponse(
-                    AccountQueryResponse::parse(payload)?
-            )),
-
-            b'S' => Ok(Self::SystemEvent(SystemEvent::parse(payload)?)),
-
-            typ => Ok(Self::Unknown(typ as char, payload.to_vec())),
-        }
     }
 }
+
+ouch_responses! {
+    [b'S'] SystemEvent,
+    [b'Q'] AccountQueryResponse,
+    [b'T'] OrderPriorityUpdate,
+    [b'R'] OrderRestated,
+    [b'B'] BrokenTrade,
+    [b'G'] DisableOrderEntryResponse,
+    [b'K'] EnableOrderEntryResponse,
+    [b'E'] OrderExecuted,
+    [b'A'] OrderAccepted,
+    [b'M'] OrderModified,
+    [b'C'] OrderCanceled,
+    [b'J'] OrderRejected,
+    [b'U'] OrderReplaced,
+    [b'D'] AiqCanceled,
+    [b'P'] CancelPending,
+    [b'I'] CancelRejected,
+    [b'X'] MassCancelResponse,
+}
+
 

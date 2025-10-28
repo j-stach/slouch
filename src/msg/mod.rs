@@ -4,8 +4,8 @@
 //pub use request::*;
 
 /// Contains types for responses from NASDAQ.
-//mod response;
-//pub use response::*;
+mod response;
+pub use response::*;
 
 /// Contains types for optional message appendages.
 mod options;
@@ -15,7 +15,7 @@ pub use options::TagValue;
 
 macro_rules! define_msg {
     (
-        [$tag:expr] $msg_name:ident: $($msg_doc:expr;)?
+        $msg_name:ident: $($msg_doc:expr;)?
             $(
                 $field_name:ident: $field_type:ident { 
                     $field_parser:expr,
@@ -33,11 +33,12 @@ macro_rules! define_msg {
             //optional_appendage: OptionalAppendage
         }
 
+        #[allow(dead_code)]
         impl $msg_name {
 
             // Data contains package without type tag, 
             // so all offsets should be one less than those in the spec.
-            pub fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
+            pub(crate) fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
 
                 $(
                     let (input, $field_name): (&[u8], $field_type) 
@@ -52,12 +53,11 @@ macro_rules! define_msg {
                 }))
             }
 
-            pub fn encode(&self) -> Vec<u8> {
+            pub(crate) fn encode(&self) -> Vec<u8> {
                 
                 let mut bytes: Vec<u8> = Vec::with_capacity(1024usize);
 
-                bytes.push($tag);
-                $( bytes.extend(self.$field_name.$field_encoder()); )*
+                $( bytes.extend($field_encoder(&self.$field_name)); )*
                 //bytes.extend(
                 //self.optional_appendage.encode_nothing_if_empty());
 
@@ -66,6 +66,7 @@ macro_rules! define_msg {
 
 
             $(
+                #[allow(dead_code)]
                 pub fn $field_name(&self) -> $field_type { self.$field_name }
             )*
 
@@ -77,4 +78,6 @@ macro_rules! define_msg {
         }
     }
 }
+
+pub(self) use define_msg;
 

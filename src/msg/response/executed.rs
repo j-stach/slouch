@@ -1,86 +1,26 @@
 
-use chrono::NaiveTime;
-
-use crate::{
-    error::OuchError,
-    helper::{ 
-        u32_from_be_bytes, 
-        u64_from_be_bytes,
-        nanosec_from_midnight
-    }
-};
-
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::NaiveTime;
 use crate::types::{ 
-    UserRefNum,
-    Price,
-    LiquidityFlag,
+    UserRefNum, 
+    Price64, 
+    LiquidityFlag 
 };
 
-use crate::msg::options::*;
+crate::msg::define_msg!{
 
-
-/// Informs you that part or all of an order has been executed.
-#[derive(Debug, Clone)]
-pub struct OrderExecuted {
-    timestamp: NaiveTime,
-    user_ref_num: UserRefNum,
-    quantity: u32,
-    price: Price,
-    liquidity_flag: LiquidityFlag,
-    match_number: u64,
-    optional_appendage: OptionalAppendage
-}
-
-impl OrderExecuted {
-
-    // Data contains package without type tag, 
-    // so all offsets should be one less than those in the official spec.
-    pub(super) fn parse(data: &[u8]) -> Result<Self, OuchError> {
-
-        if data.len() < 35 {
-            return Err(OuchError::Parse("OrderExecuted".to_string()))
-        }
-
-        Ok(Self {
-            timestamp: {
-                let ts = u64_from_be_bytes(&data[0..=7])?;
-                nanosec_from_midnight(ts)
-            },
-            user_ref_num: UserRefNum::parse(&data[8..=11])?,
-            quantity: u32_from_be_bytes(&data[12..=15])?, 
-            price: Price::parse(&data[16..=23])?,
-            liquidity_flag: LiquidityFlag::parse(data[24])?,
-            match_number: u64_from_be_bytes(&data[25..=32])?,
-            optional_appendage: OptionalAppendage::parse(&data[33..])?
-        })
-    }
-    
-    /// Time this message was generated.
-    pub fn timestamp(&self) -> NaiveTime { self.timestamp }
-    
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum {
-        self.user_ref_num
-    }
-
-    /// Quantity of shares to be ordered.
-    pub fn quantity(&self) -> u32 { self.quantity }
-    
-    /// Price at which the order was executed.
-    pub fn price(&self) -> Price { self.price }
-
-    /// Assigned by the exchange to identify the trade. 
-    /// Both the buy and the sell executions participating in the trade 
-    /// will share the same match number.
-    pub fn match_number(&self) -> u64 { self.match_number }
-
-    /// Liquidity flag the order would have received.
-    pub fn liquidity_flag(&self) -> LiquidityFlag { self.liquidity_flag }
-
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-
+    OrderExecuted: 
+    "Informs you that part or all of an order has been executed.";
+        // timestamp: NaiveTime
+        user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        quantity: u32
+            { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+        price: Price64
+            { Price64::parse, Price64::encode },
+        liquidity_flag: LiquidityFlag
+            { LiquidityFlag::parse, LiquidityFlag::encode },
+        match_number: u64
+            { be_u64, |i: &u64| u64::to_be_bytes(*i) },
 }
 
