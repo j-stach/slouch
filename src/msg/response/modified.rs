@@ -1,8 +1,7 @@
 
 use nom::number::streaming::be_u32;
-use nsdq_util::NaiveTime;
 
-use crate::types::{ UserRefNum, Side };
+use crate::types::{ UserRefNum, Side, NaiveTime };
 
 crate::msg::define_msg!{
 

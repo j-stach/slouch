@@ -1,10 +1,11 @@
 
 use nom::number::streaming::{ be_u32, be_u64 };
-use nsdq_util::NaiveTime;
+
 use crate::types::{ 
+    NaiveTime,
     UserRefNum, 
-    Price64, 
-    LiquidityFlag 
+    Price, 
+    Liquidity 
 };
 
 crate::msg::define_msg!{
@@ -16,10 +17,10 @@ crate::msg::define_msg!{
             { UserRefNum::parse, UserRefNum::encode },
         quantity: u32
             { be_u32, |i: &u32| u32::to_be_bytes(*i) },
-        price: Price64
-            { Price64::parse, Price64::encode },
-        liquidity_flag: LiquidityFlag
-            { LiquidityFlag::parse, LiquidityFlag::encode },
+        price: Price
+            { Price::parse, Price::encode },
+        liquidity: Liquidity
+            { Liquidity::parse, Liquidity::encode },
         match_number: u64
             { be_u64, |i: &u64| u64::to_be_bytes(*i) },
 }

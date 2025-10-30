@@ -2,13 +2,14 @@
 use nom::number::streaming::{ be_u8, be_u16, be_u32, be_u64 };
 
 use nsdq_util::{
-    Mpid,
-    Price,
     parse_bool,
     parse_ternary,
 };
 
 use crate::types::{
+    Mpid,
+    Price,
+    SignedPrice,
     PriceType,
     HandleInst,
     BboWeight,
@@ -89,9 +90,6 @@ macro_rules! tag_values {
     }
 }
 
-type Price64 = Price<u64, 4>;
-type SignedPrice = Price<i32, 4>;
-
 tag_values!{
 
     [1u8] SecondaryOrdRefNum: u64
@@ -121,11 +119,11 @@ tag_values!{
         { PriceType::parse, PriceType::encode },
 
     [7u8] PegOffset: SignedPrice "Offset amount for the pegged value.";
-        { Price::<i32, 4>::parse, Price::<i32, 4>::encode },
+        { SignedPrice::parse, SignedPrice::encode },
 
-    [9u8] DiscretionaryPrice: Price64 
+    [9u8] DiscretionaryPrice: Price 
     "Price for discretionary order execution.";
-        { Price::<u64, 4>::parse, Price::<u64, 4>::encode },
+        { Price::parse, Price::encode },
 
     // Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
     [10u8] DiscretionPriceType: PriceType;
@@ -152,7 +150,7 @@ tag_values!{
 
     [11u8] DiscretionPegOffset: SignedPrice 
     "Offset amount for the pegged Discretionary Price.";
-        { Price::<i32, 4>::parse, Price::<i32, 4>::encode },
+        { SignedPrice::parse, SignedPrice::encode },
 
     // Indicates if the order is post-only (will not execute immediately).
     //[12u8] PostOnly: bool;
@@ -187,10 +185,10 @@ tag_values!{
     (i.e. an order with reserves).";
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
-    [23u8] DisplayPrice: Price64 
+    [23u8] DisplayPrice: Price 
     "Used in the Order Restated Message only. \n \
     Represents an update of an order’s displayed price.";
-        { Price::<u64, 4>::parse, Price::<u64, 4>::encode },
+        { Price::parse, Price::encode },
 
     [24u8] GroupId: u16 
     "Used in the Order Restated Message only. \n \

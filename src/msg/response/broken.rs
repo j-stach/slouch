@@ -1,7 +1,6 @@
 
-use nsdq_util::NaiveTime;
-
 use crate::types::{
+    NaiveTime,
     UserRefNum,
     BrokenReason,
     OrderToken,

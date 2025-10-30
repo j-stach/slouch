@@ -1,6 +1,5 @@
 
-use nsdq_util::NaiveTime;
-use crate::types::EventCode;
+use crate::types::{ NaiveTime, EventCode };
 
 crate::msg::define_msg!{
     SystemEvent: "";

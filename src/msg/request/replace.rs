@@ -1,6 +1,5 @@
 
 use nom::number::streaming::{ be_u32, be_u64 };
-use nsdq_util::{ Mpid, StockSymbol };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
@@ -82,8 +81,8 @@ define_msg!{
             { UserRefNum::parse, UserRefNum::encode },
         quantity: u32
             { be_u32, |i: &u32| u32::to_be_bytes(*i) },
-        price: Price64
-            { Price64::parse, Price64::encode },
+        price: Price
+            { Price::parse, Price::encode },
         time_in_force: TimeInForce
             { TimeInForce::parse, TimeInForce::encode },
         display: Display
@@ -106,7 +105,7 @@ impl ReplaceOrder {
         old_ref_num: UserRefNum,
         new_ref_num: UserRefNum,
         quantity: u32,
-        price: Price64,
+        price: Price,
         time_in_force: TimeInForce,
         display: Display,
         //intermarket_sweep: bool,
@@ -136,7 +135,7 @@ impl ReplaceOrder {
         old_ref_num: UserRefNum,
         new_ref_num: UserRefNum,
         quantity: u32,
-        price: Price64,
+        price: Price,
         time_in_force: TimeInForce,
         display: Display,
         //intermarket_sweep: bool,

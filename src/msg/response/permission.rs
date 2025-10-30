@@ -1,6 +1,5 @@
 
-use nsdq_util::{ NaiveTime, Mpid };
-use crate::types::UserRefNum;
+use crate::types::{ NaiveTime, Mpid, UserRefNum };
 
 crate::msg::define_msg!{
 

@@ -1,14 +1,12 @@
 
 use nom::number::streaming::{ be_u32, be_u64 };
-use nsdq_util::{
-    NaiveTime,
-    StockSymbol,
-};
 
 use crate::types::{ 
+    NaiveTime,
+    StockSymbol,
     UserRefNum,
     Side,
-    Price64,
+    Price,
     TimeInForce,
     Display,
     Capacity,
@@ -39,8 +37,8 @@ crate::msg::define_msg!{
             { be_u32, |i: &u32| u32::to_be_bytes(*i) },
         symbol: StockSymbol
             { StockSymbol::parse, StockSymbol::encode },
-        price: Price64
-            { Price64::parse, Price64::encode },
+        price: Price
+            { Price::parse, Price::encode },
         time_in_force: TimeInForce
             { TimeInForce::parse, TimeInForce::encode },
         display: Display

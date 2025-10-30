@@ -1,12 +1,15 @@
 
 use nom::number::streaming::be_u32;
-use nsdq_util::{ NaiveTime, Mpid, StockSymbol };
+
 use crate::types::{ 
+    NaiveTime, 
+    Mpid, 
+    StockSymbol, 
     UserRefNum,
-    Price64,
+    Price,
     CancelReason,
     AiqStrategy,
-    LiquidityFlag
+    Liquidity,
 };
 
 
@@ -38,10 +41,10 @@ crate::msg::define_msg!{
             { CancelReason::parse, CancelReason::encode },
         quantity_prevented: u32 
             { be_u32, |i: &u32| u32::to_be_bytes(*i) },
-        price: Price64
-            { Price64::parse, Price64::encode },
-        liquidity_flag: LiquidityFlag
-            { LiquidityFlag::parse, LiquidityFlag::encode },
+        price: Price
+            { Price::parse, Price::encode },
+        liquidity_flag: Liquidity
+            { Liquidity::parse, Liquidity::encode },
         aiq_strategy: AiqStrategy
             { AiqStrategy::parse, AiqStrategy::encode },
 }

@@ -1,12 +1,12 @@
 
 use nom::number::streaming::be_u64;
-use nsdq_util::NaiveTime;
 
 use crate::types::{
     UserRefNum,
+    NaiveTime,
     Display,
     RestateReason,
-    Price64, 
+    Price, 
     SignedPrice,
 };
 
@@ -17,8 +17,8 @@ crate::msg::define_msg!{
         //timestamp: NaiveTime,
         user_ref_num: UserRefNum 
             { UserRefNum::parse, UserRefNum::encode },
-        price: Price64 
-            { Price64::parse, Price64::encode },
+        price: Price 
+            { Price::parse, Price::encode },
         display: Display
             { Display::parse, Display::encode },
         order_ref_num: u64
@@ -32,8 +32,8 @@ crate::msg::define_msg!{
         //timestamp: NaiveTime,
         user_ref_num: UserRefNum 
             { UserRefNum::parse, UserRefNum::encode },
-        price: Price64 
-            { Price64::parse, Price64::encode },
+        price: Price 
+            { Price::parse, Price::encode },
         reason: RestateReason
             { RestateReason::parse, RestateReason::encode },
 }

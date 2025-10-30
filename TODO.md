@@ -1,23 +1,23 @@
 
-# TODO for crate
-
-### use `nsdq-util` to replace 
-- [x] helpers, 
-- [x] enums and 
-- [x] string types, 
+# nsdq-util
 - [ ] `nsdq-util` bool & ternary, NaiveTime, etc. need both `parse` and `encode`
-- [ ] import/re-export types eg `Mpid` and `StockSymbol`
-- [ ] alias `as Price64` -> `as Price`
+- [ ] change `define_enum` to create array instead of tuple
+- [ ] `define_enum` needs to handle `u16` tags better
+
+# TODO for crate
+- [ ] Replace bad element error with option?
+
+### types
+- [x] condense type files into `strings.rs` and `enums.rs`
+- [x] import/re-export types eg `Mpid` and `StockSymbol`
+- [x] alias `as Price64` -> `as Price`
 
 ### messages
-- [x] Convert parsers to use `nom` (zero allocation)
-- [x] `parse`, `encode` convention
-- [x] macro for defining request/response enums to avoid repetition
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
 
 ### options
-- [x] `TagValue` parse more logically with `nom`
 - [ ] Finish `TagValue` vars, needs `encode` for bool and ternary
+- [ ] `add_options` for adding multiple tagvalues in a vec
 
 
 
@@ -34,9 +34,8 @@
 
 ## Future directions:
 ### Ease of use:
-- [ ] Some field and type names may be shortened while remaining descriptive
+- [x] Some field and type names may be shortened while remaining descriptive
 - [ ] `Option`-based field access through request/response enums?
-- [ ] `add_options` for adding multiple tagvalues in a vec
 
 ### Performance:
 TBD. Plenty to be done.
