@@ -1,23 +1,51 @@
 
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::{ Mpid, StockSymbol };
+
 use crate::error::BadElementError;
+use crate::{ types::*, msg::define_msg };
 
-use crate::types::{
-    UserRefNum,
-    Side
-};
 
-use crate::msg::options::{
-    OptionalAppendage,
-    TagValue
-};
+/// Create a ModifyOrder request message.
+/// WARN: PANIC! This constructor will PANIC if quantity >= 1,000,000.
+/// ```
+/// use slouch::{ 
+///     modify, 
+///     types::{ UserRefNum, Side },
+/// };
+///
+/// let request1 = modify!{
+///     user_ref_num: UserRefNum::new(),
+///     side: Side::Buy,
+///     quantity: 0u32,
+/// };
+///
+/// use slouch::msg::{ OuchRequest, ModifyOrder };
+///
+/// let request2 = OuchRequest::ModifyOrder(
+///     ModifyOrder::new(UserRefNum::new(), Side::Buy, 0u32).unwrap()
+/// );
+///
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! modify {
+    (user_ref_num: $f1:expr, side: $f2:expr, quantity: $f3:expr $(,)?) => {
+        $crate::msg::OuchRequest::ModifyOrder(
+            $crate::msg::ModifyOrder::assert_new($f1, $f2, $f3)
+        )
+    };
+}
 
-/// Modify values for an existing order, without affecting priority.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ModifyOrder {
-    user_ref_num: UserRefNum,
-    side: Side,
-    quantity: u32,
-    optional_appendage: OptionalAppendage
+define_msg!{
+    ModifyOrder: 
+    "Modify values for an existing order, without affecting priority.";
+        user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        side: Side
+            { Side::parse, Side::encode },
+        quantity: u32
+            { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 }
 
 impl ModifyOrder {
@@ -47,7 +75,7 @@ impl ModifyOrder {
             user_ref_num,
             side,
             quantity,
-            optional_appendage: OptionalAppendage::new(),
+            //optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -64,20 +92,7 @@ impl ModifyOrder {
             .expect("Quantity is acceptable value")
     }
 
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
-    
-    /// Quantity of shares to be ordered.
-    pub fn quantity(&self) -> u32 { self.quantity }
-    
-    /// Market side (Buy, Sell, etc.)
-    pub fn side(&self) -> Side { self.side }
-
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-    
+    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - SharesLocated
@@ -104,21 +119,6 @@ impl ModifyOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'M');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.push(self.side.encode());
-        bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.optional_appendage.encode_nothing_if_empty());
-
-        bytes
-    }
-    
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
+    */
 } 
 

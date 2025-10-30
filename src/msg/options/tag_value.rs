@@ -42,10 +42,9 @@ macro_rules! tag_values {
 
             pub(crate) fn encode(&self) -> Vec<u8> {
 
-                use TagValue::*;
                 let (option_tag, encoded_value) = match self {
                     $(
-                        $name(val) => ($tag, $encoder(val).to_vec()),
+                        Self::$name(val) => ($tag, $encoder(val).to_vec()),
                     )*
                 };
 
@@ -117,9 +116,9 @@ tag_values!{
     "Represents the portion of your order that you wish to have displayed.";
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
-    // Specifies the type of pricing for the order (e.g., limit, market).
-    //[6u8] PriceType: PriceType;
-    //    { PriceType::parse, PriceType::encode },
+    //Specifies the type of pricing for the order (e.g., limit, market).
+    [6u8] PriceType: PriceType;
+        { PriceType::parse, PriceType::encode },
 
     [7u8] PegOffset: SignedPrice "Offset amount for the pegged value.";
         { Price::<i32, 4>::parse, Price::<i32, 4>::encode },
@@ -129,8 +128,8 @@ tag_values!{
         { Price::<u64, 4>::parse, Price::<u64, 4>::encode },
 
     // Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
-    //[10u8] DiscretionPriceType: PriceType;
-    //    { PriceType::parse, PriceType::encode },
+    [10u8] DiscretionPriceType: PriceType;
+        { PriceType::parse, PriceType::encode },
 
     /*
         10 => {
@@ -163,24 +162,24 @@ tag_values!{
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
     // Specifies the routing destination for the order.
-    //[14u8] Route: RouteId;
-    //    { RouteId::parse, RouteId::encode },
+    [14u8] Route: RouteId;
+        { RouteId::parse, RouteId::encode },
 
     // Seconds to live. 
     // Must be less than 86400 (number of seconds in a day).
-    //[15u8] ExpireTime: ...NaiveTime?;
+    //[15u8] ExpireTime: TODO ...NaiveTime?;
     //    { RouteId::parse, RouteId::encode },
 
     // Indicates if the order should be executed immediately.
     //[16u8] TradeNow: bool;
     //    { parse_ternary, /*TODO*/ },
 
-    //[17u8] HandleInst: HandleInst "Handling instructions for the order.";
-    //    { HandleInst::parse, HandleInst::encode }
+    [17u8] HandleInst: HandleInst "Handling instructions for the order.";
+        { HandleInst::parse, HandleInst::encode },
 
-    //[18u8] BboWeight: BboWeight 
-    //"Indicates the weighting of the order in the Best Bid and Offer (BBO).";
-    //    { BboWeight::parse, BboWeight::encode }
+    [18u8] BboWeight: BboWeight 
+    "Indicates the weighting of the order in the Best Bid and Offer (BBO).";
+        { BboWeight::parse, BboWeight::encode },
 
     [22u8] DisplayQuantity: u32 
     "Used in the Order Restated Message only. \n \

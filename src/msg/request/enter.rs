@@ -1,44 +1,102 @@
 
-use nsdq_util::{
-    StockSymbol, 
-    Price,
-};
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::{ Mpid, StockSymbol };
 
 use crate::error::BadElementError;
-
-use crate::types::{ 
-    UserRefNum,
-    Side,
-    TimeInForce,
-    Display,
-    Capacity,
-    CrossType,
-    OrderToken
-};
-
-use crate::msg::options::{ 
-    OptionalAppendage,
-    TagValue
-};
+use crate::{ types::*, msg::define_msg };
 
 
-/// Enter a new order.
-/// For `quantity`, entering over 1,000,000 (maximum shares per order) 
-/// results in an error.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct EnterOrder {
-    user_ref_num: UserRefNum,
-    side: Side,
-    quantity: u32,
-    symbol: StockSymbol,
-    price: Price<u64, 4>,
-    time_in_force: TimeInForce,
-    display: Display,
-    capacity: Capacity,
-    intermarket_sweep_eligibility: bool,
-    cross_type: CrossType,
-    order_token: OrderToken,
-    optional_appendage: OptionalAppendage
+/// Create an EnterOrder request message.
+/// WARN: PANIC! This constructor will PANIC if quantity >= 1,000,000.
+/// ```
+/// use slouch::{ 
+///     enter, 
+///     types::*,
+/// };
+///
+/// let request1 = enter!{
+///     user_ref_num: UserRefNum::new(),
+///     side: Side::Buy,
+///     quantity: 69u32,
+///     symbol: StockSymbol::from("STONKS").unwrap(),
+///     price: Price::new(3, 5001).unwrap(),
+///     time_in_force: TimeInForce::Day,
+///     display: Display::Visible,
+///     capacity: Capacity::Agency,
+///     //intermarket_sweep: false,
+///     cross_type: CrossType::Opening,
+///     order_token: OrderToken::from("2 th3 M00N").unwrap()
+/// };
+///
+/// use slouch::msg::{ OuchRequest, EnterOrder };
+///
+/// let request2 = OuchRequest::EnterOrder(
+///     EnterOrder::new(
+///         UserRefNum::new(), 
+///         Side::Buy,
+///         69u32,
+///         StockSymbol::from("STONKS").unwrap(),
+///         Price::new(3, 5001).unwrap(),
+///         TimeInForce::Day,
+///         Display::Visible,
+///         Capacity::Agency,
+///         //false,
+///         CrossType::Opening,
+///         OrderToken::from("2 th3 M00N").unwrap()
+///     ).unwrap()
+/// );
+///
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! enter {
+    (
+        user_ref_num: $f1:expr,
+        side: $f2:expr,
+        quantity: $f3:expr,
+        symbol: $f4:expr,
+        price: $f5:expr,
+        time_in_force: $f6:expr,
+        display: $f7:expr,
+        capacity: $f8:expr,
+        //intermarket_sweep: $f9:expr,
+        cross_type: $f10:expr,
+        order_token: $f11:expr $(,)?
+    ) => {
+        $crate::msg::OuchRequest::EnterOrder(
+            $crate::msg::EnterOrder::assert_new(
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, //$f11
+            )
+        )
+    };
+}
+
+define_msg!{
+    EnterOrder:
+    "Enter a new order. \n\
+    For `quantity`, entering over 1,000,000 (maximum shares per order) \
+    results in an error.";
+        user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        side: Side
+            { Side::parse, Side::encode },
+        quantity: u32
+            { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+        symbol: StockSymbol
+            { StockSymbol::parse, StockSymbol::encode },
+        price: Price64
+            { Price64::parse, Price64::encode },
+        time_in_force: TimeInForce
+            { TimeInForce::parse, TimeInForce::encode },
+        display: Display
+            { Display::parse, Display::encode },
+        capacity: Capacity
+            { Capacity::parse, Capacity::encode },
+        // TODO intermarket_sweep_eligibility: bool,
+        cross_type: CrossType
+            { CrossType::parse, CrossType::encode },
+        order_token: OrderToken
+            { OrderToken::parse, OrderToken::encode },
 }
 
 impl EnterOrder {
@@ -51,11 +109,11 @@ impl EnterOrder {
         side: Side,
         quantity: u32,
         symbol: StockSymbol,
-        price: Price<u64, 4>,
+        price: Price64,
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
-        intermarket_sweep_eligibility: bool,
+        //intermarket_sweep: bool,
         cross_type: CrossType,
         order_token: OrderToken,
     ) -> Result<Self, BadElementError> {
@@ -73,10 +131,10 @@ impl EnterOrder {
             time_in_force,
             display,
             capacity,
-            intermarket_sweep_eligibility,
+            //intermarket_sweep,
             cross_type,
             order_token,
-            optional_appendage: OptionalAppendage::new()
+            //optional_appendage: OptionalAppendage::new()
         })
     }
 
@@ -87,11 +145,11 @@ impl EnterOrder {
         side: Side,
         quantity: u32,
         symbol: StockSymbol,
-        price: Price<u64, 4>,
+        price: Price64,
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
-        intermarket_sweep_eligibility: bool,
+        //intermarket_sweep: bool,
         cross_type: CrossType,
         order_token: OrderToken,
     ) -> Self {
@@ -106,50 +164,13 @@ impl EnterOrder {
             time_in_force,
             display,
             capacity,
-            intermarket_sweep_eligibility,
+            //intermarket_sweep,
             cross_type,
             order_token
         ).expect("Quantity is acceptable value")
     }
 
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
-
-    /// Quantity of shares to be ordered.
-    pub fn quantity(&self) -> u32 { self.quantity }
-    
-    /// Symbol for which the orders will be placed.
-    pub fn symbol(&self) -> StockSymbol { self.symbol }
-
-    /// Market side (Buy, Sell, etc.)
-    pub fn side(&self) -> Side { self.side }
-
-    /// Price at which the order will be placed.
-    pub fn price(&self) -> Price<u64, 4> { self.price }
-
-    /// Time block where the order is active (e.g., Day).
-    /// "Corresponds to TimeInForce (59) in Nasdaq FIX."
-    pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
-
-    /// Visibility options set for this order.
-    pub fn display(&self) -> Display { self.display }
-
-    /// Trading capacity with which this order will be placed.
-    /// (e.g. Agency, Principal)
-    pub fn capacity(&self) -> Capacity { self.capacity }
-
-    /// Returns true if this order is an eligible Intermarket Sweep Order.
-    pub fn intermarket_sweep_eligibility(&self) -> bool {
-        self.intermarket_sweep_eligibility
-    }
-
-    /// The market event for when this order is to be executed.
-    pub fn cross_type(&self) -> CrossType { self.cross_type }
-
-    /// User-defined token (CIOrdId) that is set for this order. 
-    /// Can be used to differentiate strategies, etc.
-    pub fn order_token(&self) -> OrderToken { self.order_token }
-    
+    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - Firm
@@ -207,37 +228,6 @@ impl EnterOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-    
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'O'); // Type identifier for Enter Order Request
-        bytes.extend(self.user_ref_num.encode());
-        bytes.push(self.side.encode());
-        bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.symbol.encode());
-        bytes.extend(self.price.encode());
-        bytes.push(self.time_in_force.encode());
-        bytes.push(self.display.encode());
-        bytes.push(self.capacity.encode());
-        bytes.push(match self.intermarket_sweep_eligibility {
-            true => b'Y',
-            false => b'N',
-        });
-        bytes.push(self.cross_type.encode());
-        bytes.extend(self.order_token.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
-    }
-    
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
-} 
+*/
+}
 

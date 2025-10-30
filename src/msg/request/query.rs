@@ -1,16 +1,31 @@
 
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::{ Mpid, StockSymbol };
+
 use crate::error::BadElementError;
+use crate::{ types::*, msg::define_msg };
 
-use crate::msg::options::{
-    OptionalAppendage,
-    TagValue
-};
 
-/// Can be used when recovering state to request the next available UserRefNum.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct AccountQuery {
-    /// This holds all optional fields included in the order.
-    optional_appendage: OptionalAppendage
+/// Create an AccountQuery message.
+/// ```
+/// use slouch::account_query;
+/// let request1 = account_query!();
+///
+/// use slouch::msg::{ OuchRequest, AccountQuery };
+/// let request2 = OuchRequest::AccountQuery(AccountQuery::new());
+///
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! account_query {
+    () => {
+        $crate::msg::OuchRequest::AccountQuery($crate::msg::AccountQuery::new())
+    }
+}
+
+define_msg!{
+    AccountQuery: 
+    "Use when recovering state to request the next available UserRefNum.";
 }
 
 impl AccountQuery {
@@ -18,15 +33,11 @@ impl AccountQuery {
     /// Create a new Account Query.
     pub fn new() -> Self {
         Self {
-            optional_appendage: OptionalAppendage::new(),
+            //optional_appendage: OptionalAppendage::new(),
         }
     }
-    
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
 
+    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -48,18 +59,6 @@ impl AccountQuery {
 
         Ok(self.optional_appendage.add(option))
     }
-    
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'Q');
-        bytes.extend(self.optional_appendage.encode_nothing_if_empty());
-
-        bytes
-    }
-
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
+*/
 } 
 

@@ -1,48 +1,96 @@
 
-use nsdq_util::Price;
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::{ Mpid, StockSymbol };
 
-use crate::{
-    error::BadElementError,
-    types::{
-        OrderToken,
-        UserRefNum,
-        TimeInForce,
-        Display
-    },
-    msg::options::{
-        OptionalAppendage,
-        TagValue
-    },
-};
+use crate::error::BadElementError;
+use crate::{ types::*, msg::define_msg };
 
 
-/// Cancel and replace an existing order in a single message.
+/// Create a ReplaceOrder request message.
+/// WARN: PANIC! This constructor will PANIC if quantity >= 1,000,000.
+/// ```
+/// use slouch::{ 
+///     replace, 
+///     types::*,
+/// };
 ///
-/// If the original order is no longer live or if the new UserRefNum is invalid,
-/// the replacement will be silently ignored. 
+/// let request1 = replace!{
+///     old_ref_num: UserRefNum::new(),
+///     new_ref_num: UserRefNum::new(),
+///     quantity: 420u32,
+///     price: Price::new(3, 5001).unwrap(),
+///     time_in_force: TimeInForce::Day,
+///     display: Display::Visible,
+///     //intermarket_sweep: false,
+///     order_token: OrderToken::from("To The Moon").unwrap()
+/// };
 ///
-/// If the original order is live but the details of the replace are invalid, 
-/// the original order will be canceled but a new one will not be entered. 
-/// In this case, the new UserRefNum will not be consumed and may be reused.
+/// use slouch::msg::{ OuchRequest, ReplaceOrder };
 ///
-/// If the original order is live but the cannot be canceled 
-/// (e.g., the existing Order is a cross order in the late period), 
-/// there will be an OrderReject reponse and the order will not be replaced. 
-/// The OrderReject consumes the new UserRefNum, so it may not be reused.
+/// let request2 = OuchRequest::ReplaceOrder(
+///     ReplaceOrder::new(
+///         UserRefNum::new(), 
+///         UserRefNum::new(), 
+///         420u32,
+///         Price::new(3, 5001).unwrap(),
+///         TimeInForce::Day,
+///         Display::Visible,
+///         //false,
+///         OrderToken::from("To The Moon").unwrap()
+///     ).unwrap()
+/// );
 ///
-/// Replacing an order gives it a new timestamp/time priority on the book.
-/// See the OUCH 5.0 specification for more information, including restrictions.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ReplaceOrder {
-    old_user_ref_num: UserRefNum,
-    new_user_ref_num: UserRefNum,
-    quantity: u32,
-    price: Price<u64, 4>,
-    time_in_force: TimeInForce,
-    display: Display,
-    intermarket_sweep_eligibility: bool,
-    order_token: OrderToken,
-    optional_appendage: OptionalAppendage
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! replace {
+    (
+        old_ref_num: $f1:expr,
+        new_ref_num: $f2:expr,
+        quantity: $f3:expr,
+        price: $f4:expr,
+        time_in_force: $f5:expr,
+        display: $f6:expr,
+        //intermarket_sweep: $f7:expr,
+        order_token: $f8:expr $(,)?
+    ) => {
+        $crate::msg::OuchRequest::ReplaceOrder(
+            $crate::msg::ReplaceOrder::assert_new(
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7, //$f8
+            )
+        )
+    };
+}
+
+define_msg!{
+    ReplaceOrder: 
+    "Cancel and replace an existing order in a single message.\n\
+    If the original order is no longer live or the new UserRefNum is invalid,\
+    the replacement will be silently ignored. \n\
+    If the original order is live but the details of the replace are invalid, \
+    the original order will be canceled but a new one will not be entered. \
+    In this case, the new UserRefNum will not be consumed and may be reused.\n\
+    If the original order is live but the cannot be canceled \
+    (e.g., the existing Order is a cross order in the late period), \
+    there will be an OrderReject reponse and the order will not be replaced. \
+    The OrderReject consumes the new UserRefNum, so it may not be reused. \n\
+    Replacing an order gives it a new timestamp/time priority on the book. \
+    See the OUCH 5.0 specification for more information.";
+        old_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        new_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        quantity: u32
+            { be_u32, |i: &u32| u32::to_be_bytes(*i) },
+        price: Price64
+            { Price64::parse, Price64::encode },
+        time_in_force: TimeInForce
+            { TimeInForce::parse, TimeInForce::encode },
+        display: Display
+            { Display::parse, Display::encode },
+        // TODO intermarket_sweep_eligibility: bool,
+        order_token: OrderToken
+            { OrderToken::parse, OrderToken::encode },
 }
 
 impl ReplaceOrder {
@@ -55,13 +103,13 @@ impl ReplaceOrder {
     /// If a `TagValue::UserRefIndex` option is used on the original order, 
     /// it must also be added to this request. (See `add_option` below.)
     pub fn new(
-        old_user_ref_num: UserRefNum,
-        new_user_ref_num: UserRefNum,
+        old_ref_num: UserRefNum,
+        new_ref_num: UserRefNum,
         quantity: u32,
-        price: Price<u64, 4>,
+        price: Price64,
         time_in_force: TimeInForce,
         display: Display,
-        intermarket_sweep_eligibility: bool,
+        //intermarket_sweep: bool,
         order_token: OrderToken,
     ) -> Result<Self, BadElementError> {
 
@@ -70,77 +118,45 @@ impl ReplaceOrder {
         }
 
         Ok(Self {
-            old_user_ref_num,
-            new_user_ref_num,
+            old_ref_num,
+            new_ref_num,
             quantity,
             price,
             time_in_force,
             display,
-            intermarket_sweep_eligibility,
+            //intermarket_sweep,
             order_token,
-            optional_appendage: OptionalAppendage::new()
+            //optional_appendage: OptionalAppendage::new()
         })
     }
 
     /// WARN: Panics!
     /// This constructor will panic if quantity >= 1,000,000.
     pub fn assert_new(
-        old_user_ref_num: UserRefNum,
-        new_user_ref_num: UserRefNum,
+        old_ref_num: UserRefNum,
+        new_ref_num: UserRefNum,
         quantity: u32,
-        price: Price<u64, 4>,
+        price: Price64,
         time_in_force: TimeInForce,
         display: Display,
-        intermarket_sweep_eligibility: bool,
+        //intermarket_sweep: bool,
         order_token: OrderToken,
     ) -> Self {
 
         assert!(quantity < 1_000_000);
         Self::new(
-            old_user_ref_num,
-            new_user_ref_num,
+            old_ref_num,
+            new_ref_num,
             quantity,
             price,
             time_in_force,
             display,
-            intermarket_sweep_eligibility,
+            //intermarket_sweep,
             order_token
         ).expect("Quantity is acceptable value")
     }
 
-    /// User reference number of the order to be replaced.
-    pub fn old_user_ref_num(&self) -> UserRefNum { self.old_user_ref_num }
-
-    /// User reference number for the new order.
-    pub fn new_user_ref_num(&self) -> UserRefNum { self.new_user_ref_num }
-
-    /// Quantity of shares to be ordered.
-    pub fn quantity(&self) -> u32 { self.quantity }
-    
-    /// Price at which the order will be placed.
-    pub fn price(&self) -> Price<u64, 4> { self.price }
-
-    /// Time block where the order is active (e.g., Day).
-    /// "Corresponds to TimeInForce (59) in Nasdaq FIX."
-    pub fn time_in_force(&self) -> TimeInForce { self.time_in_force }
-
-    /// Visibility options set for this order.
-    pub fn display(&self) -> Display { self.display }
-
-    /// Returns true if this order is an eligible Intermarket Sweep Order.
-    pub fn intermarket_sweep_eligibility(&self) -> bool {
-        self.intermarket_sweep_eligibility
-    }
-
-    /// User-defined token (CIOrdId) that is set for this order. 
-    /// Can be used to differentiate strategies, etc.
-    pub fn order_token(&self) -> OrderToken { self.order_token }
-    
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-    
+    /*
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 
     /// in this message, except for `Firm` and `GroupId`, which are inherited
@@ -200,29 +216,6 @@ impl ReplaceOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-    
-    pub(super) fn encode(&self) -> Vec<u8> {
-
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'U');
-        bytes.extend(self.old_user_ref_num.encode());
-        bytes.extend(self.new_user_ref_num.encode());
-        bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.price.encode());
-        bytes.push(self.time_in_force.encode());
-        bytes.push(self.display.encode());
-        bytes.push(match self.intermarket_sweep_eligibility {
-            true => b'Y',
-            false => b'N',
-        });
-        bytes.extend(self.order_token.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
-    }
-
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
-} 
+*/
+}
 

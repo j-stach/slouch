@@ -1,28 +1,47 @@
 
+use nom::number::streaming::{ be_u32, be_u64 };
+use nsdq_util::{ Mpid, StockSymbol };
+
 use crate::error::BadElementError;
-
-use nsdq_util::{
-    Mpid,
-    StockSymbol,
-};
-
-use crate::types::UserRefNum;
-
-use crate::msg::options::{
-    OptionalAppendage,
-    TagValue
-};
+use crate::{ types::*, msg::define_msg };
 
 
-/// Cancel or reduce shares on an existing order.
+/// Create a CancelOrder request message.
+/// WARN: PANIC! This constructor will PANIC if quantity >= 1,000,000.
+/// ```
+/// use slouch::{ cancel, types::UserRefNum };
 ///
-/// Duplicate cancel requests for the same UserRefNum will be ignored by OUCH.
-/// Canceling an order after its execution will be silently ignored.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct CancelOrder {
-    user_ref_num: UserRefNum,
-    quantity: u32,
-    optional_appendage: OptionalAppendage
+/// let request1 = cancel!{
+///     user_ref_num: UserRefNum::new(),
+///     quantity: 0u32,
+/// };
+///
+/// use slouch::msg::{ OuchRequest, CancelOrder };
+///
+/// let request2 = OuchRequest::CancelOrder(
+///     CancelOrder::new(UserRefNum::new(), 0u32).unwrap()
+/// );
+///
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! cancel {
+    (user_ref_num: $f1:expr, quantity: $f2:expr $(,)?) => {
+        $crate::msg::OuchRequest::CancelOrder(
+            $crate::msg::CancelOrder::assert_new($f1, $f2)
+        )
+    }
+}
+
+define_msg!{
+    CancelOrder:
+    "Cancel or reduce shares on an existing order. \n \
+    Duplicate cancel requests for the same UserRefNum will be ignored by OUCH. \
+    Canceling an order after its execution will be silently ignored.";
+        user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        quantity: u32
+            { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 }
 
 impl CancelOrder {
@@ -48,7 +67,7 @@ impl CancelOrder {
         Ok(Self {
             user_ref_num,
             quantity,
-            optional_appendage: OptionalAppendage::new(),
+            //optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -63,18 +82,8 @@ impl CancelOrder {
         Self::new(user_ref_num, quantity)
             .expect("Quantity is acceptable value")
     }
-
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
-
-    /// Quantity of shares that will remain to be executed after canceling.
-    pub fn quantity(&self) -> u32 { self.quantity }
     
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-
+    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -96,31 +105,51 @@ impl CancelOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-    
-    pub(super) fn encode(&self) -> Vec<u8> {
+*/
+}
 
-        let mut bytes: Vec<u8> = Vec::new();
 
-        bytes.push(b'X');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.quantity.to_be_bytes());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
+/// Create a MassCancel request message.
+/// ```
+/// use slouch::{
+///     mass_cancel,
+///     types::{ UserRefNum, FirmId, StockSymbol },
+/// };
+///
+/// let request1 = mass_cancel!{
+///     user_ref_num: UserRefNum::new(),
+///     firm: Mpid::from("FIRM").unwrap(),
+///     symbol: StockSymbol::from("STONKS").unwrap(),
+/// };
+///
+/// use slouch::msg::{ OuchRequest, MassCancel };
+///
+/// let request2 = OuchRequest::MassCancel(MassCancel::new(
+///     UserRefNum::new(), 
+///     Mpid::from("FIRM").unwrap(), 
+///     StockSymbol::from("STONKS").unwrap()
+/// ));
+///
+/// assert_eq!(request1, request2);
+/// ```
+#[macro_export]
+macro_rules! mass_cancel {
+    (user_ref_num: $f1:expr, firm: $f2:expr, symbol: $f3:expr $(,)?) => {
+        $crate::msg::OuchRequest::MassCancel(
+            $crate::msg::MassCancel::new($f1, $f2, $f3)
+        )
     }
+}
 
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
-} 
-
-
-/// Cancel all active orders for a symbol.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct MassCancel {
-    user_ref_num: UserRefNum,
-    firm: Mpid,
-    symbol: StockSymbol,
-    optional_appendage: OptionalAppendage
+define_msg!{
+    MassCancel: 
+    "Cancel all active orders for a symbol.";
+        user_ref_num: UserRefNum
+            { UserRefNum::parse, UserRefNum::encode },
+        firm: Mpid
+            { Mpid::parse, Mpid::encode },
+        symbol: StockSymbol
+            { StockSymbol::parse, StockSymbol::encode },
 }
 
 impl MassCancel {
@@ -136,24 +165,11 @@ impl MassCancel {
             user_ref_num,
             firm,
             symbol,
-            optional_appendage: OptionalAppendage::new(),
+            //optional_appendage: OptionalAppendage::new(),
         }
     }
 
-    /// Gets the user reference number.
-    pub fn user_ref_num(&self) -> UserRefNum { self.user_ref_num }
-
-    /// Gets the ID for the firm for whom the orders will be canceled.
-    pub fn firm(&self) -> Mpid { self.firm }
-    
-    /// Gets the symbol for which the orders will be canceled.
-    pub fn symbol(&self) -> StockSymbol { self.symbol }
-    
-    /// Get read-only access to the message's optional fields.
-    pub fn options(&self) -> &Vec<TagValue> {
-        &self.optional_appendage.tag_values()
-    }
-
+    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - GroupId
@@ -185,22 +201,7 @@ impl MassCancel {
 
         Ok(self.optional_appendage.add(option))
     }
-    
-    pub(super) fn encode(&self) -> Vec<u8> {
+*/
+}
 
-        let mut bytes: Vec<u8> = Vec::new();
-
-        bytes.push(b'C');
-        bytes.extend(self.user_ref_num.encode());
-        bytes.extend(self.firm.encode());
-        bytes.extend(self.symbol.encode());
-        bytes.extend(self.optional_appendage.encode());
-
-        bytes
-    }
-
-    /// Encode the request to a protocol-compliant byte array.
-    pub fn to_bytes(&self) -> Vec<u8> { self. encode() }
-    
-} 
 

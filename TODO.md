@@ -2,19 +2,22 @@
 # TODO for crate
 
 ### use `nsdq-util` to replace 
-- [ ] helpers, 
+- [x] helpers, 
 - [x] enums and 
-- [ ] string types, 
-- [ ] ternary etc.
+- [x] string types, 
+- [ ] `nsdq-util` bool & ternary, NaiveTime, etc. need both `parse` and `encode`
+- [ ] import/re-export types eg `Mpid` and `StockSymbol`
+- [ ] alias `as Price64` -> `as Price`
 
 ### messages
-- [ ] Convert parsers to use `nom` (zero allocation)
+- [x] Convert parsers to use `nom` (zero allocation)
 - [x] `parse`, `encode` convention
-- [ ] macro for defining request/response enums to avoid repetition
+- [x] macro for defining request/response enums to avoid repetition
+- [ ] Walk back `SystemEvent`, doesn't use Optional appendage
 
 ### options
 - [x] `TagValue` parse more logically with `nom`
-- [ ] Finish `TagValue` vars, `nsdq-util` needs `encode` for bool and ternary
+- [ ] Finish `TagValue` vars, needs `encode` for bool and ternary
 
 
 
