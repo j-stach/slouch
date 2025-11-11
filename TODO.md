@@ -3,15 +3,14 @@
 
 # TODO for crate
 - [ ] Replace bad element error with option?
-- [ ] enums completed
+- [x] enums completed
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
+- [ ] Finish adding fields to messages with new utils
 
 ### options
-- [x] Finish `TagValue` vars, needs `encode` for bool and ternary
 - [ ] `add_options` for adding multiple tagvalues in a vec
-- [x] `TagValue` must produce `nom` error when fails to parse
 
 
 
@@ -28,7 +27,6 @@
 
 ## Future directions:
 ### Ease of use:
-- [x] Some field and type names may be shortened while remaining descriptive
 - [ ] `Option`-based field access through request/response enums?
 
 ### Performance:
