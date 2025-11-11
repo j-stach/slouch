@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create a DisableOrderEntry request message.
@@ -54,11 +55,10 @@ impl DisableOrderEntry {
         Self {
             user_ref_num,
             firm,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         }
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -80,7 +80,6 @@ impl DisableOrderEntry {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 
 
@@ -133,11 +132,10 @@ impl EnableOrderEntry {
         Self {
             user_ref_num,
             firm,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         }
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -159,6 +157,5 @@ impl EnableOrderEntry {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 

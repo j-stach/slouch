@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create a ModifyOrder request message.
@@ -74,7 +75,7 @@ impl ModifyOrder {
             user_ref_num,
             side,
             quantity,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -91,7 +92,6 @@ impl ModifyOrder {
             .expect("Quantity is acceptable value")
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - SharesLocated
@@ -118,6 +118,5 @@ impl ModifyOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-    */
 } 
 

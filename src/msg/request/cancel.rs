@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create a CancelOrder request message.
@@ -66,7 +67,7 @@ impl CancelOrder {
         Ok(Self {
             user_ref_num,
             quantity,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -82,7 +83,6 @@ impl CancelOrder {
             .expect("Quantity is acceptable value")
     }
     
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -104,7 +104,6 @@ impl CancelOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 
 
@@ -164,11 +163,10 @@ impl MassCancel {
             user_ref_num,
             firm,
             symbol,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         }
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - GroupId
@@ -200,7 +198,6 @@ impl MassCancel {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 
 

@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create an AccountQuery message.
@@ -32,11 +33,10 @@ impl AccountQuery {
     /// Create a new Account Query.
     pub fn new() -> Self {
         Self {
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         }
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - UserRefIndex
@@ -58,6 +58,5 @@ impl AccountQuery {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 } 
 

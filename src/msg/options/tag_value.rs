@@ -124,7 +124,7 @@ tag_values!{
     [7u8] PegOffset: SignedPrice "Offset amount for the pegged value.";
         { SignedPrice::parse, SignedPrice::encode },
 
-    [9u8] DiscretionaryPrice: Price "Price for discretionary order execution.";
+    [9u8] DiscretionPrice: Price "Price for discretionary order execution.";
         { Price::parse, Price::encode },
 
     [10u8] DiscretionPriceType: PriceType

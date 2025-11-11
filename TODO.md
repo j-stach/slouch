@@ -2,11 +2,11 @@
 # slouch
 
 # TODO for crate
-- [x] ~Replace bad element error with option?~ Errors cleaned up
+- [ ] clean up imports
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [ ] `add_option` for each request type
+- [x] `add_option` for each request type
 
 
 

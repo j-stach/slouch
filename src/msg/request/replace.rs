@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create a ReplaceOrder request message.
@@ -126,7 +127,7 @@ impl ReplaceOrder {
             display,
             intermarket_sweep,
             order_token,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -156,7 +157,6 @@ impl ReplaceOrder {
         ).expect("Quantity is acceptable value")
     }
 
-    /*
     /// Add an optional field to the optional appendage.
     /// The majority of fields from the Enter Order Message are supported 
     /// in this message, except for `Firm` and `GroupId`, which are inherited
@@ -216,6 +216,5 @@ impl ReplaceOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 

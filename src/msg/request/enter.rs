@@ -3,6 +3,7 @@ use nom::number::streaming::{ be_u32, be_u64 };
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
+use crate::msg::options::{ TagValue, OptionalAppendage };
 
 
 /// Create an EnterOrder request message.
@@ -134,7 +135,7 @@ impl EnterOrder {
             intermarket_sweep,
             cross_type,
             order_token,
-            optional_appendage: crate::msg::options::OptionalAppendage::new(),
+            optional_appendage: OptionalAppendage::new(),
         })
     }
 
@@ -170,12 +171,11 @@ impl EnterOrder {
         ).expect("Quantity is acceptable value")
     }
 
-    /*
     /// Add a `TagValue` to the optional appendage.
     /// Available options for this message type are:
     /// - Firm
     /// - MinQty
-    /// - CustomerType
+    /// - Retail
     /// - MaxFloor
     /// - PriceType
     /// - PegOffset
@@ -201,7 +201,7 @@ impl EnterOrder {
         match option {
             Firm(..) |
             MinQty(..) |
-            CustomerType(..) |
+            Retail(..) |
             MaxFloor(..) |
             PriceType(..) |
             PegOffset(..) |
@@ -228,6 +228,5 @@ impl EnterOrder {
 
         Ok(self.optional_appendage.add(option))
     }
-*/
 }
 
