@@ -67,7 +67,7 @@ impl ModifyOrder {
     ) -> Result<Self, BadElementError> {
 
         if quantity >= 1_000_000 {
-            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+            return Err(BadElementError::InvalidQuantity(quantity))
         }
 
         Ok(Self {

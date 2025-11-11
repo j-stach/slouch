@@ -1,5 +1,5 @@
 
-use crate::error::BadElementError;
+use nsdq_util::error::TypeError;
 
 /// Used to set `TagValue::ExpireTime`.
 /// Seconds to live. Must be less than 86400 (number of seconds in a day).
@@ -10,18 +10,22 @@ impl ElapsedTime {
     
     /// Create a new time limit for use with `TagValue::ExpireTime`.
     /// `secs` must be less than 86400 (number of seconds in a day).
-    pub fn new(secs: u32) -> Result<Self, BadElementError> {
+    pub fn new(secs: u32) -> Result<Self, TypeError> {
         
         if secs >= 86_400 {
-            return Err(
-                BadElementError::InvalidValue("ElapsedTime".to_string())
-            )
+            return Err(TypeError::InvalidTime((secs as u64) * 10u64.pow(9)))
         }
 
         Ok(Self(secs))
     }
 
-    pub fn to_secs(&self) -> u32 { self.0 }
+    /// Number of seconds to live.
+    pub fn secs(&self) -> u32 { self.0 }
+
+    /// Number of nanoseconds to live.
+    pub fn nanosecs(&self) -> u64 { 
+        (self.0 as u64) * 10u64.pow(9)
+    }
 
     pub(crate) fn parse(input: &[u8]) -> nom::IResult<&[u8], Self> {
 

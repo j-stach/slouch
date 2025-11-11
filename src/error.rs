@@ -11,9 +11,6 @@ pub enum OuchError {
     #[error("Unrecognized OUCH response type: {0}")]
     UnknownResponse(char, Vec<u8>),
 
-    #[error("Insufficient data to parse: {0}")]
-    Parse(String),
-
     /// This only occurs in the client.
     #[error("OuchClient suffered an IO error: {0}")]
     ClientIo(#[from] std::io::Error),
@@ -30,29 +27,17 @@ pub enum OuchError {
 }
 
 /// Errors that occur from invalid message elements.
-#[derive(Error, Debug, PartialEq, Eq)]
+#[derive(Error, Debug)]
 pub enum BadElementError {
 
-    #[error("{0} should be {1} bytes, found {2}")]
-    WrongSize(String, usize, usize),
-
-    #[error("{0} is not uppercase alphabetic ASCII")]
-    NotUppercaseAlpha(String),
-
-    #[error("{0} is not alphabetic ASCII")]
-    NotAlpha(String),
-
-    #[error("Invalid string: {0}")]
-    InvalidAscii(#[from] std::str::Utf8Error),
-
-    #[error("{0} is an invalid option for {1}")]
-    InvalidEnum(String, String),
-
-    #[error("Invalid value for {0}")]
-    InvalidValue(String),
+    #[error("Quantity {0} exceeds max shares allowed")]
+    InvalidQuantity(u32),
 
     #[error("Invalid option tag for {0}")]
     InvalidOption(String),
+
+    #[error("Invalid value for {0}")]
+    InvalidType(#[from] nsdq_util::error::TypeError),
 }
 
 

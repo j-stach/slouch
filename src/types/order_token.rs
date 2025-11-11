@@ -4,7 +4,7 @@ use nsdq_util::{
     types::string::helper::*,
 };
 
-use crate::error::BadElementError;
+use nsdq_util::error::TypeError;
 
 define_str!{
     OrderToken [14usize] 
@@ -19,13 +19,16 @@ impl OrderToken {
     /// Generate a new OrderToken from a protocol-compliant string.
     /// May only contain ASCII alphanumeric characters and spaces.
     /// Only up to the first 14 characters will be included, others ignored.
-    pub fn from(s: impl AsRef<str>) -> Result<Self, BadElementError> {
+    pub fn from(s: impl AsRef<str>) -> Result<Self, TypeError> {
 
         let s = s.as_ref();
 
         if !is_alphanumeric(s) {
             return Err(
-                BadElementError::NotAlpha("OrderToken".to_string())
+                TypeError::InvalidString(
+                    "OrderToken".to_string(), 
+                    s.to_string()
+                )
             );
         }
 

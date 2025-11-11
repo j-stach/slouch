@@ -2,15 +2,11 @@
 # slouch
 
 # TODO for crate
-- [ ] Replace bad element error with option?
+- [x] ~Replace bad element error with option?~ Errors cleaned up
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [x] Implement `OptionalAppendage` for message generators
 - [ ] `add_option` for each request type
-
-### options
-- [ ] `add_options` for adding multiple tagvalues in a vec
 
 
 

@@ -55,7 +55,7 @@ macro_rules! replace {
     ) => {
         $crate::msg::OuchRequest::ReplaceOrder(
             $crate::msg::ReplaceOrder::assert_new(
-                $f1, $f2, $f3, $f4, $f5, $f6, $f7, //$f8
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8
             )
         )
     };
@@ -114,7 +114,7 @@ impl ReplaceOrder {
     ) -> Result<Self, BadElementError> {
 
         if quantity >= 1_000_000 {
-            return Err(BadElementError::InvalidValue("Quantity".to_string()))
+            return Err(BadElementError::InvalidQuantity(quantity))
         }
 
         Ok(Self {
