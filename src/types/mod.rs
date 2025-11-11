@@ -17,6 +17,7 @@ pub use self::{
 
 pub(crate) type Price = nsdq_util::Price<u64, 4>;
 pub(crate) type SignedPrice = nsdq_util::Price<i32, 4>;
+pub(crate) type Ternary = Option<bool>;
 
 pub use nsdq_util::{ Mpid, StockSymbol, NaiveTime };
 

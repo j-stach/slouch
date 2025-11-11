@@ -131,9 +131,9 @@ dependencies = [
 
 [[package]]
 name = "nsdq-util"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dde8d30dbfa7ed9b77fe231a9d8a2fb113f6fdb94fabd8a140c101f5ace40f13"
+checksum = "2d4cf99a994c7a8e27d0ac88550e98ba6437a1511279846964a0fa4f8c987c84"
 dependencies = [
  "chrono",
  "nom",

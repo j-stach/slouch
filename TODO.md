@@ -1,20 +1,17 @@
 
 # slouch
 
-# nsdq-util
-- [x] `nsdq-util` bool & ternary, NaiveTime, etc. need both `parse` and `encode`
-- [x] change `define_enum` to create array instead of tuple
-- [x] `define_enum` needs to handle `u16` tags better
-
 # TODO for crate
 - [ ] Replace bad element error with option?
+- [ ] enums completed
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
 
 ### options
-- [ ] Finish `TagValue` vars, needs `encode` for bool and ternary
+- [x] Finish `TagValue` vars, needs `encode` for bool and ternary
 - [ ] `add_options` for adding multiple tagvalues in a vec
+- [x] `TagValue` must produce `nom` error when fails to parse
 
 
 

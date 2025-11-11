@@ -3,11 +3,16 @@ use nom::number::streaming::{ be_u8, be_u16, be_u32, be_u64 };
 
 use nsdq_util::{
     parse_bool,
+    encode_bool,
+    parse_bool_with_chars,
+    encode_bool_with_chars,
     parse_ternary,
+    encode_ternary,
 };
 
 use crate::types::{
     Mpid,
+    Ternary,
     Price,
     SignedPrice,
     PriceType,
@@ -75,11 +80,12 @@ macro_rules! tag_values {
                             (input, Self::$name(var))
                         },
                     )* 
-                    _ => { 
-
-                        // TODO: Parse error
-                        todo![] 
-                    }
+                    _ => return Err(
+                        nom::Err::Error(nom::error::Error::new(
+                            input, 
+                            nom::error::ErrorKind::Tag
+                        ))
+                    ),
                 };
 
                 Ok(result)
@@ -104,73 +110,52 @@ tag_values!{
     [3u8] MinQty: u32 "Must be a round lot.";
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
-    // Specifies the type of customer for the order 
-    // (e.g., retail, institutional).
-    // TODO: encode_ternary/encode_bool
-    //[4u8] Retail: Option<bool> "Customer Type (Retail/Institutional)";
-    //    { parse_ternary, /*TODO*/ }
+    [4u8] Retail: Ternary "Customer Type (Retail/Institutional)";
+        { parse_ternary, |v: &Option<bool>| encode_ternary(*v) },
 
     [5u8] MaxFloor: u32 
     "Represents the portion of your order that you wish to have displayed.";
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
-    //Specifies the type of pricing for the order (e.g., limit, market).
-    [6u8] PriceType: PriceType;
+    [6u8] PriceType: PriceType
+    "Specifies the type of pricing for the order (e.g., limit, market).";
         { PriceType::parse, PriceType::encode },
 
     [7u8] PegOffset: SignedPrice "Offset amount for the pegged value.";
         { SignedPrice::parse, SignedPrice::encode },
 
-    [9u8] DiscretionaryPrice: Price 
-    "Price for discretionary order execution.";
+    [9u8] DiscretionaryPrice: Price "Price for discretionary order execution.";
         { Price::parse, Price::encode },
 
-    // Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.
-    [10u8] DiscretionPriceType: PriceType;
-        { PriceType::parse, PriceType::encode },
-
-    /*
-        10 => {
-            let price_type = PriceType::parse(payload[0])?;
-            use PriceType::*;
-            match price_type {
-                // Valid PriceType for DiscretionPriceType 
-                // excludes "Q" and "m".
-                MarketMakerPeg | Midpoint => Err(
-                    BadElementError::InvalidEnum(
-                        (price_type.encode() as char).to_string(), 
-                        "DiscretionPriceType".to_string()
-                    ).into()
-                ),
-                _ => Ok(Self::DiscretionPriceType(price_type))
-            }
-        },
-
-    */
+    [10u8] DiscretionPriceType: PriceType
+    "Limited use of `PriceType`: cant use `MarketMakerPeg` or `Midpoint`.";
+        { discretion_price_type_parse, PriceType::encode },
 
     [11u8] DiscretionPegOffset: SignedPrice 
     "Offset amount for the pegged Discretionary Price.";
         { SignedPrice::parse, SignedPrice::encode },
 
-    // Indicates if the order is post-only (will not execute immediately).
-    //[12u8] PostOnly: bool;
-    //    { |i: &[u8]| parse_bool_with_chars('P', 'N', i), /*TODO*/ }
+    [12u8] PostOnly: bool
+    "Indicates if the order is post-only (will not execute immediately).";
+        { 
+            post_only_parse,
+            |v: &bool| encode_bool_with_chars('P', 'N', *v) 
+        },
 
     [13u8] RandomReserves: u32 "Shares to do random reserve with.";
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
-    // Specifies the routing destination for the order.
-    [14u8] Route: RouteId;
+    [14u8] Route: RouteId
+    "Specifies the routing destination for the order.";
         { RouteId::parse, RouteId::encode },
 
-    // Seconds to live. 
-    // Must be less than 86400 (number of seconds in a day).
-    //[15u8] ExpireTime: TODO ...NaiveTime?;
-    //    { RouteId::parse, RouteId::encode },
+    [15u8] ExpireTime: ElapsedTime
+    "Used to set the duration for Good 'Til Time orders.";
+        { ElapsedTime::parse, ElapsedTime::encode },
 
-    // Indicates if the order should be executed immediately.
-    //[16u8] TradeNow: bool;
-    //    { parse_ternary, /*TODO*/ },
+    [16u8] TradeNow: Ternary
+    "Indicates if the order should be executed immediately.";
+        { parse_ternary, |v: &Option<bool>| encode_ternary(*v) },
 
     [17u8] HandleInst: HandleInst "Handling instructions for the order.";
         { HandleInst::parse, HandleInst::encode },
@@ -196,17 +181,16 @@ tag_values!{
     (i.e. an order with reserves).";
         { be_u16, |i: &u16| u16::to_be_bytes(*i) },
 
-    // Indicates if the order is post-only (will not execute immediately).
-    //[25u8] SharesLocated: bool;
-    //    { parse_bool, /*TODO*/ }
+    [25u8] SharesLocated: bool "Shares located for short sell.";
+        { parse_bool, |v: &bool| encode_bool(*v) },
 
     [26u8] LocateBroker: Mpid 
     "Broker code from which the locate has been acquired \
     for short sale orders";
         { Mpid::parse, Mpid::encode },
 
-    //[27u8] Side: Side "Specifies the side of the order (e.g., buy or sell).";
-    //    { Side::parse, Side::encode },
+    [27u8] Side: Side "Specifies the side of the order (e.g., buy or sell).";
+        { Side::parse, Side::encode },
 
     [28u8] UserRefIndex: u8 
     "Used in the Order Restated Message only. \n \
@@ -216,3 +200,25 @@ tag_values!{
 
 }
 
+fn post_only_parse(input: &[u8]) -> nom::IResult<&[u8], bool> {
+   parse_bool_with_chars('P', 'N', input)
+}
+
+fn discretion_price_type_parse(input: &[u8]) -> nom::IResult<&[u8], PriceType> {
+
+    let (input, price_type) = PriceType::parse(input)?;
+
+    use PriceType::*;
+    match price_type {
+        // Valid PriceType for DiscretionPriceType 
+        // excludes "Q" and "m".
+        MarketMakerPeg | Midpoint => Err(
+            nom::Err::Error(nom::error::Error::new(
+                input, 
+                nom::error::ErrorKind::Tag
+            ))
+        ),
+        _ => Ok((input, price_type))
+    }
+
+}
