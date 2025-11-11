@@ -6,7 +6,8 @@
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [ ] Implement `OptionalAppendage` for message generators
+- [x] Implement `OptionalAppendage` for message generators
+- [ ] `add_option` for each request type
 
 ### options
 - [ ] `add_options` for adding multiple tagvalues in a vec
