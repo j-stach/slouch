@@ -14,7 +14,7 @@ categories = ["network-programming", "finance"]
 exclude = [".git/**", "docs/**", "test/**", "src/test/**", "TODO.md"]
 
 [dependencies]
-nsdq-util = "0.1.1"
+nsdq-util = "0.1.2"
 nom = "8.0.0"
 thiserror = "2.0.12"
 

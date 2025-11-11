@@ -1,16 +1,13 @@
 
+# slouch
+
 # nsdq-util
-- [ ] `nsdq-util` bool & ternary, NaiveTime, etc. need both `parse` and `encode`
-- [ ] change `define_enum` to create array instead of tuple
-- [ ] `define_enum` needs to handle `u16` tags better
+- [x] `nsdq-util` bool & ternary, NaiveTime, etc. need both `parse` and `encode`
+- [x] change `define_enum` to create array instead of tuple
+- [x] `define_enum` needs to handle `u16` tags better
 
 # TODO for crate
 - [ ] Replace bad element error with option?
-
-### types
-- [x] condense type files into `strings.rs` and `enums.rs`
-- [x] import/re-export types eg `Mpid` and `StockSymbol`
-- [x] alias `as Price64` -> `as Price`
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
