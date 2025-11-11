@@ -22,7 +22,7 @@ use crate::{ types::*, msg::define_msg };
 ///     time_in_force: TimeInForce::Day,
 ///     display: Display::Visible,
 ///     capacity: Capacity::Agency,
-///     //intermarket_sweep: false,
+///     intermarket_sweep: false,
 ///     cross_type: CrossType::Opening,
 ///     order_token: OrderToken::from("2 th3 M00N").unwrap()
 /// };
@@ -39,7 +39,7 @@ use crate::{ types::*, msg::define_msg };
 ///         TimeInForce::Day,
 ///         Display::Visible,
 ///         Capacity::Agency,
-///         //false,
+///         false,
 ///         CrossType::Opening,
 ///         OrderToken::from("2 th3 M00N").unwrap()
 ///     ).unwrap()
@@ -58,13 +58,13 @@ macro_rules! enter {
         time_in_force: $f6:expr,
         display: $f7:expr,
         capacity: $f8:expr,
-        //intermarket_sweep: $f9:expr,
+        intermarket_sweep: $f9:expr,
         cross_type: $f10:expr,
         order_token: $f11:expr $(,)?
     ) => {
         $crate::msg::OuchRequest::EnterOrder(
             $crate::msg::EnterOrder::assert_new(
-                $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, //$f11
+                $f1, $f2, $f3, $f4, $f5, $f6, $f7, $f8, $f9, $f10, $f11
             )
         )
     };
@@ -91,7 +91,8 @@ define_msg!{
             { Display::parse, Display::encode },
         capacity: Capacity
             { Capacity::parse, Capacity::encode },
-        // TODO intermarket_sweep_eligibility: bool,
+        intermarket_sweep: bool
+            { nsdq_util::parse_bool, |v: &bool| nsdq_util::encode_bool(*v) },
         cross_type: CrossType
             { CrossType::parse, CrossType::encode },
         order_token: OrderToken
@@ -112,7 +113,7 @@ impl EnterOrder {
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
-        //intermarket_sweep: bool,
+        intermarket_sweep: bool,
         cross_type: CrossType,
         order_token: OrderToken,
     ) -> Result<Self, BadElementError> {
@@ -130,7 +131,7 @@ impl EnterOrder {
             time_in_force,
             display,
             capacity,
-            //intermarket_sweep,
+            intermarket_sweep,
             cross_type,
             order_token,
             //optional_appendage: OptionalAppendage::new()
@@ -148,7 +149,7 @@ impl EnterOrder {
         time_in_force: TimeInForce,
         display: Display,
         capacity: Capacity,
-        //intermarket_sweep: bool,
+        intermarket_sweep: bool,
         cross_type: CrossType,
         order_token: OrderToken,
     ) -> Self {
@@ -163,7 +164,7 @@ impl EnterOrder {
             time_in_force,
             display,
             capacity,
-            //intermarket_sweep,
+            intermarket_sweep,
             cross_type,
             order_token
         ).expect("Quantity is acceptable value")

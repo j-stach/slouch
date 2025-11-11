@@ -19,7 +19,10 @@ crate::msg::define_msg!{
     "Informs you that an order has been reduced or canceled. \n \
     OrderCanceled does not necessarily mean the entire order is dead; \
     some portion of the order may still be alive.";
-        //timestamp: NaiveTime,
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
         quantity: u32 
@@ -32,7 +35,10 @@ crate::msg::define_msg!{
 
     AiqCanceled:
     "";
-        //timestamp: NaiveTime,
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
         decrement_shares: u32 
@@ -57,7 +63,10 @@ crate::msg::define_msg!{
     but any unexecuted portion of this order will automatically be canceled \
     immediately after the cross completes. \n \
     This message will only be sent once for a given UserRefNum. ";
-        //timestamp: NaiveTime,
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
 }
@@ -72,7 +81,10 @@ crate::msg::define_msg!{
     Clients could repeat their request for any unexecuted portion \
     of the order after the cross completes. \n \
     This message will only be sent once for a given UserRefNum.";
-        //timestamp: NaiveTime,
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
 }
@@ -82,7 +94,10 @@ crate::msg::define_msg!{
     MassCancelResponse:
     "Acknowledges the receipt of a valid MassCancel request. \
     The data fields from the request are echoed back in this message.";
-        //timestamp: NaiveTime,
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
         firm: Mpid

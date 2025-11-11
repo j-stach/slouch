@@ -20,7 +20,7 @@ use crate::{ types::*, msg::define_msg };
 ///     price: Price::new(3, 5001).unwrap(),
 ///     time_in_force: TimeInForce::Day,
 ///     display: Display::Visible,
-///     //intermarket_sweep: false,
+///     intermarket_sweep: false,
 ///     order_token: OrderToken::from("To The Moon").unwrap()
 /// };
 ///
@@ -34,7 +34,7 @@ use crate::{ types::*, msg::define_msg };
 ///         Price::new(3, 5001).unwrap(),
 ///         TimeInForce::Day,
 ///         Display::Visible,
-///         //false,
+///         false,
 ///         OrderToken::from("To The Moon").unwrap()
 ///     ).unwrap()
 /// );
@@ -50,7 +50,7 @@ macro_rules! replace {
         price: $f4:expr,
         time_in_force: $f5:expr,
         display: $f6:expr,
-        //intermarket_sweep: $f7:expr,
+        intermarket_sweep: $f7:expr,
         order_token: $f8:expr $(,)?
     ) => {
         $crate::msg::OuchRequest::ReplaceOrder(
@@ -87,7 +87,8 @@ define_msg!{
             { TimeInForce::parse, TimeInForce::encode },
         display: Display
             { Display::parse, Display::encode },
-        // TODO intermarket_sweep_eligibility: bool,
+        intermarket_sweep: bool
+            { nsdq_util::parse_bool, |v: &bool| nsdq_util::encode_bool(*v) },
         order_token: OrderToken
             { OrderToken::parse, OrderToken::encode },
 }
@@ -108,7 +109,7 @@ impl ReplaceOrder {
         price: Price,
         time_in_force: TimeInForce,
         display: Display,
-        //intermarket_sweep: bool,
+        intermarket_sweep: bool,
         order_token: OrderToken,
     ) -> Result<Self, BadElementError> {
 
@@ -123,7 +124,7 @@ impl ReplaceOrder {
             price,
             time_in_force,
             display,
-            //intermarket_sweep,
+            intermarket_sweep,
             order_token,
             //optional_appendage: OptionalAppendage::new()
         })
@@ -138,7 +139,7 @@ impl ReplaceOrder {
         price: Price,
         time_in_force: TimeInForce,
         display: Display,
-        //intermarket_sweep: bool,
+        intermarket_sweep: bool,
         order_token: OrderToken,
     ) -> Self {
 
@@ -150,7 +151,7 @@ impl ReplaceOrder {
             price,
             time_in_force,
             display,
-            //intermarket_sweep,
+            intermarket_sweep,
             order_token
         ).expect("Quantity is acceptable value")
     }

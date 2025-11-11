@@ -12,7 +12,10 @@ crate::msg::define_msg!{
 
     OrderExecuted: 
     "Informs you that part or all of an order has been executed.";
-        // timestamp: NaiveTime
+        timestamp: NaiveTime { 
+            nsdq_util::parse_ouch_time_bold, 
+            |v: &NaiveTime| nsdq_util::encode_ouch_time(*v) 
+        },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
         quantity: u32

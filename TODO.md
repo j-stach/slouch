@@ -3,11 +3,11 @@
 
 # TODO for crate
 - [ ] Replace bad element error with option?
-- [x] enums completed
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [ ] Finish adding fields to messages with new utils
+- [x] Finish adding fields to messages with new utils
+- [ ] Implement `OptionalAppendage` for message generators
 
 ### options
 - [ ] `add_options` for adding multiple tagvalues in a vec
