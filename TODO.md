@@ -6,7 +6,6 @@
 
 ### messages
 - [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [x] Finish adding fields to messages with new utils
 - [ ] Implement `OptionalAppendage` for message generators
 
 ### options

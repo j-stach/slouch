@@ -32,7 +32,7 @@ impl AccountQuery {
     /// Create a new Account Query.
     pub fn new() -> Self {
         Self {
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         }
     }
 

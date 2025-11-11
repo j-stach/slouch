@@ -66,7 +66,7 @@ impl CancelOrder {
         Ok(Self {
             user_ref_num,
             quantity,
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         })
     }
 
@@ -164,7 +164,7 @@ impl MassCancel {
             user_ref_num,
             firm,
             symbol,
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         }
     }
 

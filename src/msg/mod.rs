@@ -1,7 +1,7 @@
 
 /// Contains types for messages accepted by NASDAQ.
 mod request;
-//pub use request::*;
+pub use request::*;
 
 /// Contains types for responses from NASDAQ.
 mod response;
@@ -9,7 +9,7 @@ pub use response::*;
 
 /// Contains types for optional message appendages.
 mod options;
-use options::OptionalAppendage;
+pub(self) use options::OptionalAppendage;
 pub use options::TagValue;
 
 
@@ -30,7 +30,7 @@ macro_rules! define_msg {
             $(
                 $field_name: $field_type,
             )*
-            //optional_appendage: OptionalAppendage
+            optional_appendage: $crate::msg::options::OptionalAppendage
         }
 
         #[allow(dead_code)]
@@ -44,12 +44,13 @@ macro_rules! define_msg {
                     let (input, $field_name): (&[u8], $field_type) 
                         = $field_parser(input)?;
                 )*
-                //let (input, opts) = OptionalAppendage::parse(input)?;
 
+                let (input, opts) = 
+                    $crate::msg::options::OptionalAppendage::parse(input)?;
 
                 Ok((input, Self {
                     $( $field_name, )*
-                    //optional_appendage: opts
+                    optional_appendage: opts
                 }))
             }
 
@@ -58,8 +59,7 @@ macro_rules! define_msg {
                 let mut bytes: Vec<u8> = Vec::with_capacity(1024usize);
 
                 $( bytes.extend($field_encoder(&self.$field_name)); )*
-                //bytes.extend(
-                //self.optional_appendage.encode_nothing_if_empty());
+                bytes.extend(self.optional_appendage.encode());
 
                 bytes
             }
@@ -70,10 +70,10 @@ macro_rules! define_msg {
                 pub fn $field_name(&self) -> $field_type { self.$field_name }
             )*
 
-            ///// Get read-only access to the message's optional fields.
-            //pub fn options(&self) -> &Vec<TagValue> {
-            //    &self.optional_appendage.tag_values()
-            //}
+            /// Get read-only access to the message's optional fields.
+            pub fn options(&self) -> &Vec<$crate::msg::options::TagValue> {
+                &self.optional_appendage.tag_values()
+            }
 
         }
     }

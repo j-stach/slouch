@@ -126,7 +126,7 @@ impl ReplaceOrder {
             display,
             intermarket_sweep,
             order_token,
-            //optional_appendage: OptionalAppendage::new()
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         })
     }
 

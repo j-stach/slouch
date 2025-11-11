@@ -54,7 +54,7 @@ impl DisableOrderEntry {
         Self {
             user_ref_num,
             firm,
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         }
     }
 
@@ -133,7 +133,7 @@ impl EnableOrderEntry {
         Self {
             user_ref_num,
             firm,
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         }
     }
 

@@ -134,7 +134,7 @@ impl EnterOrder {
             intermarket_sweep,
             cross_type,
             order_token,
-            //optional_appendage: OptionalAppendage::new()
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         })
     }
 

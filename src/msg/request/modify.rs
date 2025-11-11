@@ -74,7 +74,7 @@ impl ModifyOrder {
             user_ref_num,
             side,
             quantity,
-            //optional_appendage: OptionalAppendage::new(),
+            optional_appendage: crate::msg::options::OptionalAppendage::new(),
         })
     }
 

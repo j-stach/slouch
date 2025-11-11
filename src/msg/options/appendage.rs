@@ -105,13 +105,12 @@ impl OptionalAppendage {
                     tag_start = tag_end as u8 + 1;
 
                 } else {
-
-                    todo![]
-
-                    // TODO
-                    //return Err(
-                    //    OuchError::Parse("OptionalAppendage".to_string())
-                    //)
+                    return Err(
+                        nom::Err::Error(nom::error::Error::new(
+                            input, 
+                            nom::error::ErrorKind::Tag
+                        ))
+                    )
                 }
             }
         }
