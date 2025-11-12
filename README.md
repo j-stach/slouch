@@ -60,7 +60,7 @@ let request = enter!{
     side: Side::Buy,
     quantity: 69u32,
     symbol: StockSymbol::from("STONKS").unwrap(),
-    price: Price::new(35000).unwrap(),
+    price: Price::new(35000u64).unwrap(),
     time_in_force: TimeInForce::Day,
     display: Display::Visible,
     capacity: Capacity::Agency,
