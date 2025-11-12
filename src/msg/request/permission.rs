@@ -1,6 +1,4 @@
 
-use nom::number::streaming::{ be_u32, be_u64 };
-
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };
 use crate::msg::options::{ TagValue, OptionalAppendage };

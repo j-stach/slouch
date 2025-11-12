@@ -1,7 +1,5 @@
 
-use crate::error::OuchError;
 use super::TagValue;
-
 
 /// Contains optional fields that may be included in a Request/Response.
 /// Only one instance of each variant of `TagValue` is allowed --
@@ -66,6 +64,7 @@ impl OptionalAppendage {
 
     // For `ModifyOrder` and `AccountQuery` requests, 
     // the Optional Appendage (including length marker) is itself optional.
+    #[allow(dead_code)]
     pub(crate) fn encode_nothing_if_empty(&self) -> Vec<u8> {
 
         if self.tag_values.len() == 0 {

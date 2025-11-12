@@ -1,5 +1,5 @@
 
-use nom::number::streaming::{ be_u32, be_u64 };
+use nom::number::streaming::be_u32;
 
 use crate::error::BadElementError;
 use crate::{ types::*, msg::define_msg };

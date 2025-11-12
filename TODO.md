@@ -2,11 +2,10 @@
 # slouch
 
 # TODO for crate
-- [ ] clean up imports
+- [x] clean up imports
 
 ### messages
-- [ ] Walk back `SystemEvent`, doesn't use Optional appendage
-- [x] `add_option` for each request type
+- [x] Walk back `SystemEvent`, doesn't use Optional appendage
 
 
 

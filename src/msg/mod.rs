@@ -9,7 +9,6 @@ pub use response::*;
 
 /// Contains types for optional message appendages.
 mod options;
-pub(self) use options::OptionalAppendage;
 pub use options::TagValue;
 
 

@@ -3,7 +3,6 @@ use crate::types::{
     NaiveTime,
     UserRefNum,
     BrokenReason,
-    OrderToken,
 };
 
 crate::msg::define_msg!{

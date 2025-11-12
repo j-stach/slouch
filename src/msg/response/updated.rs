@@ -7,7 +7,6 @@ use crate::types::{
     Display,
     RestateReason,
     Price, 
-    SignedPrice,
 };
 
 crate::msg::define_msg!{
