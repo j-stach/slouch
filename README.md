@@ -60,11 +60,11 @@ let request = enter!{
     side: Side::Buy,
     quantity: 69u32,
     symbol: StockSymbol::from("STONKS").unwrap(),
-    price: Price::new(3, 5000).unwrap(),
+    price: Price::new(35000).unwrap(),
     time_in_force: TimeInForce::Day,
     display: Display::Visible,
     capacity: Capacity::Agency,
-    intermarket_sweep_eligibility: false,
+    intermarket_sweep: false,
     cross_type: CrossType::Opening,
     order_token: OrderToken::from("To The Moon").unwrap()
 };
@@ -90,12 +90,12 @@ let mut stream = net::TcpStream::connect(addr).unwrap();
 
 // TODO: Login to your account as described during OUCH onboarding.
 
-let bytes = account_query!().to_bytes();
+let bytes = account_query!().encode();
 stream.write_all(&bytes).unwrap();
 
 let mut buf = vec![];
 let n = stream.read(&mut buf).unwrap();
-let response = OuchResponse::try_from(&self.buf[..n]).unwrap();
+let (_buf, response) = OuchResponse::parse(&self.buf[..n]).unwrap();
 ```
     
 
