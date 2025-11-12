@@ -1,9 +1,6 @@
 
 # slouch
 
-## Testing:
-- [x] Update response 
-
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
 - [ ] All msg & type enum variants should be tested during integration
