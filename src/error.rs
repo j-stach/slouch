@@ -15,6 +15,9 @@ pub enum OuchError {
     #[error("OuchClient suffered an IO error: {0}")]
     ClientIo(#[from] std::io::Error),
 
+    #[error("Failed to parse OuchResponse from data")]
+    Parse,
+
     /// This only occurs in the client.
     #[error("OuchClient encountered an unexpected response to initial Query")]
     UnexpectedResponse,

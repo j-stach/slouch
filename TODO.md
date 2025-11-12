@@ -1,18 +1,9 @@
 
 # slouch
-
-# TODO for crate
-- [x] clean up imports
-
-### messages
-- [x] Walk back `SystemEvent`, doesn't use Optional appendage
-
-
+- [x] Reintegrate client
 
 ## Testing:
-- [ ] Test handling of inappropriate options for requests
-- [ ] Errors for bad elements in quirky types (eg `DiscretionPriceType`)
-- [ ] Parse `OuchResponse` with multiple options
+- [ ] Update tests
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)
@@ -23,6 +14,7 @@
 ## Future directions:
 ### Ease of use:
 - [ ] `Option`-based field access through request/response enums?
+- [ ] Error type for Parse should integrate with `nom::Err` more cleanly
 
 ### Performance:
 TBD. Plenty to be done.

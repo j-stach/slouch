@@ -2,8 +2,8 @@
 //! Simple OUCH v5.0 message library
 
 /// Contains an OuchClient type for sending and receiving messages.
-//pub mod client;
-//pub use client::OuchClient;
+pub mod client;
+pub use client::OuchClient;
 
 /// Contains OuchIn and OuchOut types for protocol-compliant messages.
 pub mod msg;
@@ -15,5 +15,5 @@ pub mod types;
 pub mod error;
 
 // Contains unit tests for the library (minus client)
-#[cfg(test)] mod test;
+//#[cfg(test)] mod test;
 

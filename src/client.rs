@@ -120,7 +120,7 @@ impl OuchClient {
             log::debug!("Sending {} request to server...", &msg);
         }
 
-        let bytes = msg.to_bytes();
+        let bytes = msg.encode();
         self.stream.write_all(&bytes)?;
 
         #[cfg(feature = "logs")] {
@@ -138,12 +138,18 @@ impl OuchClient {
         }
 
         let n = self.stream.read(&mut self.buffer)?;
+        let data = &self.buffer[..n];
 
         #[cfg(feature = "logs")] {
             log::debug!("Response recieved.");
         }
 
-        OuchResponse::try_from(&self.buffer[..n])
+        if let Ok((_data, response)) = OuchResponse::parse(data) {
+            Ok(response)
+        } else {
+            // TODO: Extract information from IResult into custom error.
+            Err(OuchError::Parse)
+        }
     }
 }
 
@@ -219,7 +225,7 @@ impl OuchClient {
             log::debug!("Sending {} request to server...", &msg);
         }
 
-        let bytes = msg.to_bytes();
+        let bytes = msg.encode();
         to(self.timeout, self.stream.write_all(&bytes)).await??;
 
         #[cfg(feature = "logs")] {
@@ -237,12 +243,18 @@ impl OuchClient {
         }
 
         let n = to(self.timeout, self.stream.read(&mut self.buffer)).await??;
+        let data = &self.buffer[..n];
 
         #[cfg(feature = "logs")] {
             log::debug!("Response recieved.");
         }
 
-        OuchResponse::try_from(&self.buffer[..n])
+        if let Ok((_data, response)) = OuchResponse::parse(data) {
+            Ok(response)
+        } else {
+            // TODO: Extract information from IResult into custom error.
+            Err(OuchError::Parse)
+        }
     }
 }
 
