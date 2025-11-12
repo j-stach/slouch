@@ -77,7 +77,7 @@ By default, `OuchClient` is synchronous and its events are not logged.
 ```toml
 # Cargo.toml
 [dependencies]
-slouch = { version = "0.0.0", features = ["logs", "async"] }
+slouch = { version = "0.0.3", features = ["logs", "async"] }
 ```
 6. `OuchRequest` and `OuchResponse` may also be used without an `OuchClient`.
 ```rust
