@@ -1,11 +1,8 @@
 
-// restated
-// priorit update
-
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_priority_update() {
@@ -30,7 +27,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let update = match response {
@@ -40,8 +37,7 @@ use chrono::Timelike;
 
     assert_eq!(update.timestamp().nanosecond(), 1u32);
     assert_eq!(update.user_ref_num().val(), 1u32);
-    assert_eq!(update.price().dollars(), 3u32);
-    assert_eq!(update.price().cents(), 5001u16);
+    assert_eq!(update.price().parts(), (3u64, 5001u64));
     assert_eq!(update.display(), Display::Visible);
     assert_eq!(update.order_ref_num(), 1u64);
 
@@ -72,7 +68,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let restate = match response {

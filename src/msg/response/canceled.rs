@@ -49,7 +49,7 @@ crate::msg::define_msg!{
             { be_u32, |i: &u32| u32::to_be_bytes(*i) },
         price: Price
             { Price::parse, Price::encode },
-        liquidity_flag: Liquidity
+        liquidity: Liquidity
             { Liquidity::parse, Liquidity::encode },
         aiq_strategy: AiqStrategy
             { AiqStrategy::parse, AiqStrategy::encode },

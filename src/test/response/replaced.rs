@@ -2,7 +2,7 @@
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_replaced() {
@@ -47,7 +47,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let replaced = match response {
@@ -56,18 +56,17 @@ use chrono::Timelike;
     };
 
     assert_eq!(replaced.timestamp().nanosecond(), 1u32);
-    assert_eq!(replaced.old_user_ref_num().val(), 1u32);
-    assert_eq!(replaced.new_user_ref_num().val(), 2u32);
+    assert_eq!(replaced.old_ref_num().val(), 1u32);
+    assert_eq!(replaced.new_ref_num().val(), 2u32);
     assert_eq!(replaced.side(), Side::Buy);
     assert_eq!(replaced.quantity(), 0u32);
     assert_eq!(replaced.symbol().to_string(), String::from("STONKS"));
-    assert_eq!(replaced.price().dollars(), 3u32);
-    assert_eq!(replaced.price().cents(), 5001u16);
+    assert_eq!(replaced.price().parts(), (3u64, 5001u64));
     assert_eq!(replaced.time_in_force(), TimeInForce::Day);
     assert_eq!(replaced.display(), Display::Visible);
     assert_eq!(replaced.order_ref_num(), 1u64);
     assert_eq!(replaced.capacity(), Capacity::Agency);
-    assert_eq!(replaced.intermarket_sweep_eligibility(), false);
+    assert_eq!(replaced.intermarket_sweep(), false);
     assert_eq!(replaced.cross_type(), CrossType::Opening);
     assert_eq!(replaced.order_state(), OrderState::Live);
     assert_eq!(replaced.order_token().to_string(), String::from("To The Moon"));

@@ -2,9 +2,7 @@
 # slouch
 
 ## Testing:
-- [x] Update options 
-- [x] Update request 
-- [ ] Update response 
+- [x] Update response 
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)

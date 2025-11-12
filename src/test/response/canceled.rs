@@ -2,7 +2,7 @@
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_canceled() {
@@ -25,7 +25,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let cancel = match response {
@@ -75,7 +75,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let cancel = match response {
@@ -87,10 +87,9 @@ use chrono::Timelike;
     assert_eq!(cancel.user_ref_num().val(), 1u32);
     assert_eq!(cancel.reason(), CancelReason::SelfMatchPrevention);
     assert_eq!(cancel.quantity_prevented(), 0u32);
-    assert_eq!(cancel.execution_price().dollars(), 3u32);
-    assert_eq!(cancel.execution_price().cents(), 5001u16);
+    assert_eq!(cancel.price().parts(), (3u64, 5001u64));
     assert_eq!(cancel.decrement_shares(), 0u32);
-    assert_eq!(cancel.liquidity_flag(), LiquidityFlag::Added);
+    assert_eq!(cancel.liquidity(), Liquidity::Added);
     assert_eq!(cancel.aiq_strategy(), AiqStrategy::CancelOldestMpid);
 
     let options = cancel.options();
@@ -118,7 +117,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let cancel = match response {
@@ -154,7 +153,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let cancel = match response {

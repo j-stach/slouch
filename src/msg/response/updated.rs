@@ -37,8 +37,6 @@ crate::msg::define_msg!{
         },
         user_ref_num: UserRefNum 
             { UserRefNum::parse, UserRefNum::encode },
-        price: Price 
-            { Price::parse, Price::encode },
         reason: RestateReason
             { RestateReason::parse, RestateReason::encode },
 }

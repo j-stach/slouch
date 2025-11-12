@@ -2,7 +2,7 @@
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_executed() {
@@ -29,7 +29,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let exec = match response {
@@ -40,10 +40,9 @@ use chrono::Timelike;
     assert_eq!(exec.timestamp().nanosecond(), 1u32);
     assert_eq!(exec.user_ref_num().val(), 1u32);
     assert_eq!(exec.quantity(), 0u32);
-    assert_eq!(exec.price().dollars(), 3u32);
-    assert_eq!(exec.price().cents(), 5001u16);
+    assert_eq!(exec.price().parts(), (3u64, 5001u64));
     assert_eq!(exec.match_number(), 1u64);
-    assert_eq!(exec.liquidity_flag(), LiquidityFlag::Added);
+    assert_eq!(exec.liquidity(), Liquidity::Added);
 
     let options = exec.options();
     match options[0] {

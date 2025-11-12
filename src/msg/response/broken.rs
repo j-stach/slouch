@@ -1,8 +1,11 @@
 
+use nom::number::streaming::be_u64;
+
 use crate::types::{
     NaiveTime,
     UserRefNum,
     BrokenReason,
+    OrderToken,
 };
 
 crate::msg::define_msg!{
@@ -18,7 +21,11 @@ crate::msg::define_msg!{
         },
         user_ref_num: UserRefNum
             { UserRefNum::parse, UserRefNum::encode },
+        match_number: u64 
+            { be_u64, |i: &u64| u64::to_be_bytes(*i) },
         reason: BrokenReason
-            { BrokenReason::parse, BrokenReason::encode }
+            { BrokenReason::parse, BrokenReason::encode },
+        order_token: OrderToken
+            { OrderToken::parse, OrderToken::encode },
 }
 

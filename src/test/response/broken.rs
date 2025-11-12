@@ -2,7 +2,7 @@
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_broken_trade() {
@@ -27,7 +27,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let broken = match response {

@@ -84,7 +84,7 @@ use crate::{
     // MinQty bytes
     bytes.extend(0u32.to_be_bytes());
 
-    let (bytes, tv) = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::MaxFloor(val) => assert_eq!(val, 0u32),
         _ => panic!("Where'd you find this?"),

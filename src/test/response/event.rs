@@ -1,9 +1,8 @@
 
 use crate::msg::OuchResponse;
-
-use chrono::Timelike;
-
 use crate::types::EventCode;
+
+use nsdq_util::types::time::Timelike;
 
 #[test] fn parse_system_event() {
 
@@ -13,7 +12,7 @@ use crate::types::EventCode;
     // S for event code
     data.push(b'S');
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let event = match response {

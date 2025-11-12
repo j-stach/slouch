@@ -2,7 +2,7 @@
 use crate::msg::{ OuchResponse, TagValue };
 use crate::types::*;
 
-use chrono::Timelike;
+use nsdq_util::types::time::Timelike;
 
 
 #[test] fn parse_accepted() {
@@ -45,7 +45,7 @@ use chrono::Timelike;
     // Include the UserRefIndex byte 
     data.push(0u8);
 
-    let response = OuchResponse::try_from(&data[0..])
+    let (_data, response) = OuchResponse::parse(&data[0..])
         .expect("Should be valid data");
 
     let accepted = match response {
@@ -58,13 +58,12 @@ use chrono::Timelike;
     assert_eq!(accepted.side(), Side::Buy);
     assert_eq!(accepted.quantity(), 0u32);
     assert_eq!(accepted.symbol().to_string(), String::from("STONKS"));
-    assert_eq!(accepted.price().dollars(), 3u32);
-    assert_eq!(accepted.price().cents(), 5001u16);
+    assert_eq!(accepted.price().parts(), (3u64, 5001u64));
     assert_eq!(accepted.time_in_force(), TimeInForce::Day);
     assert_eq!(accepted.display(), Display::Visible);
     assert_eq!(accepted.order_ref_num(), 1u64);
     assert_eq!(accepted.capacity(), Capacity::Agency);
-    assert_eq!(accepted.intermarket_sweep_eligibility(), false);
+    assert_eq!(accepted.intermarket_sweep(), false);
     assert_eq!(accepted.cross_type(), CrossType::Opening);
     assert_eq!(accepted.order_state(), OrderState::Live);
     assert_eq!(accepted.order_token().to_string(), String::from("To The Moon"));
