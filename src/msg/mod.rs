@@ -23,7 +23,7 @@ macro_rules! define_msg {
             ),* $(,)?
     ) => {
 
-        #[derive(Debug, Clone)]
+        #[derive(Debug, Clone, PartialEq, Eq)]
         $(#[doc = $msg_doc])?
         pub struct $msg_name {
             $(

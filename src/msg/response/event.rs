@@ -1,7 +1,7 @@
 
 use crate::types::{ NaiveTime, EventCode };
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SystemEvent {
     timestamp: NaiveTime,
     event_code: EventCode

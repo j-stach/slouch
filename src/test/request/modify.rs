@@ -50,7 +50,7 @@ fn bad_quantity() {
         quantity: 0u32
     };
     
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'M'];
@@ -60,12 +60,14 @@ fn bad_quantity() {
     should_be.push(b'B');
     // u32 for quantity
     should_be.extend(0u32.to_be_bytes());
+    // Opts length (empty)
+    should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
 
 
     request.add_option(TagValue::UserRefIndex(1u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'M'];

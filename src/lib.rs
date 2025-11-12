@@ -15,5 +15,5 @@ pub mod types;
 pub mod error;
 
 // Contains unit tests for the library (minus client)
-//#[cfg(test)] mod test;
+#[cfg(test)] mod test;
 

@@ -7,7 +7,9 @@ use nsdq_util::{
     parse_bool_with_chars,
     encode_bool_with_chars,
     parse_ternary,
+    parse_ternary_with_chars,
     encode_ternary,
+    encode_ternary_with_chars,
 };
 
 use crate::types::{
@@ -111,7 +113,10 @@ tag_values!{
         { be_u32, |i: &u32| u32::to_be_bytes(*i) },
 
     [4u8] Retail: Ternary "Customer Type (Retail/Institutional)";
-        { parse_ternary, |v: &Option<bool>| encode_ternary(*v) },
+        { 
+            retail_parse, 
+            |v: &Option<bool>| encode_ternary_with_chars('R', 'X', ' ', *v) 
+        },
 
     [5u8] MaxFloor: u32 
     "Represents the portion of your order that you wish to have displayed.";
@@ -221,4 +226,8 @@ fn discretion_price_type_parse(input: &[u8]) -> nom::IResult<&[u8], PriceType> {
         _ => Ok((input, price_type))
     }
 
+}
+
+fn retail_parse(input: &[u8]) -> nom::IResult<&[u8], Option<bool>> {
+    parse_ternary_with_chars('R', 'X', ' ', input)
 }

@@ -6,7 +6,7 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum, 
-    FirmId, 
+    Mpid, 
 };
 
 
@@ -14,7 +14,7 @@ use crate::types::{
 
     let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
     };
     
     let eoe = match request {
@@ -22,7 +22,7 @@ use crate::types::{
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(eoe.user_ref_num(), UserRefNum::new());
-    assert_eq!(eoe.firm(), FirmId::from("FIRM").unwrap());
+    assert_eq!(eoe.firm(), Mpid::from("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -34,10 +34,10 @@ use crate::types::{
 
     let mut request = enable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
     };
     
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'E'];
@@ -52,7 +52,7 @@ use crate::types::{
 
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'E'];
@@ -76,7 +76,7 @@ use crate::types::{
 
     let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
     };
     
     let doe = match request {
@@ -84,7 +84,7 @@ use crate::types::{
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(doe.user_ref_num(), UserRefNum::new());
-    assert_eq!(doe.firm(), FirmId::from("FIRM").unwrap());
+    assert_eq!(doe.firm(), Mpid::from("FIRM").unwrap());
     assert!(request.options().is_empty());
 
     request.add_option(TagValue::UserRefIndex(0u8))
@@ -96,10 +96,10 @@ use crate::types::{
 
     let mut request = disable_entry!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
     };
     
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'D'];
@@ -114,7 +114,7 @@ use crate::types::{
 
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'D'];

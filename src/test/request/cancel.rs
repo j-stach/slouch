@@ -6,7 +6,7 @@ use crate::{
 
 use crate::types::{ 
     UserRefNum, 
-    FirmId, 
+    Mpid, 
     StockSymbol
 };
 
@@ -47,7 +47,7 @@ fn bad_quantity() {
         quantity: 0u32
     };
 
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'X'];
@@ -62,7 +62,7 @@ fn bad_quantity() {
 
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'X'];
@@ -86,7 +86,7 @@ fn bad_quantity() {
 
     let mut request = mass_cancel!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
         symbol: StockSymbol::from("STONKS").unwrap(),
     };
     
@@ -95,7 +95,7 @@ fn bad_quantity() {
         _ => panic!{"Damn son, where'd you find that"}
     };
     assert_eq!(mc.user_ref_num(), UserRefNum::new());
-    assert_eq!(mc.firm(), FirmId::from("FIRM").unwrap());
+    assert_eq!(mc.firm(), Mpid::from("FIRM").unwrap());
     assert_eq!(mc.symbol(), StockSymbol::from("STONKS").unwrap());
     assert!(request.options().is_empty());
 
@@ -108,11 +108,11 @@ fn bad_quantity() {
 
     let mut request = mass_cancel!{
         user_ref_num: UserRefNum::new(),
-        firm: FirmId::from("FIRM").unwrap(),
+        firm: Mpid::from("FIRM").unwrap(),
         symbol: StockSymbol::from("STONKS").unwrap(),
     };
 
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'C'];
@@ -129,7 +129,7 @@ fn bad_quantity() {
 
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'C'];

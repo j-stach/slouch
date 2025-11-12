@@ -1,9 +1,10 @@
 
 # slouch
-- [x] Reintegrate client
 
 ## Testing:
-- [ ] Update tests
+- [x] Update options 
+- [x] Update request 
+- [ ] Update response 
 
 ### Integration testing
 - [ ] [Schedule appointment](https://www.nasdaqtrader.com/Trader.aspx?id=TestingFacility)

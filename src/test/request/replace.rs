@@ -10,13 +10,13 @@ use crate::types::*;
 
     // Macros are tested in the doc comments 
     let mut request = replace!{
-        old_user_ref_num: UserRefNum::new(),
-        new_user_ref_num: UserRefNum::new(),
+        old_ref_num: UserRefNum::new(),
+        new_ref_num: UserRefNum::new(),
         quantity: 0u32,
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         order_token: OrderToken::from("OrderToken").unwrap()
     };
     
@@ -24,13 +24,13 @@ use crate::types::*;
         OuchRequest::ReplaceOrder(ref eo) => eo,
         _ => panic!{"Damn son, where'd you find that"}
     };
-    assert_eq!(eo.old_user_ref_num(), UserRefNum::new());
-    assert_eq!(eo.new_user_ref_num(), UserRefNum::new());
+    assert_eq!(eo.old_ref_num(), UserRefNum::new());
+    assert_eq!(eo.new_ref_num(), UserRefNum::new());
     assert_eq!(eo.quantity(), 0u32);
-    assert_eq!(eo.price(), Price::new(3, 5001).unwrap());
+    assert_eq!(eo.price(), Price::new(35001u64).unwrap());
     assert_eq!(eo.time_in_force(), TimeInForce::Day);
     assert_eq!(eo.display(), Display::Visible);
-    assert_eq!(eo.intermarket_sweep_eligibility(), false);
+    assert_eq!(eo.intermarket_sweep(), false);
     assert_eq!(eo.order_token(), OrderToken::from("OrderToken").unwrap());
     assert!(request.options().is_empty());
 
@@ -43,13 +43,13 @@ use crate::types::*;
 #[should_panic]
 fn bad_quantity() {
     let _ = replace!{
-        old_user_ref_num: UserRefNum::new(),
-        new_user_ref_num: UserRefNum::new(),
+        old_ref_num: UserRefNum::new(),
+        new_ref_num: UserRefNum::new(),
         quantity: 1_000_000u32,
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         order_token: OrderToken::from("To The Moon").unwrap()
     };
 }
@@ -57,17 +57,17 @@ fn bad_quantity() {
 #[test] fn encode_replace() {
 
     let mut request = replace!{
-        old_user_ref_num: UserRefNum::new(),
-        new_user_ref_num: UserRefNum::new(),
+        old_ref_num: UserRefNum::new(),
+        new_ref_num: UserRefNum::new(),
         quantity: 0u32,
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         order_token: OrderToken::from("To The Moon").unwrap()
     };
     
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'U'];
@@ -94,7 +94,7 @@ fn bad_quantity() {
 
     request.add_option(TagValue::UserRefIndex(1u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'U'];

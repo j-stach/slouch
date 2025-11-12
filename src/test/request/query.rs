@@ -18,14 +18,16 @@ use crate::{ account_query, msg::TagValue };
 
     let mut request = account_query!();
 
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
-    let should_be: Vec<u8> = vec![b'Q'];
+    let mut should_be: Vec<u8> = vec![b'Q'];
+    // Opts length (empty)
+    should_be.extend(0u16.to_be_bytes());
     assert_eq!(bytes, should_be);
 
     request.add_option(TagValue::UserRefIndex(0u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'Q'];

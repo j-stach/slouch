@@ -15,9 +15,9 @@ pub use self::{
     elapsed_time::ElapsedTime,
 };
 
-pub(crate) type Price = nsdq_util::Price<u64, 4>;
-pub(crate) type SignedPrice = nsdq_util::Price<i32, 4>;
-pub(crate) type Ternary = Option<bool>;
+pub type Price = nsdq_util::Price<u64, 4>;
+pub type SignedPrice = nsdq_util::Price<i32, 4>;
+pub type Ternary = Option<bool>;
 
 pub use nsdq_util::{ Mpid, StockSymbol, NaiveTime };
 

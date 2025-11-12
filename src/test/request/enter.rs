@@ -14,11 +14,11 @@ use crate::types::*;
         side: Side::Buy,
         quantity: 0u32,
         symbol: StockSymbol::from("STONKS").unwrap(),
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         cross_type: CrossType::Opening,
         order_token: OrderToken::from("OrderToken").unwrap()
     };
@@ -31,11 +31,11 @@ use crate::types::*;
     assert_eq!(eo.side(), Side::Buy);
     assert_eq!(eo.quantity(), 0u32);
     assert_eq!(eo.symbol(), StockSymbol::from("STONKS").unwrap());
-    assert_eq!(eo.price(), Price::new(3, 5001).unwrap());
+    assert_eq!(eo.price(), Price::new(35001u64).unwrap());
     assert_eq!(eo.time_in_force(), TimeInForce::Day);
     assert_eq!(eo.display(), Display::Visible);
     assert_eq!(eo.capacity(), Capacity::Agency);
-    assert_eq!(eo.intermarket_sweep_eligibility(), false);
+    assert_eq!(eo.intermarket_sweep(), false);
     assert_eq!(eo.cross_type(), CrossType::Opening);
     assert_eq!(eo.order_token(), OrderToken::from("OrderToken").unwrap());
     assert!(request.options().is_empty());
@@ -53,11 +53,11 @@ fn bad_quantity() {
         side: Side::Buy,
         quantity: 1_000_000u32,
         symbol: StockSymbol::from("STONKS").unwrap(),
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         cross_type: CrossType::Opening,
         order_token: OrderToken::from("To The Moon").unwrap()
     };
@@ -70,16 +70,16 @@ fn bad_quantity() {
         side: Side::Buy,
         quantity: 0u32,
         symbol: StockSymbol::from("STONKS").unwrap(),
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001u64).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         cross_type: CrossType::Opening,
         order_token: OrderToken::from("To The Moon").unwrap()
     };
     
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'O'];
@@ -112,7 +112,7 @@ fn bad_quantity() {
 
     request.add_option(TagValue::UserRefIndex(1u8))
         .expect("Should be a good optional value");
-    let bytes = request.clone().to_bytes();
+    let bytes = request.clone().encode();
 
     // Include the request type tag
     let mut should_be: Vec<u8> = vec![b'O'];

@@ -14,11 +14,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
         side: Side::Buy,
         quantity: 69u32,
         symbol: StockSymbol::from("STONKS").unwrap(),
-        price: Price::new(3, 5001).unwrap(),
+        price: Price::new(35001).unwrap(),
         time_in_force: TimeInForce::Day,
         display: Display::Visible,
         capacity: Capacity::Agency,
-        intermarket_sweep_eligibility: false,
+        intermarket_sweep: false,
         cross_type: CrossType::Opening,
         order_token: OrderToken::from("To The Moon").unwrap()
     };
@@ -59,10 +59,10 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
     let mut enter = root.0;
     enter.add_option(
-        TagValue::Firm(FirmId::from("FIRM").unwrap()
+        TagValue::Firm(Mpid::from("FIRM").unwrap()
     )).unwrap();
     enter.add_option(TagValue::UserRefIndex(1u8)).unwrap();
-    let bytes = enter.to_bytes();
+    let bytes = enter.encode();
 
     let mut should_be = root.1;
     // Include the appendage length marker
@@ -96,7 +96,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     // Overwrite an option with a new value to ensure only it is encoded
     // and that it is encoded in the same order as originally added.
     enter.add_option(TagValue::MaxFloor(1u32)).unwrap();
-    let bytes = enter.to_bytes();
+    let bytes = enter.encode();
 
     let mut should_be = root.1;
     // Include the appendage length marker
@@ -131,7 +131,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     
 #[test] fn customer_type() { 
 
-    let ct = TagValue::CustomerType(CustomerType::Retail);
+    let ct = TagValue::Retail(Some(true));
     let bytes = ct.encode();
 
     let mut should_be = vec![];
@@ -165,7 +165,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn peg_offset() { 
 
-    let po = TagValue::PegOffset(SignedPrice::new(0, 0200, true).unwrap());
+    let po = TagValue::PegOffset(SignedPrice::new(-200i32).unwrap());
     let bytes = po.encode();
 
     let mut should_be = vec![];
@@ -188,7 +188,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     let mut enter = root.0;
     // - DiscretionPrice
     enter.add_option(
-        TagValue::DiscretionPrice(Price::new(0, 0200).unwrap())
+        TagValue::DiscretionPrice(Price::new(200u64).unwrap())
     ).unwrap();
     // - DiscretionPriceType
     enter.add_option(
@@ -197,11 +197,11 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     // - DiscretionPegOffset
     enter.add_option(
         TagValue::DiscretionPegOffset(
-            SignedPrice::new(0, 0200, true)
+            SignedPrice::new(-200i32)
             .unwrap()
         )
     ).unwrap();
-    let bytes = enter.to_bytes();
+    let bytes = enter.encode();
 
     let mut should_be = root.1;
     // Include the appendage length marker
@@ -287,7 +287,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
 #[test] fn trade_now() { 
 
-    let tn = TagValue::TradeNow(TradeNow::Yes);
+    let tn = TagValue::TradeNow(Some(true));
     let bytes = tn.encode();
 
     let mut should_be = vec![];
@@ -346,9 +346,9 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     enter.add_option(TagValue::SharesLocated(true)).unwrap();
     // - LocateBroker
     enter.add_option(
-        TagValue::LocateBroker(BrokerId::from("XXXX").unwrap())
+        TagValue::LocateBroker(Mpid::from("XXXX").unwrap())
     ).unwrap();
-    let bytes = enter.to_bytes();
+    let bytes = enter.encode();
 
     let mut should_be = root.1;
     // Include the appendage length marker
@@ -390,9 +390,9 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
     assert_eq!(bytes, should_be);
 }
 
-#[test] fn bbo_weight_indicator() { 
+#[test] fn bbo_weight() { 
 
-    let bbo = TagValue::BboWeightIndicator(BboWeightIndicator::Large);
+    let bbo = TagValue::BboWeight(BboWeight::Large);
     let bytes = bbo.encode();
 
     let mut should_be = vec![];
@@ -423,7 +423,7 @@ fn test_order() -> (crate::msg::OuchRequest, Vec<u8>) {
 
     assert_eq!(bytes, should_be);
 
-    let p = TagValue::DisplayPrice(Price::new(0, 0001).unwrap());
+    let p = TagValue::DisplayPrice(Price::new(1u64).unwrap());
     let bytes = p.encode();
 
     let mut should_be = vec![];

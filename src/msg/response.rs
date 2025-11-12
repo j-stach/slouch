@@ -42,7 +42,7 @@ macro_rules! ouch_responses {
     ($([$tag:expr] $msg_name:ident),*$(,)?) => {
 
         /// Server responses to expect in OUCH 5.0
-        #[derive(Debug, Clone)]
+        #[derive(Debug, Clone, PartialEq, Eq)]
         pub enum OuchResponse {
             $(
                 $msg_name($msg_name),

@@ -111,7 +111,7 @@ impl CancelOrder {
 /// ```
 /// use slouch::{
 ///     mass_cancel,
-///     types::{ UserRefNum, FirmId, StockSymbol },
+///     types::{ UserRefNum, Mpid, StockSymbol },
 /// };
 ///
 /// let request1 = mass_cancel!{

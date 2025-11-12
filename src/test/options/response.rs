@@ -12,11 +12,11 @@ use crate::{
     // OrdRefNum bytes
     bytes.extend(200u64.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::DiscretionPrice(val) => assert_eq!(
             val, 
-            Price::new(0, 200).unwrap()
+            Price::new(200u64).unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -30,7 +30,7 @@ use crate::{
     // PriceTypes flag
     bytes.push(b'L');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::DiscretionPriceType(val) => assert_eq!(
             val, PriceType::Limit
@@ -47,11 +47,11 @@ use crate::{
     // PegOffest price bytes
     bytes.extend((-200i32).to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::DiscretionPegOffset(val) => assert_eq!(
             val, 
-            SignedPrice::new(0, 200, true).unwrap()
+            SignedPrice::new(-200i32).unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -66,11 +66,11 @@ use crate::{
     // Include the firm chars
     bytes.extend(b"XXXX");
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::Firm(val) => assert_eq!(
             val, 
-            FirmId::from("XXXX").unwrap()
+            Mpid::from("XXXX").unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -84,7 +84,7 @@ use crate::{
     // MinQty bytes
     bytes.extend(0u32.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::MaxFloor(val) => assert_eq!(val, 0u32),
         _ => panic!("Where'd you find this?"),
@@ -99,7 +99,7 @@ use crate::{
     // MinQty bytes
     bytes.extend(0u32.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::MinQty(val) => assert_eq!(val, 0u32),
         _ => panic!("Where'd you find this?"),
@@ -114,9 +114,9 @@ use crate::{
     // CustomerType flag
     bytes.push(b'R');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
-        TagValue::CustomerType(val) => assert_eq!(val, CustomerType::Retail),
+        TagValue::Retail(val) => assert_eq!(val, Some(true)),
         _ => panic!("Where'd you find this?"),
     }
 
@@ -129,7 +129,7 @@ use crate::{
     // PriceTypes flag
     bytes.push(b'L');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::PriceType(val) => assert_eq!(val, PriceType::Limit),
         _ => panic!("Where'd you find this?"),
@@ -144,11 +144,11 @@ use crate::{
     // PegOffest price bytes
     bytes.extend((-200i32).to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::PegOffset(val) => assert_eq!(
             val, 
-            SignedPrice::new(0, 200, true).unwrap()
+            SignedPrice::new(-200i32).unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -163,7 +163,7 @@ use crate::{
     // PostOnly flag
     bytes.push(b'N');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::PostOnly(val) => assert_eq!(val, false),
         _ => panic!("Where'd you find this?"),
@@ -178,7 +178,7 @@ use crate::{
     // RansomReserves quantity bytes
     bytes.extend(0u32.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::RandomReserves(val) => assert_eq!(val, 0u32),
         _ => panic!("Where'd you find this?"),
@@ -193,7 +193,7 @@ use crate::{
     // ExpireTime bytes
     bytes.extend(420u32.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::ExpireTime(val) => assert_eq!(
             val, 
@@ -211,9 +211,9 @@ use crate::{
     // TradeNow flag
     bytes.push(b'Y');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
-        TagValue::TradeNow(val) => assert_eq!(val, TradeNow::Yes),
+        TagValue::TradeNow(val) => assert_eq!(val, Some(true)),
         _ => panic!("Where'd you find this?"),
     }
 
@@ -226,7 +226,7 @@ use crate::{
     // HandleInst flag
     bytes.push(b'I');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::HandleInst(val) => assert_eq!(
             val, 
@@ -244,7 +244,7 @@ use crate::{
     // GroupId bytes
     bytes.extend(1u16.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::GroupId(val) => assert_eq!(val, 1u16),
         _ => panic!("Where'd you find this?"),
@@ -259,11 +259,11 @@ use crate::{
     // Include the broker chars
     bytes.extend(b"XXXX");
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::LocateBroker(val) => assert_eq!(
             val, 
-            BrokerId::from("XXXX").unwrap()
+            Mpid::from("XXXX").unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -277,7 +277,7 @@ use crate::{
     // SharedLocated flag
     bytes.push(b'Y');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::SharesLocated(val) => assert_eq!(val, true),
         _ => panic!("Where'd you find this?"),
@@ -292,7 +292,7 @@ use crate::{
     // OrdRefNum bytes
     bytes.extend(1u64.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::SecondaryOrdRefNum(val) => assert_eq!(val, 1u64),
         _ => panic!("Where'd you find this?"),
@@ -300,18 +300,18 @@ use crate::{
 
 }
 
-#[test] fn bbo_weight_indicator() {
+#[test] fn bbo_weight() {
 
     // Include the option tag, ignore length marker
     let mut bytes = vec![18u8];
     // Indicator flag
     bytes.push(b'3');
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
-        TagValue::BboWeightIndicator(val) => assert_eq!(
+        TagValue::BboWeight(val) => assert_eq!(
             val, 
-            BboWeightIndicator::Large,
+            BboWeight::Large,
         ),
         _ => panic!("Where'd you find this?"),
     }
@@ -325,7 +325,7 @@ use crate::{
     // OrdRefNum bytes
     bytes.extend(1u32.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::DisplayQuantity(val) => assert_eq!(val, 1u32),
         _ => panic!("Where'd you find this?"),
@@ -340,11 +340,11 @@ use crate::{
     // OrdRefNum bytes
     bytes.extend(200u64.to_be_bytes());
 
-    let tv = TagValue::parse(&bytes).unwrap();
+    let (_bytes, tv) = TagValue::parse(&bytes).unwrap();
     match tv {
         TagValue::DisplayPrice(val) => assert_eq!(
             val, 
-            Price::new(0, 200).unwrap()
+            Price::new(200u64).unwrap()
         ),
         _ => panic!("Where'd you find this?"),
     }

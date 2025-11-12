@@ -15,8 +15,6 @@ pub use self::{
     replace::ReplaceOrder,
 };
 
-//use super::options::TagValue;
-
 macro_rules! ouch_requests {
     ($([$tag:expr] $msg_kind:ident),*$(,)?) => {
 
@@ -30,7 +28,7 @@ macro_rules! ouch_requests {
         /// This guarantees that if two orders are entered consecutively on 
         /// the same connection, the first order entered will always be 
         /// accepted first.
-        #[derive(Debug, Clone)]
+        #[derive(Debug, Clone, PartialEq, Eq)]
         pub enum OuchRequest {
             $(
                 $msg_kind($msg_kind),
@@ -53,27 +51,28 @@ macro_rules! ouch_requests {
                 }
             }
 
-            // /// Get the options attached to this request.
-            // pub fn options(&self) -> &Vec<TagValue> {
-            //     EnterOrder(msg) => msg.options(),
-            //     match self {
-            //         Self::$msg_kind(msg) => msg.options(),
-            //     }
-            // }
+            /// Get the options attached to this request.
+            pub fn options(&self) -> &Vec<$crate::msg::options::TagValue> {
+                match self {
+                    $(
+                        Self::$msg_kind(msg) => msg.options(),
+                    )*
+                }
+            }
 
-            ///// Add a new optional field to the request's appendage.
-            ///// If a `TagValue` of the same variant already exists,
-            ///// it will be overwritten in place by the new optional field.
-            //pub fn add_option(
-            //    &mut self, 
-            //    option: TagValue
-            //) -> Result<(), OuchError> {
-            //    let string = match self {
-            //        $(
-            //            Self::$msg_kind(msg) => msg.add_option(option)?,
-            //        )*
-            //    }
-            //}
+            /// Add a new optional field to the request's appendage.
+            /// If a `TagValue` of the same variant already exists,
+            /// it will be overwritten in place by the new optional field.
+            pub fn add_option(
+                &mut self, 
+                option: $crate::msg::options::TagValue
+            ) -> Result<(), $crate::error::OuchError> {
+                match self {
+                    $(
+                        Self::$msg_kind(msg) => Ok(msg.add_option(option)?),
+                    )*
+                }
+            }
 
         }
 
